@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+
+		<style>
+			.table-top {
+				position: fixed;
+				top: 49px;
+				left: 0;
+				right: 0;
+				background: white;
+			}
+			
+			.table-view-cell {
+				height: 62px;
+				border-bottom: 1px #DFE0E2 solid;
+				-webkit-user-select: none;
+				padding-left: 17px;
+				list-style: none;
+			}
+			.table-view-cell:active {
+				background-color: #F5F5F9;
+			}
+			
+			.desribe-title {
+				padding-top: 15px;
+				text-align: left;
+				width: 150px;
+				font-size: 17px;
+				line-height: 30px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+			}
+			
+			.renzheng-text {
+				position: absolute;
+				right: 30px;
+				padding-top: 15px;
+				text-align: left;
+				font-size: 17px;
+				line-height: 30px;
+				color: #8F8F94;
+				font-family: SimHei;
+				display: inline-block;
+			}
+			
+			.right-pic {
+				background: url(../img/ic_personal-center_more_normal.png) no-repeat 50% 50%;
+				background-size: 8px 14px;
+				width: 14px;
+				height: 60px;
+				position: absolute;
+				right: 10px;
+				display: inline-block;
+			}
+			
+			.renzheng-pic {
+				background: url(../img/ic_xianzheng_yes.png) no-repeat 50% 50%;
+				background-size: 22px 22px;
+				width: 32px;
+				height: 60px;
+				position: absolute;
+				right: 85px;
+				display: inline-block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">帐号认证</span>
+			</div>
+		</div>
+		<div class="table-top">
+			<!--<li id="mobile" class="table-view-cell">
+				<span class="desribe-title">手机认证</span>
+				<span id="mobile1" class="renzheng-text">已认证</span>
+				<div class="right-pic"></div>
+				<div id="mobile2" class="renzheng-pic"></div>
+			</li>
+			<li id="bank" class="table-view-cell">
+				<span class="desribe-title">银行认证</span>
+				<span id="bank1" class="renzheng-text">已认证</span>
+				<div class="right-pic"></div>
+				<div id="bank2" class="renzheng-pic"></div>
+			</li>
+			<li id="email" class="table-view-cell">
+				<span class="desribe-title" type="text">邮箱认证</span>
+				<span id="email1" class="renzheng-text">已认证</span>
+				<div class="right-pic"></div>
+				<div id="email2" class="renzheng-pic"></div>
+			</li>
+			<li id="enterprise" class="table-view-cell">
+				<span class="desribe-title" type="text">企业认证</span>
+				<span id="enterprise1" class="renzheng-text">已认证</span>
+				<div class="right-pic"></div>
+				<div id="enterprise2" class="renzheng-pic"></div>
+			</li>
+			<li id="realname" class="table-view-cell">
+				<span class="desribe-title" type="text">实名认证</span>
+				<span id="realname1" class="renzheng-text">已认证</span>
+				<div class="right-pic"></div>
+				<div id="realname2" class="renzheng-pic"></div>
+			</li>-->
+			<script>
+			var getdata = new Object();
+				mui.plusReady(function() {
+					var webView = plus.webview.currentWebview();
+					$(".back").click(function() {
+						$(".content").css("display", "none");
+						webView.close("slide-out-right", 300);
+					});
+					DataRequest.postData(Constant.IP + Constant.AccountAC, [{
+						key: "uid",
+						value: 295
+					}], successFL, errorFL);
+				});
+
+				function successFL(jsonStr) {
+					var json = $.parseJSON(jsonStr);
+					getdata = json;
+					console.log(jsonStr);
+					var bool = (json.enterprise == 0) || (json.enterprise == 1);
+					if (bool) {
+						var obj = document.getElementById("realname");
+						obj.parentNode.removeChild(obj);
+					} else {
+						var obj = document.getElementById("enterprise");
+						obj.parentNode.removeChild(obj);
+					}
+					for (var key in json) {
+						refreshPanel(key, json[key]);
+					}
+				}
+
+				function errorFL(jsonStr) {
+					mui.toast(jsonStr);
+				}
+
+				function refreshPanel(id, type) {
+					var id1 = id + "1";
+					var id2 = id + "2";
+					var item1 = $("#" + id1);
+					var item2 = $("#" + id2);
+					if (type.value) {
+						item1.text("已认证");
+						item2.css("background", "url(../img/ic_xianzheng_yes.png) no-repeat 50% 50%");
+						item2.css("background-size", " 22px 22px");
+					} else {
+						item1.text("未认证");
+						item2.css("background", "url(../img/ic_yanzheng_no.png) no-repeat 50% 50%");
+						item2.css("background-size", " 22px 22px");
+					}
+				}
+				//银行认证
+				$("#bank").click(function() {
+					var target = plus.webview.create("bankList.html");
+					plus.webview.show(target, "slide-in-right", 300);
+				});
+				//邮箱认证
+				$("#email").click(function() {
+					var target = plus.webview.create("emailAC.html", $("#email1").text(),null,{"data":getdata.email.num});
+					plus.webview.show(target, "slide-in-right", 300);
+				});
+				//手机认证
+				$("#mobile").click(function() {
+					var target = plus.webview.create("phoneAC.html",$("#mobile1").text(),null,{"data":getdata.mobile.num});
+					plus.webview.show(target, "slide-in-right", 300);
+				});
+				//企业认证
+				$("#enterprise").click(function() {
+					var target = plus.webview.create("companyAC.html");
+					plus.webview.show(target, "slide-in-right", 300);
+				});
+				//个人认证
+				$("#realname").click(function() {
+					var target = plus.webview.create("realnameAC.html");
+					plus.webview.show(target, "slide-in-right", 300);
+				});
+			</script>
+	</body>
+
+</html>

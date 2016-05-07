@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/pull.css" />
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/rencai.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+
+		<script>
+		var show = false;
+			//创建人才
+			var CreaterRenCaiItem = function(RencaiItem) {
+				var $item = $("<div class='line-3 rencai-header rencai-list-item'></div>");
+				$item.attr("uid", RencaiItem.uid + "");
+				$item.attr("retime", RencaiItem.reg_time + "");
+				$item.bind("tap",function() {
+					if (!show) {
+						show = true;
+						$_this = $(this);
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("rencai-detail.html", "人才详情", Constant.allScreen_style);
+							targetTab.loadURL("rencai-detail.html?uid=" + $_this.attr("uid"));
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						});
+					}
+				});
+				//用户头像
+				var $userHeader = $("<div class='rencai-user-img'></div>").css("background", "url(" + RencaiItem.pic + ") no-repeat").css("background-size","contain");
+				//用户等级
+				var $userLevel = $("<div class='rencai-user-level-flag'></div>");
+				var $userLevelNumber = $("<span class='rencai-user-level-flag-text'></span>").text(RencaiItem.seller_level.level);
+				$userLevel.append($userLevelNumber);
+				$userHeader.append($userLevel);
+				$item.append($userHeader);
+				//用户介绍
+				var $userDescribe = $("<div class='left vertical-center'></div>")
+					//用户名
+				var $userName = $("<span class='rencai-user-title'></span>").text(RencaiItem.username);
+				$userDescribe.append($userName);
+				//						用户标签
+				var flags = RencaiItem.skill_ids;
+				if (flags !== null) {
+					var $userFlag = $("<ul class='rencai-user-item-flag'></ul>");
+					for (var j = 0, length = flags.length; j < length; j++) {
+						var $flagItem = $("<li class='rencai-user-item-flag-item font-size-13px'>").text(flags[j]);
+						$userFlag.append($flagItem);
+					}
+					$userDescribe.append($userFlag);
+				}
+				//						用户简介
+				var $userDetail = $("<span class='rencai-user-describe font-size-13px'></span>").text("简介：" + RencaiItem.summary);
+				$userDescribe.append($userDetail);
+				$item.append($userDescribe);
+				return $item;
+			};
+			/************************************************/
+			var initLayout = function() {
+				$(".line-3").each(function() {
+					Common.left_right_layout($(this));
+				});
+			};
+			//普通上拉加载更多
+			var PullUpSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				console.log(jsonStr);
+				mTotalPage = json.pgs;
+				console.log(mTotalPage);
+				var $List = $(".mui-table-view");
+				if (json.status == "success") {
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var RenCaiItem = CreaterRenCaiItem(json.result[i]);
+							$List.append(RenCaiItem);
+						}
+					}
+					initLayout();
+				} else {
+					mui.toast(json.msg);
+					mPage--;
+				}
+			}
+			var PullUpErrorFn = function() {
+				mPage--;
+			}
+			var pullUp = function() {
+				console.log("mPage::" + mPage + "::mTotalPage::" + mTotalPage);
+				DataRequest.getData(Constant.IP + Constant.RenCaiUpPull, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "page",
+					value: mPage
+				}], PullUpSuccessFn, PullUpErrorFn);
+			};
+			//普通下拉刷新
+			var PullDownSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//				mTotalPage = json.pgs;
+				//				console.log(mTotalPage);
+				var $List = $(".mui-table-view");
+				if (json.status == "success") {
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var RenCaiItem = CreaterRenCaiItem(json.result[i]);
+							var $first = $List.children(":first");
+							RenCaiItem.insertBefore($first);
+						}
+					}
+				} else {
+					mui.toast(json.msg);
+				}
+				initLayout();
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var PullDownErrorFn = function() {
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var pullDown = function() {
+				console.log("mPage::" + mPage + "::mTimer::" + mTimer);
+				DataRequest.getData(Constant.IP + Constant.RenCaiDownPull, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "retime",
+					value: mTimer
+				}], PullDownSuccessFn, PullDownErrorFn);
+			};
+			/************************************************/
+		</script>
+	</head>
+
+	<body>
+		<div class="mui-scroll-content">
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul class="mui-table-view mui-table-view-chevron">
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!--<div class="line-3 rencai-header rencai-list-item">
+					<div class="rencai-user-img">
+						<div class="rencai-user-level-flag">
+							<span class="rencai-user-level-flag-text">2</span>
+						</div>
+					</div>
+					<div class="left vertical-center">
+						<span class="rencai-user-title">欢乐的陈许愿</span>
+						<ul class="rencai-user-item-flag">
+							<li class="rencai-user-item-flag-item font-size-13px">
+								后台监测
+							</li>
+							<li class="rencai-user-item-flag-item font-size-13px">
+								安卓开发
+							</li>
+						</ul>
+						<span class="rencai-user-describe">简介：</span>
+					</div>
+					<div class="task-user-send-message">
+					</div>
+				</div>-->
+		<script>
+			var show = false;
+			var mSearch = false;
+			var mKeyw = "";
+			var mTimer; //下拉刷新用到
+			var mPage = 0;
+			var mTotalPage; //上拉加载更多用到
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			//查询人才
+			var getData = function(keyw) {
+				//0表示查询人才，1表示查询任务
+				console.log(mFirstPullTimer);
+				mSearch = true;
+				mKeyw = keyw;
+				console.log("mKeyw::" + mKeyw);
+				pullupRefresh();
+			};
+			if (mui.os.plus) {
+				mui.plusReady(function() {
+					setTimeout(function() {
+						if (!mSearch) {
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+						}
+					}, 1000);
+				});
+			} else {
+				var mFirstPullTimer;
+				mui.plusReady(function() {
+					setTimeout(function() {
+						if (!mSearch) {
+							mui('#pullrefresh').pullRefresh().pullupLoading();
+						}
+					}, 1000);
+				});
+			}
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				var $first = $(".mui-table-view").children(":first");
+				mTimer = $first.attr("retime");
+				console.log("mTotalPage::" + mTotalPage + "keyw::" + mKeyw + "mTimer::" + mTimer);
+				pullDown();
+			}
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				console.log("mPage::" + mPage + "::mTotalPage::" + mTotalPage);
+				if (mPage == 0) {
+					mPage++;
+					mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+				} else {
+					if (mPage >= mTotalPage) { //超过了总页数
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+						return;
+					} else {
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh(mPage++ > mTotalPage);
+					}
+				}
+				pullUp();
+			}
+		</script>
+	</body>
+
+</html>

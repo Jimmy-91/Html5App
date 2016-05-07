@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/base.css" />
+		<link rel="stylesheet" href="../css/myTipsAdd.css" />
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+
+		<!-- 头部 -->
+		<header class="mui-bar mui-bar-nav top">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">添加标签</h1>
+			<a id="btnAdd" class="add">
+				<span class="mui-icon mui-icon-checkmarkempty"></span>
+			</a>
+		</header>
+
+		<!-- 主体 -->
+		<div class="mui-content mb-70">
+			<div class="leftMenu">
+				<p class="title">技术分类</p>
+				<ul id="type" class="list">
+					<!--<li class="active">网络安全运维</li>
+					<li>安全设备</li>
+					<li>程序开发</li>
+					<li>数据库</li>
+					<li>操作系统</li>
+					<li>软件众包</li>
+					<li>设计</li>-->
+				</ul>
+			</div>
+			<div id="detail">
+				<!--<div class="box box-add">
+					网络安全处理
+				</div>
+				<div class="box box-exist">
+					后门检测
+				</div>
+				<div class="box">
+					虚拟化
+				</div>
+				<div class="box">
+					网络安全处理
+				</div>
+				<div class="box">
+					后门检测
+				</div>
+				<div class="box">
+					虚拟化
+				</div>-->
+			</div>
+		</div>
+	</body>
+
+</html>
+<script>
+	var typedata = {};
+	var HaveTips = []; //已有标签
+	var addTips = "";
+	var currentStep = 0;
+	mui.plusReady(function() {
+		var jsontips = $.parseJSON(Common.getJson("tips"));
+		HaveTips = jsontips.result;
+		var fenleidata = Common.getJson("fenlei");
+		var json = $.parseJSON(fenleidata);
+		if (json != null) {
+			typedata = json.result.cates;
+			var $list = $("#type");
+			$list.empty();
+			for (var i = 0; i < typedata.length; i++) {
+				var $listitem = $("<li id=" + i + ">" + typedata[i].indus_name + "</li>");
+				$listitem.bind("click", function() {
+					var id = $(this).attr("id");
+					refreshPanel($(this), id);
+				});
+				if (i == 0) {
+					$listitem.addClass("active");
+					refreshPanel($(this), 0);
+				}
+				$list.append($listitem);
+			}
+		} else {
+			alert("get data error");
+		};
+	});
+
+	function refreshPanel(obj, index) {
+		currentStep = index;
+		$("#type li").removeClass("active");
+		obj.addClass("active");
+		var data = typedata[index].cates_item;
+		var detail = $("#detail");
+		detail.empty();
+		for (var i = 0; i < data.length; i++) {
+			var item = $("<div id=" + i + " class='box'>" + data[i].indus_name + "</div>");
+			var tip = addTips.indexOf(data[i].indus_id);
+			if (tip > 0 || tip == 0) {
+				item.addClass("box-add");
+			}
+			var ck = true;
+			for (var j = 0; j < HaveTips.length; j++) {
+				if (HaveTips[j].indus_id == data[i].indus_id) {
+					ck = false;
+					item.addClass("box-exist");
+				}
+			}
+			if (ck) {
+				item.bind("click", function() {
+					var index = $(this).attr("id");
+					$(this).toggleClass("box-add");
+					var num = addTips.indexOf(data[index].indus_id);
+					if (num < 0) {
+						if (addTips != "") {
+							addTips = addTips + "," + data[index].indus_id;
+						} else {
+							addTips = data[index].indus_id;
+						}
+					} else {
+						addTips = addTips.replace(data[index].indus_id + ",", "");
+						addTips = addTips.replace("," + data[index].indus_id, "");
+						addTips = addTips.replace(data[index].indus_id, "");
+					}
+					console.log(addTips);
+				})
+			}
+			detail.append(item);
+		}
+	};
+	$("#btnAdd").click(function() {
+		var needtips = addTips;
+		for (var i = 0; i < HaveTips.length; i++) {
+			if (needtips == "") {
+				if (i == 0) {
+					needtips = needtips + HaveTips[i].indus_id;
+				} else {
+					needtips = needtips + "," + HaveTips[i].indus_id;
+				}
+			} else {
+				needtips = needtips + "," + HaveTips[i].indus_id;
+			}
+		}
+		if(needtips.length>20){
+			mui.toast("最多添加5个标签!");
+			return;
+		}
+		console.log("needtips=" + needtips);
+		DataRequest.getData(Constant.IP + Constant.MyTips, [{
+			key: "action",
+			value: "skill"
+		}, {
+			key: "skill",
+			value: needtips
+		}], successAddMyTip, errorAddMyTip);
+	})
+
+	function successAddMyTip(jsonStr) {
+		var data = $.parseJSON(jsonStr);
+		mui.toast(data.msg);
+		var target = plus.webview.currentWebview();
+		target.close("slide-out-right", 300);
+	}
+
+	function errorAddMyTip(jsonStr) {
+		console.log(jsonStr);
+	}
+</script>

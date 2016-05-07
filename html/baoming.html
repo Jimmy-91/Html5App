@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/pay.css" />
+		<link rel="stylesheet" href="../css/baoming.css" />
+		<link rel="stylesheet" href="../css/mui.picker.css" />
+		<link rel="stylesheet" href="../css/mui.poppicker.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+		<script type="text/javascript" src="../js/mui.picker.js"></script>
+		<script type="text/javascript" src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<title></title>
+		<script>
+			//悬赏模式报名
+			var BaomingSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			}
+			var BaomingErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			}
+			var baomingAPI = function(baoming) {
+				console.log("taskId::" + taskId + "tar_content::" + baoming.tar_content + "price::" + baoming.price + "cycle::" + baoming.cycle);
+				DataRequest.postData(Constant.IP2 + baoming.Api, [{
+					key: "taskId",
+					value: taskId
+				}, {
+					key: "tar_content",
+					value: baoming.tar_content
+				}, {
+					key: "price",
+					value: baoming.price
+				}, {
+					key: "cycle",
+					value: baoming.cycle
+				}, {
+					key: "province",
+					value: mProvince
+				}, {
+					key: "city",
+					value: mCity
+				}, {
+					key: "area ",
+					value: mArea
+				}], BaomingSuccessFn, BaomingErrorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">报名</span>
+			</div>
+		</div>
+		<div class="content">
+			<div>
+				<div class="baoming-canshu">
+					<div class="baoming-canshu-item">
+						<span class="font-size-16px title">报价</span>
+						<span class="font-size-16px unit">元</span>
+						<input id="price" class="font-size-17px" type="text" onKeyUp="value=value.replace(/\D/g,'')" placeholder="请输入你的报价" />
+					</div>
+					<div class="baoming-canshu-item">
+						<span class="font-size-16px title">工作周期</span>
+						<span class="font-size-16px unit">天</span>
+						<input id="cycle" class="font-size-17px" type="text" onKeyUp="value=value.replace(/\D/g,'')" placeholder="请输入你的工作周期" />
+					</div>
+					<div id="select-city" class="baoming-canshu-item">
+						<span class="font-size-16px title">所在地</span>
+						<span class="unit more-hint"></span>
+						<span id="city" class="input font-size-17px">湖北 武汉</span>
+					</div>
+				</div>
+				<div class="baoming-content mui-input-row">
+					<textarea id="textarea" class="font-size-17px baoming-detail" onfocus="initTextArea()" rows="7" cols="10">描述（最多200字）</textarea>
+				</div>
+				<div id="baoming-submit" class="pay_button font-size-18px">
+					提交
+				</div>
+			</div>
+			<script>
+				//上级页面传入的报名参数
+				var params = Common.urlParam(window.location);
+				var taskId, task_model;
+				var mProvince, mCity, mArea;
+				taskId = params.taskId
+				task_model = params.task_model;
+				console.log("taskId::" + taskId + "task_model::" + task_model);
+				if (task_model == 1) {
+					$(".baoming-canshu").css("display", "none");
+				} else {
+					$(".baoming-canshu").css("display", "block");
+				}
+				/**************************关闭窗口start*****************************/
+				mui.plusReady(function() {
+					$(".back").click(function() {
+						$(".content").css("display", "none");
+						plus.webview.currentWebview().close("slide-out-right", 300);
+					});
+				});
+				/**************************关闭窗口end*****************************/
+				var initTextArea = function() {
+					$(".baoming-detail").text("").addClass("select");
+				};
+				var cityShow = $(".select-city").children(".input");
+				(function($, doc) {
+					$.init();
+					$.ready(function() {
+						var cityPicker3 = new $.PopPicker({
+							layer: 3
+						});
+						cityPicker3.setData(cityData3);
+						var selectCity = doc.getElementById('select-city');
+						var city = doc.getElementById('city');
+						selectCity.addEventListener('click', function(event) {
+							cityPicker3.show(function(items) {
+								var str = (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+								mProvince = (items[0] || {}).value;
+								mCity = (items[1] || {}).value;
+								mArea = (items[2] || {}).value;
+								console.log(mProvince + ":" + mCity + ":" + mArea);
+								city.innerText = str;
+								city.className = "input font-size-17px action";
+							});
+						}, false);
+					});
+				})(mui, document);
+				$("#baoming-submit").click(function() {
+					var baoming = {};
+					if (task_model == 1) { //悬赏模式
+						baoming.tar_content = $("#textarea").val();
+						baoming.Api = Constant.XuanTaskBaoming;
+					} else if (task_model == 4) { //竞标模式
+						baoming.price = $("#price").val();
+						baoming.ci = $("#cycle").val();
+						baoming.tar_content = $("#textarea").val();
+						baoming.Api = Constant.JingTaskBaoming;
+					}
+					console.log("taskId::" + taskId + "tar_content::" + baoming.tar_content + "price::" + baoming.price + "cycle::" + baoming.cycle);
+					baomingAPI(baoming);
+				});
+			</script>
+	</body>
+
+</html>

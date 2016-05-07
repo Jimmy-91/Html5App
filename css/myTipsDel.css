@@ -1,0 +1,48 @@
+.mui-bar-nav{
+        background:#DD3C38;
+}
+.mui-icon{
+        color: #fff;
+}
+.mui-bar-nav h1{
+        color: #fff;
+}
+.mui-bar-nav .add{
+        color: #fff;
+        float:right;
+}
+.mui-bar-nav .complish{
+        padding:0px;
+        margin-top:4px;
+        float:right;
+        color:#fff;
+        margin-top:11px;
+}
+
+.mui-content .box{
+        font-size:14px;
+        padding:8px 6px;
+        border:1px solid;
+        float:left;
+        margin-left:10px;
+        margin-top:10px;
+        color:#34C6F1;
+        position:relative;
+}
+
+.mui-content .xu{
+        width: 80px;
+        border:1px dashed #ccc;
+        text-align:center;
+}
+
+.box .mui-badge{
+        padding:0px;
+        position: absolute;
+        right:-7px;
+        top:-8px;
+}
+.mui-icon-closeempty{
+        font-size: 14px;
+}
+

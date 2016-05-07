@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>首页</title>
+        <link href="css/mui.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="css/base.css" />
+        <link rel="stylesheet" href="css/send_task.css" />
+        <script src="js/mui.min.js"></script>
+        <script src="js/index.js"></script>
+        <script type="text/javascript" charset="utf-8">mui.init();</script>
+</head>
+<body>
+<!-- 头部 -->
+<header class="mui-bar mui-bar-nav">
+        <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+        <h1 class="mui-title">发需求</h1>
+</header>
+
+<!-- 主体 -->
+<div class="mui-content mb-70">
+        
+        <div class="box">
+                <p class="title">任务分类</p>
+                <select>
+                        <option value="">请选择任务分类</option>
+                        <option value="item-1">item-1</option>
+                        <option value="item-2">item-2</option>
+                        <option value="item-3">item-3</option>
+                        <option value="item-4">item-4</option>
+                        <option value="item-5">item-5</option>
+                </select>
+                
+                <select>
+                        <option value="">请选择任务子类</option>
+                        <option value="item-1">item-1</option>
+                        <option value="item-2">item-2</option>
+                        <option value="item-3">item-3</option>
+                        <option value="item-4">item-4</option>
+                        <option value="item-5">item-5</option>
+                </select>
+        </div>
+        
+        <div class="mui-clearfix"></div>
+        
+        <!-- 通用盒子 -->
+        <div class="box">
+                <p class="title">标　　题</p>
+                <div class="mui-input-row">
+                        <input type="text" class="mui-input-clear" placeholder="请输入标题">
+                </div>
+        </div>
+        
+        <div class="box">
+                <p class="title">任务模式</p>
+                <form class="mui-input-group">
+                        <div class="mui-input-row mui-radio mui-left">
+                                <label>悬赏模式</label>
+                                <input name="radio1" type="radio">
+                        </div>
+                        <div class="mui-input-row mui-radio mui-left">
+                                <label>招标模式</label>
+                                <input name="radio1" type="radio" checked>
+                        </div>
+                </form>
+        </div>
+        
+        <div class="box" style="padding-bottom: 0px;">
+                <p class="title">
+                        需求详情
+                        <span class="mui-icon mui-icon-camera mui-pull-right"></span>
+                        <span class="mui-icon mui-icon-mic-filled mui-pull-right"></span>   
+                </p>
+                <div class="mui-input-row">
+                        <textarea rows="5" placeholder="需求详情" style="overflow:auto"></textarea>
+                </div>
+        </div>
+        
+        <!-- 图片和录音 -->
+        <div class="box" style="padding-top:0px;">
+                <div class="case">1</div>
+                <div class="case">2</div>
+        </div>
+        
+        <div class="mui-clearfix"></div>
+        
+        <div class="box">
+                <div class="left">
+                        <p class="title">预算</p>
+                        <div class="mui-input-row">
+                                <input type="text" class="mui-input-clear" placeholder="请输入预算">
+                        </div>
+                </div>
+                <div class="right">
+                        <p class="title">截止日期</p>
+                        <div class="mui-input-row">
+                                <input type="date" class="mui-input-clear" value="/ / /">
+                        </div>
+                </div>
+        </div>
+        
+        <div class="box">
+                <button type="button" class="mui-btn mui-btn-block submit">提交</button>
+        </div>
+        
+</div>
+
+	
+</body>
+</html>
+
+

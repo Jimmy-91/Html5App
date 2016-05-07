@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/task-detail.css" />
+		<link rel="stylesheet" href="../css/assess.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+		<title></title>
+		<script>
+			var closePage = function(millisecond) {
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", millisecond);
+			};
+			//余额支付
+			//付款接口调用
+			var pingjiaSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				console.log("jsonStr：" + jsonStr);
+				if (json.status == "success") {
+					mui.plusReady(function() {
+						Common.saveJson("flag", "true");
+						closePage(1000);
+					});
+				}
+				mui.toast(json.msg);
+			}
+			var pingjiaErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			}
+			var pingjiaApi = function(taskId, mark_status, aid_star) {
+				console.log("taskId::" + taskId + "mark_status::" + mark_status + "aid_star::" + aid_star + "IP:" + Constant.IP2 + Constant.pingjia);
+				DataRequest.postData(Constant.IP2 + Constant.pingjia, [{
+					key: "taskId",
+					value: taskId
+				}, {
+					key: "mark_status",
+					value: mark_status
+				}, {
+					key: "aid_star",
+					value: aid_star
+				}], pingjiaSuccessFn, pingjiaErrorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">评价</span>
+			</div>
+		</div>
+		<div class="content">
+			<div>
+				<div class="pingjia-bar grid-table-menu">
+					<a class="pingjia-item grid-cell-menu " flag="1">
+						<div class="pingjia"></div><span class="pingjia-title">好评</span>
+					</a>
+					<a class="pingjia-item grid-cell-menu " flag="2">
+						<div class="pingjia"></div><span class="pingjia-title">中评</span>
+					</a>
+					<a class="pingjia-item grid-cell-menu " flag="3">
+						<div class="pingjia"></div><span class="pingjia-title">差评</span>
+					</a>
+				</div>
+			</div>
+			<div class="pingfen-bar rencai-work-pingjia">
+
+			</div>
+			<div class="pay_button font-size-18px">
+				提交
+			</div>
+		</div>
+	</body>
+	<script>
+		/**************************关闭窗口start*****************************/
+		mui.plusReady(function() {
+			$(".back").click(function() {
+				closePage(300);
+			});
+		});
+		/**************************关闭窗口end*****************************/
+		var initRenCaiWorkPingJia = function(workPingJia) {
+			var $WorkPingJia = $(".rencai-work-pingjia");
+			$(".rencai-work-pingjia").empty();
+			for (var i = 0, leng = workPingJia.length; i < leng; i++) {
+				$div = $("<div></div>").append("<span class='rencai-work-pingjia-text middle'>" + workPingJia[i].aid_name + ":</span>").append(Common.creatStarBar({
+					starOn: "url(../img/ic_star_pressed.png)",
+					starOff: "url(../img/ic_star_noraml.png)",
+					starMargin: "5px",
+					starNumber: 10,
+					starHeight: "24px",
+					starWidth: "12px",
+					starOnNumber: 0
+				}, true));
+				$WorkPingJia.append($div.css("padding-top", "14px"));
+			}
+			return $WorkPingJia;
+		};
+		$(".pingjia-item").click(function() {
+			$(this).parent().children().removeClass("action");
+			$(this).addClass("action");
+		});
+		//页面参数
+		var params = Common.urlParam(window.location);
+		var mTaskId, mIsSendTask;
+		//targetTab.loadURL("assess.html?taskId=" + task_id);
+		//		mTaskId = parseInt(params.taskId);
+		mTaskId = params.taskId;
+		console.log();
+		console.log();
+		mIsSendTask = params.isSendTask;
+		console.log("mTaskId::" + mTaskId + "mIsSendTask::" + mIsSendTask);
+		if (mIsSendTask == "true") {
+			var workPingJia = [{
+				aid_name: "工作速度"
+			}, {
+				aid_name: "工作质量"
+			}, {
+				aid_name: "工作态度"
+			}];
+		} else if (mIsSendTask == "false") {
+			var workPingJia = [{
+				aid_name: "付款及时性"
+			}, {
+				aid_name: "合作愉快度"
+			}];
+		}
+		initRenCaiWorkPingJia(workPingJia);
+		$(".pay_button").click(function() {
+			var pingjia = $(".pingjia-bar").children(".action").attr("flag");
+			var pingfen;
+			var $start_bar = $(".pingfen-bar").find(".starBar");
+			var size = $start_bar.length;
+			for (var i = 0; i < size; i++) {
+				var fen = $($start_bar[i]).attr("star_on");
+				if (fen != null && fen > 0) {
+					if (i == 0) {
+						pingfen = fen;
+					} else {
+						pingfen = pingfen + "," + fen;
+					}
+				}
+			}
+			console.log("pingjia::" + pingjia + "pingfen::" + pingfen);
+			if (pingjia != undefined && pingfen != undefined) {
+				pingjiaApi(mTaskId, pingjia, pingfen);
+			} else {
+				mui.toast("请完成评价的全部选项");
+			}
+		});
+	</script>
+
+</html>

@@ -1,0 +1,39 @@
+			.table-view-cell {
+				height: 62px;
+				border-bottom: 1px #DFE0E2 solid;
+				padding-left: 17px;
+				list-style: none;
+			}
+			
+			.input-detail {
+				position: relative;
+				width: 80%;
+				padding-left: 15px;
+				border: none;
+			}
+			
+			.input {
+				background: white;
+			}
+			
+			.input-flag {
+				line-height: 62px;
+			}
+			
+			.login-button-bottom-bar {
+				margin-top: 16px;
+				color: #8F8F94;
+				position: relative;
+			}
+			
+			.login-button-bottom-bar .login-button-bottom-left {
+				position: absolute;
+				float: left;
+				left: 15px;
+			}
+			
+			.login-button-bottom-bar .login-button-bottom-right {
+				position: absolute;
+				float: right;
+				right: 15px;
+			}

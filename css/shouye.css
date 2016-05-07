@@ -1,0 +1,56 @@
+.shouye-task-type-table-menu {
+	/*height: 100px;*/
+	position: relative;
+	height: 18.726%;
+	background-color: white;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.shouye-task-type-img {
+	display: inline-block;
+	width: 100%;
+	height: 44%;
+}
+
+.shouye-task-type-text {
+	color: #7f7f7f;
+}
+
+.shouye-task-type-anquanyunwei {
+	background: url(../img/ic_anquanyunwei.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.shouye-task-type-wangluoshebei {
+	background: url(../img/ic_wangluoshebei.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.shouye-task-type-xitongyingyong {
+	background: url(../img/ic_xitongyingyong.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.shouye-task-type-wangluotuiguang {
+	background: url(../img/ic_wangluotuiguang.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.shouye-task-type-gengduo {
+	background: url(../img/ic_gengduo.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.shouye-task-type-table-menu .table-menu-item:active {
+	background-color: #DDDDDD;
+}
+
+.news-title {
+	display: block;
+	margin-left: 18px;
+}
+
+.news-time {
+	display: block;
+	margin-left: 18px;
+}

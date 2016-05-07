@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/shouye-yewudetail.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">任务详情</span>
+			</div>
+		</div>
+		<div class="renwu-list-bar">
+			<a class="renwu-list-bar-item" flag="0">任务分类
+				<div class="renwu-list-bar-item-img"></div>
+			</a>
+			<a class="renwu-list-bar-item" flag="1">任务模式
+			<div class="renwu-list-bar-item-img"></div></a>
+			<a class="renwu-list-bar-item" flag="2">任务金额
+			<div class="renwu-list-bar-item-img"></div></a>
+		</div>
+		<!--任务分类展示-->
+		<div class="select-list">
+			<div class="renwu-class-select-list">
+				<!--<div class="select-list-item" flag="0">
+					<span>网络安全加固11</span>
+					<div class="check-select-item"></div>
+				</div>-->
+			</div>
+			<div class="renwu-mode-select-list" id="renwumode">
+				<div class="select-list-item" flag="1">
+					<span>悬赏模式</span>
+					<div class="check-select-item"></div>
+				</div>
+				<div class="select-list-item" flag="2">
+					<span>招标模式</span>
+					<div class="check-select-item"></div>
+				</div>
+			</div>
+			<div class="renwu-money-select-list">
+				<div class="select-list-item-text" flag="0">
+					<label class="renwu-money-label">金额：</label>
+					<input id="minnum" class="renwu-money-input" type="number" />&nbsp;&nbsp;&nbsp;&nbsp;―&nbsp;&nbsp;&nbsp;&nbsp;
+					<input id="maxnum" class="renwu-money-input" type="number" />
+				</div>
+				<div class="select-list-item-button" flag="0">
+					<input class="renwu-money-queren" type="button" value="确认" />
+				</div>
+			</div>
+		</div>
+
+		<div class="renwu-list">
+			<!--<div class="renwu-list-item">
+				<div class="renwu-describe">
+					<span class="rewu-desribe-title single-line">个人网站搭建</span>
+					<div class="rewu-zhao"></div>
+					<p class="rewu-desribe-content single-line">程序阿达嘎嘎社工裤人家的那个就程序阿达嘎嘎社工裤人家的那个就</p>
+				</div>
+				<span class="renwu-money">￥1000</span>
+			</div>-->
+		</div>
+		<div class="center-tips">
+			<span>无此条件任务</span>
+		</div>
+		<script>
+			var indus_id = null; //任务分类
+			var tasktype = null; //任务模式
+			var minnum = null; //最小金额
+			var maxnum = null; //最大金额
+			//选中的列表
+			$(".renwu-list-bar-item").click(function() {
+				$(".renwu-list-bar").children().removeClass("renwu-list-bar-item-action");
+				$(".renwu-list-bar-item-img").removeClass("renwu-list-bar-item-img-action");
+				$(this).addClass("renwu-list-bar-item-action");
+				$(this).children(".renwu-list-bar-item-img").addClass("renwu-list-bar-item-img-action");
+				var index = $(this).attr("flag");
+				$(".select-list").children().css("display", "none");
+				$(".select-list").children().eq(index).css("display", "block");
+				$(".select-list").children().eq(index).children(".select-list-item").click(function() {
+					$(this).parent().children(".select-list-item").removeClass("select-list-item-action");
+					$(this).parent().children(".select-list-item").children(".check-select-item").css("display", "none");
+					$(this).addClass("select-list-item-action");
+					$(".select-list-item-action .check-select-item").css("display", "block");
+					$(".select-list").children().css("display", "none");
+					$(".renwu-list-bar-item-img").removeClass("renwu-list-bar-item-img-action");
+					$(".renwu-list-bar").children().removeClass("renwu-list-bar-item-action");
+					if (index == 0) {
+						indus_id = $(this).attr("flag");
+					} else if (index == 1) {
+						tasktype = $(this).attr("flag");
+					} else {
+						console.log("click index 2");
+					}
+					refreshTaskList();
+				});
+			});
+			$(".renwu-money-queren").click(function() {
+				$(".renwu-list-bar-item-img").removeClass("renwu-list-bar-item-img-action");
+				$(".select-list").children().css("display", "none");
+				$(".renwu-list-bar").children().removeClass("renwu-list-bar-item-action");
+				minnum = document.getElementById("minnum").value;
+				maxnum = document.getElementById("maxnum").value;
+				refreshTaskList();
+			});
+			mui.plusReady(function() {
+				var webView = plus.webview.currentWebview();
+				var title = webView.id;
+				$(".title")[0].innerHTML = title;
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					webView.hide("slide-out-right", 300);
+				});
+				var jsonfenlei = Common.getJson("fenlei");
+				var tid = "";
+				var arr = new Array();
+				if (jsonfenlei != null) {
+					var json = $.parseJSON(jsonfenlei);
+					for (var i = 0; i < json.result.cates.length; i++) {
+						if (json.result.cates[i].indus_name.match(title)) {
+							tid = json.result.cates[i].indus_id;
+							indus_id = tid;
+							arr = json.result.cates[i].cates_item;
+							initTastList(arr);
+							refreshTaskList();
+							break;
+						}
+					}
+				}
+			});
+			var initTastList = function(zifenlei) {
+				var $fenleiList = $(".renwu-class-select-list");
+				if ($fenleiList.children().length > 0) {
+					$fenleiList.empty();
+				}
+				for (var i = 0; i < zifenlei.length; i++) {
+					var li = document.createElement("li");
+					var $RenWuItem = $("<div class='select-list-item'></div>").attr("flag", zifenlei[i].indus_id);
+					var $RenWuTitle = $("<span></span>").text(zifenlei[i].indus_name);
+					var $RenWuSelect = $("<div class='check-select-item'></div>")
+					$RenWuItem.append($RenWuTitle);
+					$RenWuItem.append($RenWuSelect);
+					$fenleiList.append($RenWuItem);
+				}
+			};
+			var refreshTaskList = function() {
+				console.log("indus_id=" + indus_id);
+				console.log("tasktype=" + tasktype);
+				console.log("minnum=" + minnum);
+				console.log("maxnum=" + maxnum);
+				DataRequest.getData(Constant.IP + Constant.TaskList, [{
+					key: "mincash",
+					value: minnum
+				}, {
+					key: "maxcash",
+					value: maxnum
+				}, {
+					key: "sid",
+					value: indus_id
+				}, {
+					key: "r",
+					value: tasktype
+				}], successFL, errorFL);
+			}
+			var successFL = function(jsonStr) {
+				console.log("get data success");
+				var jsonlist = $.parseJSON(jsonStr);
+				mui.plusReady(function() {
+					Common.saveJson("tasklist", jsonStr);
+				});
+				var $TaskList = $(".renwu-list");
+				if ($TaskList.children().length > 0) {
+					$TaskList.empty();
+				}
+				var $TaskListNull = $(".center-tips");
+				if ($TaskListNull.children().length > 0) {
+					$TaskListNull.empty();
+				}
+				if (jsonlist.result == null) {
+					var $TaskListNullItem = $("<span>无此条件任务</span>");
+					$TaskListNull.append($TaskListNullItem);
+					return;
+				}
+				console.log(jsonlist.result[0].task_title);
+				var taskdata = jsonlist.result;
+				for (var i = 0; i < taskdata.length; i++) {
+					var li = document.createElement("li");
+					var $TaskListItem = $("<div class='renwu-list-item'></div>");
+					var $TaskListItemDC = $("<div class='renwu-describe'></div>");
+					var $TaskListItemDCTitle = $("<span class='rewu-desribe-title single-line'></span>").text(taskdata[i].task_title);
+					if (taskdata[i].model_id == 1) {
+						var $TaskListItemType = $("<div class='rewu-zhao'></div>")
+						var $TaskListItemMoney = $("<span class='renwu-money'></span>").text("￥" + taskdata[i].task_cash + "元");
+					} else {
+						var $TaskListItemType = $("<div class='rewu-shang'></div>")
+						var $TaskListItemMoney = $("<span class='renwu-money'></span>").text("￥" + taskdata[i].cove_desc);
+					}
+					var $TaskListItemPa = $("<p class='rewu-desribe-content single-line'></p>").text(taskdata[i].task_desc);
+					$TaskListItemDC.append($TaskListItemDCTitle);
+					$TaskListItemDC.append($TaskListItemType);
+					$TaskListItemDC.append($TaskListItemPa);
+					$TaskListItem.append($TaskListItemDC);
+					$TaskListItem.append($TaskListItemMoney);
+					$TaskList.append($TaskListItem);
+				}
+			};
+			var errorFL = function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("get data error");
+			};
+		</script>
+	</body>
+
+</html>

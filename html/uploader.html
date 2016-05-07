@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/uploader.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/slide-menu.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/filemanager.js"></script>
+		<script type="text/javascript" src="../js/SelectFileUpload.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script>
+			//待确认的接口调用悬赏模式第二步上传附件
+			var seller_Update_SuccessFn = function(jsonStr) {
+				console.log("seller_Update_SuccessFn**********************");
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					mui.plusReady(function() {
+						Common.saveJson("flag", "true");
+					});
+					closePager();
+				}
+				mui.toast(json.msg);
+			};
+			var seller_Update_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var seller_Update = function() {
+				console.log("task_id::" + task_id + "agree_id::" + agree_id + "file_ids::" + file_ids);
+				DataRequest.postData(Constant.IP2 + Constant.YanShouSetup2, [{
+					key: "taskId",
+					value: task_id
+				}, {
+					key: "agreeId",
+					value: agree_id
+				}, {
+					key: "file_ids",
+					value: file_ids
+				}], seller_Update_SuccessFn, seller_Update_ErrorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border ">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">上传附件</span>
+			</div>
+			<div class="header-right-elem border font-size-18px ">
+				完成
+			</div>
+		</div>
+		<div class="content">
+			<ul class="mui-table-view">
+				<!--<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red font-size-17px">删除</a>
+					</div>
+					<div class="mui-slider-handle font-size-17px">
+						左滑显示删除按钮
+					</div>
+				</li>
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red font-size-17px">删除</a>
+					</div>
+					<div class="mui-slider-handle font-size-17px">
+						左滑显示删除按钮
+					</div>
+				</li>-->
+			</ul>
+			<div class="pay_button font-size-18px add_file">
+				<img class="add-fujian middle " src="../img/ic_add_fujian.png" />
+				<span class="middle ">添加附件</span>
+			</div>
+			<div class="upload-select">
+				<div class="table">
+					<div class="table-cell" flag="1">
+						<div class="download-file task-picture"></div>
+						拍照
+					</div>
+					<div class="table-cell" flag="2">
+						<div class="download-file video"></div>
+						语音
+					</div>
+					<div class="table-cell" flag="3">
+						<div class="download-file photo"></div>
+						相册
+					</div>
+					<div class="table-cell" flag="4">
+						<div class="download-file folder"></div>
+						<span>其他文件</span>
+					</div>
+				</div>
+			</div>
+			<div class='md-overlay'></div>
+
+		</div>
+		<script>
+			/**************************关闭窗口start*****************************/
+			var closePager = null;
+			mui.plusReady(function() {
+				closePager = function() {
+					$(".content").css("display", "none");
+					plus.webview.currentWebview().close("slide-out-right", 300);
+				}
+			});
+			$(".back").click(function() {
+				closePager();
+			});
+			/**************************关闭窗口end*****************************/
+			var getImage = function() {
+				console.log("开始拍照：");
+				var cmr = plus.camera.getCamera();
+				cmr.captureImage(function(p) {
+					console.log("成功：" + p);
+					var dst = "_www/camera/" + getFileSimpleName(p);
+					plus.zip.compressImage({
+							src: p,
+							dst: dst,
+							quality: 20
+						},
+						function() {
+							plus.io.resolveLocalFileSystemURL(p, function(entry) {
+								console.log("成功：" + entry.fullPath);
+								var file = {};
+								file.name = "";
+								file.path = dst;
+								SelectFileUpload.upLoad(file, function(jsonStr) {
+									console.log(jsonStr);
+								}, function(jsonStr) {});
+							}, function(e) {
+								console.log("读取拍照文件错误：" + e.message);
+							});
+						},
+						function(error) {});
+				}, function(e) {
+					console.log("失败：" + e.message);
+				}, {
+					filename: "_doc/camera/",
+					index: 1
+				});
+			};
+			$(".pay_button").click(function() {
+				$(".upload-select").addClass("md-show").slideDown(300);
+			});
+			$(".md-overlay").click(function() {
+				$(".upload-select").removeClass("md-show").slideUp(300);
+			})
+			$(".table-cell").click(function() {
+				$(".upload-select").removeClass("md-show").slideUp(300);
+				var flag = parseInt($(this).attr("flag"));
+				switch (flag) {
+					case 1: //拍照上传
+						getImage();
+						break;
+					case 2: //录音上传
+						break;
+					case 3: //从相册选择上传
+						break;
+					case 4: //从文件夹选择文件
+						SelectFileUpload.selectUpLoad("file/*", function(jsonStr) {
+							var $ListItem = $(".mui-table-view");
+							console.log(jsonStr);
+							var json = JSON.parse(jsonStr);
+							if (json.status == "success") {
+								$ListItem.children("li:last-child").attr("file_id", json.result.fileid);
+							} else {
+								$ListItem.children("li:last-child").remove();
+							}
+						}, function(jsonStr) {
+							var $ListItem = $(".mui-table-view");
+							if (jsonStr != null && jsonStr != "") {
+								mui.toast("上传失败");
+								var json = JSON.parse(jsonStr);
+								if (json.status == "fail") {
+									$ListItem.children("li:last-child").remove();
+								}
+							} else {
+								if (jsonStr == null) {
+									mui.toast("取消了上传");
+								} else {
+									mui.toast("网络超时");
+								}
+								$ListItem.children("li:last-child").remove();
+							}
+						});
+						break;
+				}
+			});
+			var addItem = function(filePath) {
+				var $ListItem = $(".mui-table-view");
+				$ListItem.attr("filePath", filePath);
+				var fileName = getFileSimpleName(filePath);
+				console.log(fileName + ":::" + filePath);
+				var $Item = $("<li class='mui-table-view-cell'><div class='mui-slider-right mui-disabled'><a class='mui-btn mui-btn-red font-size-17px'>删除</a></div><div class='mui-slider-handle font-size-17px'>" + fileName + "</div></li>");
+				var $child = $ListItem.children("li:last-child")[0];
+				console.log($child);
+				if ($child == null) {
+					$ListItem.append($Item)
+				} else {
+					$Item.insertAfter($child);
+				}
+				$(".mui-btn").unbind("click");
+				$(".mui-btn").bind("click", function() {
+					$li = $(this).parent().parent();
+					$li.remove();
+				});
+				$(".mui-table-view-cell").unbind("click");
+				$(".mui-table-view-cell").bind("click", function() {
+					return false;
+				});
+			};
+			var task_id, agree_id, file_ids="";
+			var params = Common.urlParam(window.location);
+			//			targetTab.loadURL("uploader.html?taskId=" + task.task_id + "&agreeId=" + task.agree_id);
+			task_id = params.taskId;
+			agree_id = params.agreeId;
+			$(".header-right-elem").click(function() {
+				$(".mui-table-view").children().each(function() {
+					file_ids += $(this).attr("file_id") + "|";
+				})
+				if (file_ids != null) {
+					file_ids = file_ids.substring(0, file_ids.length - 1);
+				}
+				//				console.log(file_ids);
+				seller_Update();
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,32 @@
+.mui-bar-nav{
+        background:#DD3C38;
+}
+.mui-icon{
+        color: #fff;
+}
+.mui-bar-nav h1{
+        color: #fff;
+}
+.mui-bar-nav .remove{
+        color: #fff;
+        float:right;
+        margin-top:12px;
+}
+
+
+.mui-content .box{
+        font-size:14px;
+        padding:8px 6px;
+        border:1px solid;
+        float:left;
+        margin-left:10px;
+        margin-top:10px;
+        color:#34C6F1;
+}
+
+.mui-content .xu{
+        width: 80px;
+        border:1px dashed #ccc;
+        text-align:center;
+}
+

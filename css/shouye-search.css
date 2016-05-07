@@ -1,0 +1,61 @@
+.shouye-search-bar {
+	background-color: white;
+	color: #7F7F7F;
+}
+
+.shouye-search-bar .search-bar {
+	background-color: #EFEFF4;
+	width: 80%;
+	right: 16.3%;
+}
+
+.shouye-search-bar .search-bar input {
+	color: black;
+}
+
+.shouye-search-bar .search-bar input::-webkit-input-placeholder {
+	color: #7F7F7F;
+}
+
+.shouye-search-bar .search-bar .shouye-search-select {
+	width: 9px;
+	background: url(../img/ic_more_normal.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+.shouye-search-bar .search-bar .shouye-search-select-text {
+	background: transparent;
+	width: 33px;
+	line-height: 210%;
+	font-size: 15px;
+	color: #DD3C3A;
+	margin: 0;
+	padding: 0;
+	padding-left: 5px;
+}
+
+.shouye-search-bar .search-bar .shouye-search-select:active {
+	background: url(../img/ic_more_pressed.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+.shouye-search-bar .quxiao {
+	position: absolute;
+	height: 0;
+	line-height: 1px;
+	top: 0;
+	bottom: 0;
+	right: 4.16%;
+	color: #DD3C3A;
+	margin: auto;
+}
+
+.shouye-select-search-list {
+	position: fixed;
+	top: 49px;
+	left: 0;
+	right: 0;
+	background: white;
+	z-index: 10;
+	display: block;
+}

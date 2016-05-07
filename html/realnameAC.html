@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<link rel="stylesheet" href="../css/default.css" />
+	</head>
+	<style>
+		body {
+			font-family: simhei;
+		}
+		
+		.put {
+			position: relative;
+			float: left;
+			margin-bottom: 20px;
+		}
+		
+		.fail {
+			width: 8%;
+			height: 40px;
+			float: right;
+			background: white;
+		}
+		
+		.fail img {
+			width: 60%;
+			height: auto;
+			margin-top: 50%;
+		}
+		
+		.kw {
+			margin-top: 10px;
+			margin-left: auto;
+			margin-right: auto;
+			width: 60%;
+			height: 150px;
+			background: white;
+		}
+		
+		.kw p {
+			position: relative;
+			text-align: center;
+			padding-top: 68px;
+			font-size: 14px;
+		}
+		
+		.table-view-cell {
+			height: 62px;
+			border-bottom: 1px #DFE0E2 solid;
+			-webkit-user-select: none;
+			padding-left: 17px;
+			list-style: none;
+			background: white;
+		}
+		
+		.desribe-title {
+			padding-top: 15px;
+			text-align: left;
+			width: 150px;
+			font-size: 17px;
+			line-height: 30px;
+			color: black;
+			font-family: SimHei;
+			display: inline-block;
+			border: none;
+		}
+	</style>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-28px">实名认证</span>
+			</div>
+
+			<div class="header-right-elem">
+				<div class="add"></div>
+			</div>
+		</div>
+
+		<div class="content">
+			<div>
+				<li class="table-view-cell">
+					<input id="namevalue" class="desribe-title" placeholder="请输入姓名" />
+				</li>
+				<li class="table-view-cell">
+					<input id="idvalue" class="desribe-title" placeholder="请输入身份证号" />
+				</li>
+			</div>
+			<div id="btnAddPhoto" class="kw">
+				<p>上传身份证照片</p>
+			</div>
+			<div class="line"></div>
+			<div class="pay_button font-size-18px">
+				提交
+			</div>
+		</div>
+		<script>
+			var picurl = "";
+			$("#btnAddPhoto").click(function() {
+				if (mui.os.plus) {
+					var a = [{
+						title: "拍照"
+					}, {
+						title: "从手机相册选择"
+					}];
+					plus.nativeUI.actionSheet({
+						title: "修改头像",
+						cancel: "取消",
+						buttons: a
+					}, function(b) {
+						switch (b.index) {
+							case 0:
+								console.log(0000);
+								break;
+							case 1:
+								console.log("拍照");
+								var cmr = plus.camera.getCamera();
+								cmr.captureImage(function(path) {
+									appendFile(path);
+								}, function(err) {});
+								break;
+							case 2:
+								console.log("从手机相册选择");
+								plus.gallery.pick(function(path) {
+									appendFile(path);
+								}, function(err) {}, null);
+								break;
+							default:
+								break;
+						}
+					})
+				}
+			});
+
+			function appendFile(p) {
+				console.log("p" + p);
+				$("#btnAddPhoto").css("background", "url('" + p + "') no-repeat").css("background-size", "cover");
+				$(".kw p").remove();
+				var wt = plus.nativeUI.showWaiting();
+				var task = plus.uploader.createUpload(Constant.uploadfile, {
+						method: "POST"
+					},
+					function(t, status) { //上传完成
+						if (status == 200) {
+							var json = $.parseJSON(t.responseText);
+							picurl = json.result.url;
+							console.log("asd=" + picurl);
+						} else {
+							console.log("上传失败：" + status);
+						}
+						wt.close();
+					}
+				);
+				task.addFile(p, {
+					key: "upload"
+				});
+				task.start();
+				plus.uploader.c
+			}
+			//RealName
+			$(".pay_button").click(function() {
+				var name = document.getElementById("namevalue").value;
+				var id = document.getElementById("idvalue").value;
+				if (name == "") {
+					mui.toast("请输入姓名");
+					return;
+				}
+				if (id == "") {
+					mui.toast("请输入身份证号");
+					return;
+				} else {
+					var ck = Common.isIDCard(id);
+					if (!ck) {
+						mui.toast("请输入正确的身份证号");
+						return;
+					}
+				}
+				if (picurl == "") {
+					mui.toast("请添加身份证照片");
+					return;
+				}
+				DataRequest.getData(Constant.IP + Constant.RealName, [{
+					key: "uid",
+					value: 295
+				}, {
+					key: "id_card",
+					value: document.getElementById("idvalue").value
+				}, {
+					key: "realname",
+					value: document.getElementById("namevalue").value
+				}, {
+					"key": "id_pic",
+					value: picurl
+				}], successFL, errorFL);
+			})
+
+			function successFL(jsonStr) {
+				var rs = $.parseJSON(jsonStr);
+				mui.toast(rs.msg);
+			}
+
+			function errorFL(jsonStr) {
+				mui.toast(jsonStr);
+			}
+			mui.plusReady(function(){
+				$(".back").click(function() {
+				var target = plus.webview.currentWebview();
+				$(".content").css("display", "none");
+				target.close("slide-out-right", 300);
+			});
+			})
+		</script>
+	</body>
+
+</html>

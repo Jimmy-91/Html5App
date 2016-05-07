@@ -1,0 +1,23 @@
+*{
+        font-family:"microsoft yahei";
+}
+body{
+        background:#fff;
+}
+.mui-content{
+        background:#fff;
+}
+ul{
+        list-style:none;
+}
+
+/* 距离底部边距 */
+.mb-10{
+        margin-bottom:10px;
+}
+.mb-20{
+        margin-bottom:20px;
+}
+.mb-70{
+        margin-bottom:70px;
+}

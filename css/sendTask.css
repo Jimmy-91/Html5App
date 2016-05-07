@@ -1,0 +1,124 @@
+button {
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.42;
+	position: relative;
+	display: inline-block;
+	margin-bottom: 0;
+	padding: 6px 12px;
+	cursor: pointer;
+	-webkit-transition: all;
+	transition: all;
+	-webkit-transition-timing-function: linear;
+	transition-timing-function: linear;
+	-webkit-transition-duration: .2s;
+	transition-duration: .2s;
+	text-align: center;
+	vertical-align: top;
+	white-space: nowrap;
+	color: #333;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom-left-radius: 3px;
+	background-color: #fff;
+	background-clip: padding-box
+}
+
+.send-task-btnAddPhoto {
+	position: relative;
+	padding: 6px 18px;
+	color: #E8565A;
+	border: 1px #E8565A solid;
+	background: url(../img/ic_phone_noraml.png) no-repeat;
+	-webkit-user-select: none;
+}
+
+.send-task-btnAddPhoto:active {
+	background: url(../img/ic_phone_pressed.png) no-repeat;
+	color: white;
+}
+
+.send-task-btnAddVoice {
+	position: relative;
+	padding: 6px 18px;
+	color: #E8565A;
+	border: 1px #E8565A solid;
+	background: url(../img/ic_yuying_noraml.png) no-repeat;
+	-webkit-user-select: none
+}
+
+.send-task-btnAddVoice:active {
+	background: url(../img/ic_yuying_pressed.png) no-repeat;
+	color: white;
+}
+
+.rprogress {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 140px;
+	height: 140px;
+	margin-left: -70px;
+	margin-top: -70px;
+	background-image: url(../images/arecord.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 30px 30px;
+	background-color: rgba(0, 0, 0, 0.7);
+	border-radius: 5px;
+	display: none;
+	-webkit-transition: .15s;
+}
+
+.rschedule {
+	background-color: rgba(0, 0, 0, 0);
+	border: 5px solid rgba(0, 183, 229, 0.9);
+	opacity: .9;
+	border-left: 5px solid rgba(0, 0, 0, 0);
+	border-right: 5px solid rgba(0, 0, 0, 0);
+	border-radius: 50px;
+	box-shadow: 0 0 15px #2187e7;
+	width: 46px;
+	height: 46px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -23px;
+	margin-top: -23px;
+	-webkit-animation: spin 1s infinite linear;
+	animation: spin 1s infinite linear;
+}
+
+.r-sigh {
+	display: none;
+	border-radius: 50px;
+	box-shadow: 0 0 15px #2187e7;
+	width: 46px;
+	height: 46px;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -23px;
+	margin-top: -23px;
+	text-align: center;
+	line-height: 46px;
+	font-size: 40px;
+	font-weight: bold;
+	color: #2187e7;
+}
+
+.rsalert {
+	font-size: 12px;
+	color: #bbb;
+	text-align: center;
+	position: absolute;
+	border-radius: 5px;
+	width: 130px;
+	margin: 5px 5px;
+	padding: 5px;
+	left: 0px;
+	bottom: 0px;
+}

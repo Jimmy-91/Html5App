@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/shouye-search.css" />
+		<link rel="stylesheet" href="../css/pull.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/softInputMode.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script>
+			$(function() {
+				$("#search").focus();
+			});
+		</script>
+	</head>
+
+	<body>
+
+		<div id="Screen-Width" class="header-bar shouye-search-bar">
+			<form id="search">
+				<div class="search-bar">
+					<span class="shouye-search-select-text" flag="0">人才</span><span class="shouye-search-select"></span>
+					<input id="search-input" class="font-size-15px" type="text" placeholder="输入关键词试试" />
+				</div>
+			</form>
+			<span class="quxiao font-size-15px">取消</span>
+		</div>
+
+		<header class="mui-bar mui-bar-nav">
+		</header>
+		<div class="mui-content"></div>
+		<script>
+			//启用双击监听
+			mui.init({
+				subpages: [{
+					url: 'shouye-search-sub.html',
+					id: 'shouye-search-sub.html',
+					styles: {
+						top: '49px',
+						bottom: '0px',
+					}
+				}]
+			});
+			var contentWebview = null;
+			mui.plusReady(function() {
+				$(".quxiao").click(function() {
+					plus.webview.currentWebview().close("slide-out-bottom", 300);
+				});
+			});
+			$(".shouye-search-select").click(function() { //切换查询类型
+				var flag = $(".shouye-search-select-text").attr("flag");
+				if (contentWebview == null) {
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				contentWebview.evalJS("showSelectList('" + flag + "');");
+			});
+			$(".shouye-search-select-text").click(function() { //切换查询类型
+				var flag = $(".shouye-search-select-text").attr("flag");
+				if (contentWebview == null) {
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				contentWebview.evalJS("showSelectList('" + flag + "');");
+			});
+			mui.plusReady(function() {
+				$("#search").submit(function() {
+					console.log("submit");
+					if (contentWebview == null) {
+						contentWebview = plus.webview.currentWebview().children()[0];
+					}
+					var key = $('#search-input').val();
+					console.log(key);
+					var flag = $(".shouye-search-select-text").attr("flag");
+					contentWebview.evalJS("location.reload();");
+					setTimeout(function() {
+						contentWebview.evalJS("getData('" + flag + "','" + key + "')");
+					}, 200);
+					return false;
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/pull.css" />
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/rencai.css" />
+
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script>
+			var show = false;
+			var showSelectList = function(flag) {
+				$(".select-list-item").removeClass("select-list-item-action");
+				$(".select-list-item[flag='" + flag + "']").addClass("select-list-item-action");
+				$('.search-list').slideDown(200);
+				mui('#pullrefresh').pullRefresh().setStopped(true);
+				$("#pullrefresh").addClass("md-show");
+				document.ontouchmove = function() {
+					return false;
+				};
+			};
+			var hindSelectList = function() {
+				$('.search-list').slideUp(200);
+				mui('#pullrefresh').pullRefresh().setStopped(false);
+				$("#pullrefresh").removeClass("md-show");
+				document.ontouchmove = function() {
+					return true;
+				};
+			};
+			//创建任务Item
+			var CreaterTaskItem = function(taskInfoItem) {
+				var $Item = $("<div id='task-item' class='line-2 border-bottom'></div>");
+				$Item.attr("task_id", taskInfoItem.task_id);
+				$Item.attr("agree_id", taskInfoItem.agree_id);
+				var src;
+				var money;
+				if (taskInfoItem.model_id == 1) {
+					src = "../img/ic_shang.png";
+					money = taskInfoItem.task_cash;
+				} else {
+					src = "../img/ic_zhao.png";
+					money = taskInfoItem.start_cove + "-" + taskInfoItem.end_cove;
+				}
+				var $Left = $("<div class='left vertical-center'></div>");
+				var $Left_layout = $("<div class='linearlayout-vertical'></div>");
+				var $Left_layout_top = $("<div class='linearlayout-horizontal'></div>").append($("<span id='task-title'class='font-size-17px title-color middle text-simple-line'>" + taskInfoItem.task_title + "</span>")).append($("<img class='task-mode middle'/>").attr("src", src));
+				var endTime = new Date(parseInt(taskInfoItem.sub_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+				var startTime = new Date(parseInt(taskInfoItem.start_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+				var $Left_layout_bottom = $("<div class='linearlayout-horizontal'><p id='task-end-residue-time' class='font-size-12px content-color'>截止时间：" + endTime + "</p><p id='task-star-time' class='font-size-12px content-color'>发布时间：" + startTime + "</p></div>");
+				$Left_layout.append($Left_layout_top).append($Left_layout_bottom);
+				$Item.find("#task-title").parent().append($("<span class='task-money middle'>￥" + money + "</span>"));
+				$Left.append($Left_layout);
+				$Item.append($Left);
+				$Item.bind("tap", function() {
+					if (!show) {
+						show = true;
+						//任务详情
+						var $_this = $(this);
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("task-detail.html", "任务详情", Constant.allScreen_style);
+							var intTaskStatus = $(".menu-action").attr("intTaskStatus");
+							var seller_status = $Item.find(".task-right-button").attr("seller_status");
+							targetTab.loadURL("task-detail.html?taskId=" + $_this.attr("task_id"));
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						});
+					}
+					return false;
+				});
+				var $Right = $("<div class='right vertical-center'></div>");
+				var $hint = $("<div class='task-right-status font-size-12px md-trigger' data-modal='modal-2'>" + taskInfoItem.task_status + "</div>");
+				$Right.append($hint);
+				$Item.append($Right);
+				return $Item;
+			};
+			//创建人才Item
+			var CreaterRenCaiItem = function(RencaiItem) {
+				var $item = $("<div class='line-3 rencai-header rencai-list-item'>");
+				$item.attr("uid", RencaiItem.uid + "");
+				$item.attr("retime", RencaiItem.reg_time + "");
+				$item.bind("tap", function() {
+					if (!show) {
+						show = true;
+						$_this = $(this);
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("rencai-detail.html", "人才详情", Constant.allScreen_style);
+							targetTab.loadURL("rencai-detail.html?uid=" + $_this.attr("uid"));
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						});
+					}
+				});
+				//用户头像
+				var $userHeader = $("<div class='rencai-user-img'></div>").css("background", "url(" + RencaiItem.pic + ") no-repeat").css("background-size", "contain");
+				//用户等级
+				var $userLevel = $("<div class='rencai-user-level-flag'></div>");
+				var $userLevelNumber = $("<span class='rencai-user-level-flag-text'></span>").text(RencaiItem.seller_level.level);
+				$userLevel.append($userLevelNumber);
+				$userHeader.append($userLevel);
+				$item.append($userHeader);
+				//用户介绍
+				var $userDescribe = $("<div class='left vertical-center'></div>")
+					//用户名
+				var $userName = $("<span class='rencai-user-title'></span>").text(RencaiItem.username);
+				$userDescribe.append($userName);
+				//						用户标签
+				var flags = RencaiItem.skill_ids;
+				if (flags !== null) {
+					var $userFlag = $("<ul class='rencai-user-item-flag'></ul>");
+					for (var j = 0, length = flags.length; j < length; j++) {
+						var $flagItem = $("<li class='rencai-user-item-flag-item font-size-13px'>").text(flags[j]);
+						$userFlag.append($flagItem);
+					}
+					$userDescribe.append($userFlag);
+				}
+				//						用户简介
+				var $userDetail = $("<span class='rencai-user-describe  font-size-13px'></span>").text("简介：" + RencaiItem.summary);
+				$userDescribe.append($userDetail);
+				$item.append($userDescribe);
+				return $item;
+			}
+		</script>
+	</head>
+
+	<body>
+		<!--下拉刷新容器-->
+		<div class="search-list shouye-select-search-list" style="display: none; top: 0;">
+			<div class="select-list-item select-list-item-action" flag="0">
+				<span>人才</span>
+				<div class="check-select-item"></div>
+			</div>
+			<div class="select-list-item" flag="1">
+				<span>任务</span>
+				<div class="check-select-item"></div>
+			</div>
+		</div>
+		<div class="mui-scroll-content">
+			<div id="pullrefresh" class="mui-content mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--数据列表-->
+					<ul class="mui-table-view mui-table-view-chevron">
+					</ul>
+				</div>
+			</div>
+			<div class='md-overlay'></div>
+		</div>
+		<script>
+			//业务逻辑
+			var mSearchType = 0;
+			var mKeyw, mPage = 0;
+			//上拉加载更多时对比页码
+			var mTotalPage;
+			//人才下拉刷新时用到时间对比
+			//任务下拉刷新时用到总条数对比
+			var mTimer, mCount;
+			var getData = function(flag, keyw) {
+				//0表示查询人才，1表示查询任务
+				mKeyw = keyw;
+				mSearchType = flag;
+				console.log(mSearchType + "" + mKeyw);
+				pullupRefresh();
+			};
+			document.ontouchstart = function() {
+				var count = $(".mui-table-view").children("div").length;
+				if (count == 0) {
+					mui('#pullrefresh').pullRefresh().setStopped(true);
+				} else {
+					mui('#pullrefresh').pullRefresh().setStopped(false);
+				}
+			};
+			//注册查询类别选择监听
+			var headWebView = null;
+			mui.plusReady(function() {
+				$(".select-list-item").click(function() {
+					var lastFlag = $(".select-list-item-action").attr("flag");
+					var currentFlag = $(this).attr("flag")
+					console.log(lastFlag + "::" + currentFlag);
+					if (lastFlag != currentFlag) {
+						$(this).parent().children().removeClass("select-list-item-action");
+						$(this).addClass("select-list-item-action");
+						var text = $(this).children("span").text();
+						if (headWebView == null) {
+							headWebView = plus.webview.currentWebview().parent();
+						}
+						headWebView.evalJS("$('.shouye-search-select-text').text('" + text + "').attr('flag','" + currentFlag + "')");
+						setTimeout(function() {
+							location.reload();
+						}, 250);
+					}
+					hindSelectList();
+					return false;
+				});
+			});
+			mui.init({
+				pullRefresh: {
+					container: '#pullrefresh',
+					down: {
+						callback: pulldownRefresh
+					},
+					up: {
+						contentrefresh: '正在加载...',
+						callback: pullupRefresh
+					}
+				}
+			});
+			var initLayout = function() {
+				$(".line-2").each(function() {
+					Common.left_right_layout($(this));
+				});
+				$(".line-3").each(function() {
+					Common.left_right_layout($(this));
+				});
+			};
+			//上拉获取任务信息
+			var GetTaskPullUpSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mTotalPage = json.pgc;
+				mCount = json.count;
+				var $List = $(".mui-table-view")
+				if (json.status == "success") {
+					if (json.result != undefined & json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var TaskItem = CreaterTaskItem(json.result[i]);
+							$List.append(TaskItem);
+						}
+					}
+					initLayout();
+				} else {
+					mui.toast(json.msg);
+					mPage--;
+				}
+			}
+			var GetTaskPullUpErrorFn = function() {
+				mPage--;
+			}
+			var getTaskPullUp = function(mKeyw) {
+				console.log("mPage::" + mPage + "::mTotalPage::" + mTotalPage);
+				DataRequest.getData(Constant.IP + Constant.ShouYeSearchTaskListPullUpApi, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "page",
+					value: mPage
+				}], GetTaskPullUpSuccessFn, GetTaskPullUpErrorFn);
+			};
+			//下拉刷新获取任务信息
+			var GetTaskPullDownSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//				mTotalPage = json.pgc;
+				//				mCount = json.count;
+				var $List = $(".mui-table-view")
+				if (json.status == "success") {
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var TaskItem = CreaterTaskItem(json.result[i]);
+							var $first = $List.children(":first");
+							TaskItem.insertBefore($first);
+						}
+					}
+				} else {
+					mui.toast(json.msg);
+				}
+				initLayout();
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var GetTaskPullDownErrorFn = function() {
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var getTaskPullDown = function() {
+				console.log("mPage::" + mKeyw + "::mTotalPage::" + mCount);
+				DataRequest.getData(Constant.IP + Constant.ShouYeSearchTaskListPullDownApi, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "count",
+					value: mCount
+				}], GetTaskPullDownSuccessFn, GetTaskPullDownErrorFn);
+			};
+			//上拉获取人才信息
+			var GetRencaiPullUpSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				var $List = $(".mui-table-view");
+				if (json.status == "success") {
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var RenCaiItem = CreaterRenCaiItem(json.result[i]);
+							$List.append(RenCaiItem);
+						}
+					}
+					initLayout();
+				} else {
+					mui.toast(json.msg);
+					mPage--;
+				}
+			}
+			var GetRencaiPullUpErrorFn = function() {
+				mPage--;
+			}
+			var getRencaiPullUp = function(mKeyw) {
+				console.log("mPage::" + mPage + "::mTotalPage::" + mTotalPage);
+				DataRequest.getData(Constant.IP + Constant.RenCaiUpPull, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "page",
+					value: mPage
+				}], GetRencaiPullUpSuccessFn, GetRencaiPullUpErrorFn);
+			};
+			//下拉刷新获取人才信息
+			var GetRencaiPullDownSuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mTotalPage = json.pgs;
+				console.log(mTotalPage);
+				var $List = $(".mui-table-view");
+				if (json.status == "success") {
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var RenCaiItem = CreaterRenCaiItem(json.result[i]);
+							var $first = $List.children(":first");
+							RenCaiItem.insertBefore($first);
+						}
+					}
+				} else {
+					mui.toast(json.msg);
+				}
+				initLayout();
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var GetRencaiPullDownErrorFn = function() {
+				mui('#pullrefresh').pullRefresh().endPulldownToRefresh();
+			}
+			var getRencaiPullDown = function() {
+				console.log("mPage::" + mPage + "::mTimer::" + mTimer);
+				DataRequest.getData(Constant.IP + Constant.RenCaiDownPull, [{
+					key: "keyw",
+					value: mKeyw
+				}, {
+					key: "retime",
+					value: mTimer
+				}], GetRencaiPullDownSuccessFn, GetRencaiPullDownErrorFn);
+			};
+			/**
+			 * 下拉刷新具体业务实现
+			 */
+			function pulldownRefresh() {
+				mui.plusReady(function() {
+					console.log("mTotalPage::" + mTotalPage + "keyw::" + mKeyw + "mSearchType::" + mSearchType)
+					if (mSearchType == 0) {
+						var $first = $(".mui-table-view").children(":first");
+						mTimer = $first.attr("retime");
+						console.log("mTimer:::" + mTimer);
+						getRencaiPullDown();
+					} else if (mSearchType == 1) {
+						getTaskPullDown();
+					}
+				});
+			}
+			/**
+			 * 上拉加载具体业务实现
+			 */
+			function pullupRefresh() {
+				console.log("mTotalPage::" + mTotalPage + "keyw::" + mKeyw + "searchType::" + mSearchType);
+				mui.plusReady(function() {
+					if (mPage == 0) {
+						mPage++;
+						mui('#pullrefresh').pullRefresh().endPullupToRefresh();
+					} else {
+						if (mPage >= mTotalPage) { //超过了总页数
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(true);
+							return;
+						} else {
+							mui('#pullrefresh').pullRefresh().endPullupToRefresh(mPage++ > mTotalPage);
+						}
+					}
+					if (mSearchType == 0) {
+						getRencaiPullUp(mKeyw);
+					} else if (mSearchType == 1) {
+						getTaskPullUp(mKeyw);
+					}
+				});
+			}
+		</script>
+	</body>
+
+</html>

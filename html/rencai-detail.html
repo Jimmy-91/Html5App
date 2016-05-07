@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/rencai.css" />
+		<link rel="stylesheet" href="../css/rencai-detail.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">人才详情</span>
+			</div>
+		</div>
+		<div id="content" class="content" style="display: none;">
+			<!--人才详细信息头-->
+			<!--<div class="line-3 rencai-header">
+				<div class="rencai-user-img">
+					<div class="rencai-user-level-flag">
+						<span class="rencai-user-level-flag-text">2</span>
+					</div>
+				</div>
+				<div class="left vertical-center">
+					<span class="rencai-user-title">欢乐的陈许愿</span>
+					<ul class="rencai-user-item-flag">
+						<li class="rencai-user-item-flag-item font-size-13px">
+							后台监测
+						</li>
+						<li class="rencai-user-item-flag-item font-size-13px">
+							安卓开发
+						</li>
+					</ul>
+					<span class="rencai-user-describe">简介：</span>
+				</div>
+				<div class="task-user-send-message">
+				</div>
+			</div>-->
+			<!--人才认证信息-->
+			<!--<div class="table-menu renzheng">
+				<a class="table-menu-item renzheng-success" id="0">
+					<div class="renzheng-menu-img enterprise-renzheng"></div>
+					<span class="shouye-task-type-text font-size-14px">安全运维</span>
+				</a>
+				<a class="table-menu-item " id="1">
+					<div class="renzheng-menu-img enterprise-renzheng"></div>
+					<span class="shouye-task-type-text font-size-14px">网络设备</span>
+				</a>
+				<a class="table-menu-item " id="2">
+					<div class="renzheng-menu-img enterprise-renzheng"></div>
+					<span class="shouye-task-type-text font-size-14px">系统应用</span>
+				</a>
+				<a class="table-menu-item " id="3">
+					<div class="renzheng-menu-img enterprise-renzheng"></div>
+					<span class="shouye-task-type-text font-size-14px">网络推广</span>
+				</a>
+			</div>-->
+
+			<!--人才工作评价-->
+			<!--<div class="rencai-work-pingjia">
+
+			</div>-->
+			<!--人才完成成功任务-->
+			<!--<div class="layout-title">
+				<div class="layout-title-flag"></div>
+				<span class="layout-title-text font-size-18px">任务推荐</span>
+			</div>
+			<div id="simple-task-recommend" class="simple-task-list">
+				<div class="simple-task-item">
+					<span class="simple-task-title font-size-17px text-simple-line">美化APP美化APP美化APP美化APP美化APP美化APP</span><span class="simple-task-money font-size-17px text-simple-line">￥10000000.00</span>
+				</div>
+				<div class="simple-task-item">
+					<span class="simple-task-title font-size-17px text-simple-line">美化APP美化APP美化APP美化APP美化APP美化APP</span><span class="simple-task-money font-size-17px text-simple-line">￥10000000.00</span>
+				</div>
+			</div>-->
+		</div>
+		<!--<footer id="float-button" class="line-menu float-button-bar ">
+			<a class="line-menu-item float-button-item">
+				<input class="float-button float-button-left-text send-message-img" type="button" value="发消息" />
+			</a>
+			<a class="line-menu-item float-button-item">
+				<input id="guanzhu-img" class="float-button float-button-right-text guanzhu-img" isfollow="-1" type="button" value="关注" />
+			</a>
+		</footer>-->
+		<footer id="float-button" class="line-menu float-button-bar ">
+			<div id="send-message" class="line-menu-item float-button-item">
+				<div class="left">
+					<div class="img send-message-img middle"></div>
+					<span class="float-button middle">发消息</span>
+				</div>
+			</div>
+			<div id="guanzhu" class="line-menu-item  float-button-item" isfollow="-1">
+				<div class="right">
+					<div class="img guanzhu-img middle"></div>
+					<span class="float-button middle">取消关注</span>
+				</div>
+			</div>
+		</footer>
+	</body>
+	<script>
+		var init_layout = function() {
+			Common.left_right_layout($(".line-3"));
+			Common.left_right_layout($(".line-2"));
+			$(".content").append($("<div class='empty'></div>"));
+		};
+		mui.plusReady(function() {
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", 300);
+			});
+		});
+		//初始化人才描述信息
+		var initRenCaiHeader = function(json) {
+			var userInfo = json.result.user;
+			var $Rencai_header = $("<div class='line-3 rencai-header'></div>");
+			$Rencai_header.attr("f_id", userInfo.uid);
+			$Rencai_header.attr("f_name", userInfo.username);
+			var $userHeader = $("<div class='rencai-user-img'></div>").css("background", "url(" + userInfo.user_pic + ") no-repeat").css("background-size", "contain");
+			var $userLevel = $("<div class='rencai-user-level-flag'><span class='rencai-user-level-flag-text'>" + userInfo.seller_level.level + "</span></div>");
+			$userHeader.append($userLevel);
+			$Rencai_header.append($userHeader);
+			$Header_Left = $("<div class='left vertical-center'></div>");
+			$Header_Left_title = $("<span class='rencai-user-title'>" + userInfo.username + "</span>");
+			$Header_Left_Skill = $("<ul class='rencai-user-item-flag'></ul>");
+			var skill = userInfo.skill_ids;
+			if (skill != null && skill.length > 0) {
+				console.log(skill.length + "::::");
+				for (var i = 0; i < skill.length; i++) {
+					$Header_Left_Skill.append($("<li class='rencai-user-item-flag-item font-size-13px'>" + skill[i] + "</li>"));
+				}
+			}
+			$Header_Left.append($Header_Left_title).append($Header_Left_Skill).append("<span class='rencai-user-describe'>简介：" + userInfo.summary + "</span>");
+			$Rencai_header.append($Header_Left);
+			return $Rencai_header;
+		};
+		//初始化人才认证
+		var initRenCaiRenzheng = function(json) {
+			var auth = json.result.auth;
+			var auths = [];
+			for (key in auth) {
+				if (auth[key].auth_status == "1") {
+					auths.unshift(auth[key]);
+				} else {
+					auths.push(auth[key]);
+				}
+			}
+			var $renzheng = $("<div class='table-menu renzheng'></div>");
+			for (var i = 0, leng = auths.length; i < leng; i++) {
+				if (auths[i] != null) {
+					$renzheng.append($("<a class='table-menu-item'><div class='renzheng-menu-img " + auths[i].auth_code + "-renzheng'></div><span class='shouye-task-type-text font-size-14px'>" + auths[i].auth_title + "</span></a>"));
+					//认证了
+					if (auths[i].auth_status == "1") {
+						$renzheng.children(":nth-child(" + (i + 1) + ")").addClass("renzheng-success");
+					}
+				}
+			}
+			return $renzheng;
+		};
+		//初始化人才工作评价
+		var initRenCaiWorkPingJia = function(json) {
+			var $WorkPingJia = $("<div class='rencai-work-pingjia'></div>");
+			var work = json.result.work;
+			var workPingJia = [];
+			//工作速度
+			workPingJia.push(work.worksp);
+			//工作质量
+			workPingJia.push(work.workman);
+			//工作态度
+			workPingJia.push(work.workst);
+			$(".rencai-work-pingjia").empty();
+			for (var i = 0, leng = workPingJia.length; i < leng; i++) {
+				$div = $("<div></div>").append("<span class='rencai-work-pingjia-text middle'>" + workPingJia[i].aid_name + ":</span>").append(Common.creatStarBar({
+					starOn: "url(../img/ic_star_pressed.png)",
+					starOff: "url(../img/ic_star_noraml.png)",
+					starMargin: "5px",
+					starNumber: 10,
+					starHeight: "24px",
+					starWidth: "12px",
+					starOnNumber: (workPingJia[i].star * 2)
+				}, false));
+				$WorkPingJia.append($div);
+			}
+			return $WorkPingJia;
+		};
+		//		//初始化人才成功任务
+		var initRenCaiSuccessTask = function(json) {
+			var task = json.result.task;
+			$(".content").append("<div class='layout-title'><div class='layout-title-flag'></div><span class='layout-title-text font-size-18px'>任务推荐</span></div>")
+			var $Simple_task_list = $("<div id='simple-task-recommend' class='simple-task-list'></div>");
+			for (var i = 0, leng = task.length; i < leng; i++) {
+				$Simple_task_list.append($("<div class='simple-task-item'><span class='simple-task-title font-size-17px text-simple-line'>" + task[i].task_title + "</span><span class='simple-task-money font-size-17px text-simple-line'>￥" + task[i].task_cash + "</span></div>"));
+			}
+			return $Simple_task_list;
+		};
+		//改变关注浮动button的状态
+		var changedButton = function(follow_status) {
+			console.log("follow_status::" + follow_status);
+			if (follow_status == 1) {
+				$("#guanzhu").attr("isfollow", follow_status + "");
+				$("#guanzhu").find(".guanzhu-img").removeClass("guanzhu-img").addClass("cancel-guanzhu-img");
+				$("#guanzhu").find(".float-button").text("取消关注");
+			} else {
+				$("#guanzhu").attr("isfollow", follow_status + "");
+				$("#guanzhu").find(".cancel-guanzhu-img").removeClass("cancel-guanzhu-img").addClass("guanzhu-img");
+				$("#guanzhu").find(".float-button").text("关注");
+			}
+		};
+		var changedLayout = function(json) {
+			var $Content = $(".content");
+			$Content.append(initRenCaiHeader(json));
+			$Content.append(initRenCaiRenzheng(json));
+			$Content.append(initRenCaiWorkPingJia(json));
+			$Content.append(initRenCaiSuccessTask(json));
+			changedButton(json.result.user.follow_status);
+			init_layout();
+		}
+		var successFn = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			if (json.status == "success") {
+				$(".content").css("display", "block");
+				changedLayout(json);
+			} else {
+				mui.toast(json.msg);
+			}
+		}
+		var errorFn = function() {};
+		//页面参数
+		//targetTab.loadURL("rencai-detail.html?uid=" + $_this.attr("uid"));
+		var show = false;
+		var params = Common.urlParam(window.location);
+		var mUid = params.uid;
+		//获取当前人才的uid
+		console.log("uid:::::" + mUid);
+		mui.plusReady(function() {
+			DataRequest.getData(Constant.IP + Constant.RenCaiDetail, [{
+				key: "id",
+				value: mUid
+			}], successFn, errorFn);
+		});
+		$("#send-message").click(function() {
+			var $_this = $(this);
+			mui.plusReady(function() {
+				Common.u_Id = Common.getJson(Common.u_Id_Key);
+				var f_id = $(".rencai-header").attr("f_id");
+				var f_name = $(".rencai-header").attr("f_name");
+				console.log("Constant.IP2 + Constant.RenCaiFollowAdd:::::" + Constant.IP2 + Constant.RenCaiFollowAdd);
+				if (Common.u_Id != undefined) {
+					console.log(f_id == Common.u_Id);
+					if (f_id == Common.u_Id) {
+						mui.toast("你不能给自己发送消息");
+					} else {
+						console.log(f_id + "::" + f_name);
+						if (!show) {
+							show = true;
+							targetTab = plus.webview.create("messageDetail.html", "系统消息", Constant.allScreen_style, {
+								"uid": f_id,
+								"username": f_name
+							});
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						}
+					}
+				} else { //还没登录
+					Dialog.showDialog("还没登录", null, Dialog.closeDialog());
+				}
+			});
+		});
+		/**************************************************关注人才*********************************************/
+		var successFn2 = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			if (json.status == "success") {
+				var isfollow = $("#guanzhu").attr("isfollow");
+				if (isfollow == 1) {
+					changedButton(0);
+				} else if (isfollow == 0) {
+					changedButton(1);
+				}
+			}
+			mui.toast(json.msg);
+		};
+		var errorFn2 = function(jsonStr) {
+			alert(jsonStr);
+		};
+		$("#guanzhu").click(function() {
+			var $_this = $(this);
+			mui.plusReady(function() {
+				Common.u_Id = Common.getJson(Common.u_Id_Key);
+				var isfollow = $_this.attr("isfollow");
+				console.log("isfollow::" + isfollow);
+				var f_id = $(".rencai-header").attr("f_id");
+				console.log("f_id:::::" + f_id);
+				console.log("Constant.IP2 + Constant.RenCaiFollowAdd:::::" + Constant.IP2 + Constant.RenCaiFollowAdd);
+				if (Common.u_Id != undefined) {
+					console.log(f_id == Common.u_Id);
+					if (f_id == Common.u_Id) {
+						mui.toast("你不能关注自己");
+					} else {
+						if (isfollow == 0) {
+							DataRequest.postData(Constant.IP2 + Constant.RenCaiFollowAdd, [{
+								key: "f_id",
+								value: f_id
+							}], successFn2, errorFn2);
+						} else if (isfollow == 1) {
+							DataRequest.postData(Constant.IP2 + Constant.RenCaiFollowCancel, [{
+								key: "f_id",
+								value: f_id
+							}], successFn2, errorFn2);
+						}
+					}
+				} else { //还没登录
+					Dialog.showDialog("还没登录", null, Dialog.closeDialog());
+				}
+			});
+		});
+	</script>
+
+</html>

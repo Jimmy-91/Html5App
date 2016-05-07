@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+	<!--content的几个属性：
+    width viewport的宽度[device-width | pixel_value]width如果直接设置pixel_value数值，大部分的安卓手机不支持，但是ios支持；
+    height – viewport 的高度 （范围从 223 到 10,000 ）
+    user-scalable [yes | no]是否允许缩放
+    initial-scale [数值] 初始化比例（范围从 > 0 到 10）
+    minimum-scale [数值] 允许缩放的最小比例
+    maximum-scale [数值] 允许缩放的最大比例
+    -->
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,height=device-height, user-scalable=no,initial-scale=1">
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<title></title>
+		<style>
+			.put {
+				width: 100%;
+				height: 50px;
+				line-height: 25px;
+				font-size: 18px;
+				font-family: SimHei;
+				border: none;
+				text-indent: 15px;
+				background-color: #fff;
+				border-radius: 0px;
+			}
+			
+			.putcode {
+				width: 68%;
+				float: left;
+			}
+			
+			.getcode {
+				width: 32%;
+				height: 50px;
+				line-height: 50px;
+				font-size: 15px;
+				font-family: SimHei;
+				border: none;
+				text-align: center;
+				background: #F9C24B;
+				color: white;
+				float: right;
+			}
+			
+			.reg_header {
+				height: 145px;
+				background: #fff;
+			}
+			
+			.reg_header ul {
+				list-style-type: none;
+			}
+			
+			.reg_header li {
+				float: left;
+				width: 50%;
+			}
+			
+			.reg_header li .pos {
+				position: relative;
+				left: 0px;
+				right: 0px;
+				top: 21px;
+				bottom: 0px;
+				margin: 0 auto;
+				width: 68px;
+			}
+			
+			.reg_header li .bo1 {
+				border-radius: 50px;
+				width: 68px;
+				height: 68px;
+				background: #FFDB7B;
+				position: relative;
+			}
+			
+			.reg_header li .bo1.action {
+				background: #e5c66e;
+			}
+			
+			.reg_header li .boi1 {
+				position: absolute;
+				background: url(../img/ic_zhucegeren.png) no-repeat;
+				width: 28px;
+				height: 26px;
+				background-size: contain;
+				left: 0px;
+				right: 0px;
+				top: 0px;
+				bottom: 0px;
+				margin: auto
+			}
+			
+			.reg_header li .bo2 {
+				border-radius: 50px;
+				width: 68px;
+				height: 68px;
+				background: #3D9AF1;
+				position: relative;
+			}
+			
+			.reg_header li .bo2.action {
+				background: #368ad9;
+			}
+			
+			.reg_header li .boi2 {
+				position: absolute;
+				background: url(../img/ic_zhuceqiye.png) no-repeat;
+				width: 28px;
+				height: 26px;
+				background-size: contain;
+				left: 0px;
+				right: 0px;
+				top: 0px;
+				bottom: 0px;
+				margin: auto
+			}
+			
+			.reg_header li label {
+				width: 68px;
+				display: block;
+				padding-top: 8px;
+				font-size: 15px;
+			}
+			
+			.input-item {
+				border-bottom: 1px solid #DDDDDD;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">注册</span>
+			</div>
+		</div>
+
+		<div class="content">
+			<div class="reg_header">
+				<ul>
+					<li>
+						<div class="pos">
+							<div id="persion" class="pos-item bo1">
+								<div class="boi1"></div>
+							</div>
+							<label>我是个人</label>
+						</div>
+					</li>
+					<li>
+						<div class="pos">
+							<div id="company" class="pos-item bo2">
+								<div class="boi2"></div>
+							</div>
+							<label>我是企业</label>
+						</div>
+					</li>
+				</ul>
+			</div>
+			<div class="input-item">
+				<input id="account" type="text" placeholder="输入您的昵称" class="put">
+			</div>
+			<!--<div class="line"></div>-->
+			<div class="input-item">
+				<input id="phone" type="text" placeholder="输入您的手机号" class="put" autocomplete="off">
+			</div>
+			<div class="input-item">
+				<input id="pw" type="text" placeholder="输入您的密码" class="put" autocomplete="off">
+			</div>
+			<div class="input-item">
+				<input id="pw2" type="text" placeholder="再次输入密码" class="put" autocomplete="off">
+			</div>
+			<div class="input-item">
+				<input id="code" type="text" placeholder="输入短信验证码" class="put putcode" autocomplete="off" maxlength="4">
+				<div class="getcode">获取验证码</div>
+				<br style="clear: both;" />
+			</div>
+			<div class="pay_button font-size-18px">
+				注册
+			</div>
+		</div>
+		<script>
+			/**************************关闭窗口start*****************************/
+			mui.plusReady(function() {
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					plus.webview.currentWebview().close("slide-out-right", 300);
+				});
+			});
+			/**************************关闭窗口end*****************************/
+			var user_type = 1; //用户类型
+			var phone = ""; //手机号
+			var password = ""; //密码
+			var account = ""; //昵称
+			var c_account = ""; //企业名
+			var phone_code = ""; //手机验证码
+			$(".pos-item").click(function() {
+				$(".pos-item").removeClass("action");
+				$(this).addClass("action");
+				if($(this).attr("id") == "persion"){
+					user_type = 1;
+					$("#account").attr('placeholder','输入您的昵称');
+				}else{
+					user_type = 2;
+					$("#account").attr('placeholder','输入您的企业名');
+				}
+				console.log(user_type);
+			});
+			$(".getcode").click(function() {
+				phone = $("#phone").val();
+				console.log(phone);
+				if (Common.isPhone(phone)) {
+					DataRequest.getData(Constant.IP2 + Constant.getRegisterCode, [{
+						key: "phone",
+						value: phone
+					}], successFn, errorFn);
+				} else {
+					mui.toast("请输入正确的手机号！");
+				}
+			});
+			function successFn(jsonStr){
+				console.log(jsonStr);
+				var data = $.parseJSON(jsonStr);
+				if(data.status){
+					mui.toast("发送短信成功！");
+				}
+			}
+			function errorFn(jsonStr){
+				console.log(jsonStr);
+			}
+			$(".pay_button").click(function() {
+				account = $("#account").val();
+				if(account == ""){
+					if(user_type == 1){
+						mui.toast("请输入昵称");
+					}else{
+						mui.toast("请输入公司名");
+					}
+					return;
+				}
+				phone = $("#phone").val();
+				console.log(phone);
+				var ck = Common.isPhone(phone);
+				if(!ck){
+					mui.toast("请输入正确的手机号！");
+				}
+			});
+		</script>
+	</body>
+
+</html>

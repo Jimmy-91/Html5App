@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/yanshou_download.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/filemanager.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border ">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">查看附件</span>
+			</div>
+		</div>
+		<div class="content">
+			<span id="#show">100</span>
+		</div>
+		<footer id="float-task-status-button" class="line-menu float-task-status-bar">
+			<a class="line-menu-item">
+				确认验收
+			</a>
+		</footer>
+		<script>
+			/**************************关闭窗口start*****************************/
+			var closePager = null;
+			mui.plusReady(function() {
+				closePager = function() {
+					$(".content").css("display", "none");
+					plus.webview.currentWebview().close("slide-out-right", 300);
+				}
+			});
+			$(".back").click(function() {
+				closePager();
+			});
+			/**************************关闭窗口end*****************************/
+			/**************************请求附件下载文件路径*****************************/
+			//页面参数
+			var params = Common.urlParam(window.location);
+			//			targetTab.loadURL("yanshou_download.html?taskId=" + task_id + "&agreeId=" + agree_id+"&file_ids=" + task_file_ids);
+			var file_ids = params.file_ids;
+			var task_id = params.taskId;
+			var agree_id = params.agreeId;
+			var accessory_detail_SuccessFn = function(jsonStr) {
+				console.log(jsonStr);
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					var result = json.result;
+					for (var i = 0; i < result.length; i++) {
+						var $FileItem = $("<div class='file-name-bar'><span class='file-name'>" + getFileSimpleName(result[i].save_name) + "</span><div class='progress'></div><div class='progress-over'></div></div>");
+						files.push(result[i].save_name);
+						//						var urlStr = result[i].save_name;
+						var urlStr = "http://192.168.0.141/upload" + result[i].save_name.substring(27, result[i].save_name.length);
+						alert(urlStr);
+						$FileItem.attr("url", urlStr);
+						$(".content").append($FileItem);
+						$(".file-name-bar").unbind("click");
+						$(".file-name-bar").bind("click", function() {
+							var $this = $(this);
+							mui.plusReady(function() {
+								var flag = $this.attr("flag");
+								if (flag == undefined) {
+									mui.toast("开始下载");
+									var file = $this.attr("url");
+									plus.android.invoke(downloadManager, "onDownload", file);
+								} else {
+									mui.toast("已经下载");
+								}
+							});
+						});
+					}
+					downloadPrepare();
+				}
+			};
+			var accessory_detail_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var accessory_detail = function() {
+				console.log(file_ids);
+				DataRequest.postData(Constant.IP2 + Constant.getFileUrl, [{
+					key: "file_ids",
+					value: file_ids
+				}], accessory_detail_SuccessFn, accessory_detail_ErrorFn);
+			};
+			$(function() {
+				accessory_detail();
+			});
+			/****************************************下载************************************************/
+			var files = [];
+			var downloadManager = null;
+			var downloadPrepare = function() {
+				mui.plusReady(function() {
+					var main = plus.android.runtimeMainActivity();
+					plus.android.importClass("java.util.HashMap");
+					var listener = plus.android.implements("io.dcloud.MyDownloadChangedListener", {
+						"Changed": function(hashMap) {
+							for (var i = 0; i < files.length; i++) {
+								var task = hashMap.get(files[i]);
+								if (task != null && task != undefined) {
+									var status = plus.android.getAttribute(task, "status");
+									var title = plus.android.getAttribute(task, "title");
+									var totalSize = plus.android.getAttribute(task, "totalSize");
+									var downloadSize = plus.android.getAttribute(task, "downloadSize");
+									var progressNumber = Math.floor(downloadSize / totalSize * 100);
+									if (progressNumber >= 100) {
+										progressNumber = 100;
+									}
+									$(".file-name-bar[url='" + files[i] + "']").children(".progress").css("width", progressNumber + "%");
+									$("#show").text("title::" + title + ",status::" + status + ",Size::" + progressNumber);
+								}
+							}
+						}
+					});
+					downloadManager = plus.android.newObject("io.dcloud.MyDownloadManager", main, listener);
+				});
+			};
+			/******************************************************************************************/
+			var buyer_Confirm_Check_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//确认验收成功后改变UI
+				if (json.status == "success") {
+					//					mui.plusReady(function() {
+					//						Common.saveJson("flag", "true");
+					//					});
+				}
+				mui.toast(json.msg);
+			};
+			var buyer_Confirm_Check_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			$("#float-task-status-button").click(function() {
+				console.log("task_id::" + task_id + "agree_id::" + agree_id);
+				DataRequest.postData(Constant.IP2 + Constant.YanShouSetup3, [{
+					key: "taskId",
+					value: task_id
+				}, {
+					key: "agreeId",
+					value: agree_id
+				}], buyer_Confirm_Check_SuccessFn, buyer_Confirm_Check_ErrorFn);
+			});
+		</script>
+	</body>
+
+</html>

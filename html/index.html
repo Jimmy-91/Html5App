@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/index.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/softInputMode.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script>
+			//			$(function() {
+							
+			//				//准备各个选项卡页面
+			//				var targetTab;
+			//
+			//				function plusReady() {
+			//					
+			//					for (var i = 0; i < 5; i++) {
+			//						var sub;
+			//						if (i != 4) {
+			//							sub = plus.webview.create(subpages[i], subpages[i], Constant.topBar_bottomBar_style);
+			//						} else {
+			//							sub = plus.webview.create(subpages[i], subpages[i], Constant.bottomBar_style);
+			//						}
+			//						sub.hide();
+			//						self.append(sub);
+			//					}
+			//					plus.webview.show(subpages[0]);
+			//				}
+			//				if (window.plus) {
+			//					plusReady();
+			//				} else {
+			//					document.addEventListener("plusready", plusReady, false);
+			//				}
+			//				//选项卡页面切换
+			//				var lastPage = 0;
+			//				$(".footer-bar .table-menu-item").click(function() {
+			//					var page = $(this).attr("page");
+			//					if (page != lastPage) {
+			//						$(this).siblings(".table-menu-item").removeClass("menu-action");
+			//						$(this).addClass("menu-action");
+			//						if (page == 0) { //是第一个页面
+			//							$(".header-bar").removeClass("header-bar-hide");
+			//							$(".header-center-elem").addClass("header-bar-hide");
+			//							$(".header-bar .search-bar").removeClass("header-bar-hide");
+			//						} else if (page == 4) { //是最后一个页面
+			//							$(".header-bar").addClass("header-bar-hide");
+			//						} else {
+			//							$(".header-bar").removeClass("header-bar-hide");
+			//							$(".header-bar .search-bar").addClass("header-bar-hide");
+			//							$(".header-center-elem").removeClass("header-bar-hide");
+			//							var title = $(this).children(".footer-menu-text").text();
+			//							$(".header-center-elem .title").text(title);
+			//						}
+			//						$.each(subpages, function(i, value) {
+			//							plus.webview.hide(value);
+			//						});
+			//						plus.webview.show(subpages[page]);
+			//						lastPage = page;
+			//					}
+			//				});
+			//				var show = false;
+			//				$(".search-bar").click(function() {
+			//					if (!show) {
+			//						show = true;
+			//						mui.plusReady(function() {
+			//							targetTab = Common.createWeb("shouye-search.html", "人才详情", Constant.allScreen_style);
+			//							plus.webview.show(targetTab, "slide-in-bottom", 300);
+			//							targetTab.addEventListener("close", function() {
+			//								show = false;
+			//							});
+			//						});
+			//					}
+			//					//					if (open) {
+			//					//						open = false;
+			//					//						mui.plusReady(function() {
+			//					//							plus.webview.show(targetTab, "slide-in-bottom", 300);
+			//					//							targetTab.addEventListener("show", function() {
+			//					//								open = true;
+			//					//							});
+			//					//							targetTab.addEventListener("close", function() {
+			//					//								targetTab = Common.createWeb("rencai-detail.html", "人才详情", rencai_sub_detail);
+			//					//							});
+			//					//						});
+			//					//					}
+			//				});
+			//			});
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<!--<div class="header-left-elem border"></div>-->
+			<div class="header-center-elem horizontal-center header-bar-hide">
+				<span class="title font-size-20px">首页</span>
+			</div>
+			<!--<div class="header-right-elem border"></div>-->
+			<div class="search-bar">
+				<span></span>
+				<input class="font-size-15px" type="text" placeholder="搜索人才，任务" readonly="true" />
+			</div>
+		</div>
+		<div class="footer-bar table-menu">
+			<span class="table-menu-item menu-action" page="0">
+				<span class="footer-menu-img home-menu-img"></span>
+			<span class="footer-menu-text font-size-11px">首页</span>
+			</span>
+			<span class="table-menu-item" page="1">
+				<span class="footer-menu-img people-menu-img"></span>
+			<span class="footer-menu-text font-size-11px">人才</span>
+			</span>
+			<span class="table-menu-item" page="2">
+				<span class="footer-menu-img add-menu-img"></span>
+			<span class="footer-menu-text font-size-11px">发需求</span>
+			</span>
+			<span class="table-menu-item" page="3">
+				<span class="footer-menu-img message-menu-img"></span>
+			<span class="footer-menu-text font-size-11px">消息</span>
+			</span>
+			<span class="table-menu-item" page="4">
+				<span class="footer-menu-img my-menu-img"></span>
+			<span class="footer-menu-text font-size-11px">我的</span>
+			</span>
+		</div>
+		<script>
+			var subpages = ['shouye.html', 'rencai.html', 'sendtask.html', 'xiaoxi.html', 'wode.html'];
+			mui.plusReady(function() {
+				Symb.SoftInputMode(32);
+				for (var i = 0; i < subpages.length; i++) {
+					var self = plus.webview.currentWebview();
+					if (i != 4) {
+						sub = plus.webview.create(subpages[i], subpages[i], Constant.topBar_bottomBar_style);
+					} else {
+						sub = plus.webview.create(subpages[i], subpages[i], Constant.bottomBar_style);
+					}
+					sub.hide();
+					self.append(sub);
+				}
+			});
+			var targetTab = null;
+			var createPageWebview = function(page, pageStyle) {
+				mui.plusReady(function() {
+					var self = plus.webview.currentWebview();
+					targetTab = plus.webview.getWebviewById(subpages[page]);
+					if (targetTab == null) {
+						targetTab = Common.createWeb(subpages[page], subpages[page], pageStyle);
+						self.append(targetTab);
+					}
+					plus.webview.show(targetTab);
+				});
+			}
+			$(function() {
+				createPageWebview(0, Constant.topBar_bottomBar_style); //创建首页
+			});
+			//选项卡页面切换
+			var lastPage = 0;
+			$(".footer-bar .table-menu-item").click(function() {
+				var page = $(this).attr("page");
+				var pageNumber = parseInt(page);
+				var pageStyle = Constant.topBar_bottomBar_style;
+				if (page != lastPage) {
+					plus.webview.getWebviewById(subpages[lastPage]).hide();
+					switch (pageNumber) {
+						case 0:
+//							$(".header-bar").removeClass("header-bar-hide");
+							$(".header-center-elem").addClass("header-bar-hide");
+							$(".header-bar .search-bar").removeClass("header-bar-hide");
+							break;
+						case 1:
+						case 2:
+						case 3:
+							$(".header-bar").removeClass("header-bar-hide");
+							$(".header-bar .search-bar").addClass("header-bar-hide");
+							$(".header-center-elem").removeClass("header-bar-hide");
+							var title = $(this).children(".footer-menu-text").text();
+							$(".header-center-elem .title").text(title);
+							break;
+						case 4:
+							pageStyle = Constant.bottomBar_style;
+//							$(".header-bar").addClass("header-bar-hide");
+							break;
+					}
+					createPageWebview(page, pageStyle);
+					lastPage = pageNumber;
+				}
+			});
+			var show = false;
+			$(".search-bar").click(function() {
+				if (!show) {
+					show = true;
+					mui.plusReady(function() {
+						targetTab = Common.createWeb("shouye-search.html", "人才详情", Constant.allScreen_style);
+						plus.webview.show(targetTab, "slide-in-bottom", 300);
+						targetTab.addEventListener("close", function() {
+							show = false;
+						});
+					});
+				}
+			});
+		</script>
+	</body>
+
+</html>

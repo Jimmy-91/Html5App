@@ -1,0 +1,102 @@
+/*宽度为360px屏幕*/
+@media screen and (max-width: 360px) {
+	.font-size-11px {
+		font-size: 11px;
+	}
+	.font-size-12px {
+		font-size: 12px;
+	}
+	.font-size-13px {
+		font-size: 13px;
+	}
+	.font-size-14px {
+		font-size: 14px;
+	}
+	.font-size-15px {
+		font-size: 15px;
+	}
+	.font-size-16px {
+		font-size: 16px;
+	}
+	.font-size-17px {
+		font-size: 17px;
+	}
+	.font-size-18px {
+		font-size: 18px;
+	}
+	.font-size-20px {
+		font-size: 20px;
+	}
+	.font-size-24px {
+		font-size: 60px;
+	}
+}
+
+@media screen and (min-width: 360px) and (max-width: 720px) {
+	.font-size-11px {
+		font-size: 11px;
+	}
+	.font-size-12px {
+		font-size: 12px;
+	}
+	.font-size-13px {
+		font-size: 13px;
+	}
+	.font-size-14px {
+		font-size: 14px;
+	}
+	.font-size-15px {
+		font-size: 15px;
+	}
+	.font-size-16px {
+		font-size: 16px;
+	}
+	.font-size-17px {
+		font-size: 17px;
+	}
+	.font-size-18px {
+		font-size: 18px;
+	}
+	.font-size-20px {
+		font-size: 20px;
+	}
+	.font-size-24px {
+		font-size: 60px;
+	}
+}
+
+
+/*宽度为720px屏幕*/
+
+@media screen and (min-width: 720px) {
+	.font-size-11px {
+		font-size: 22px;
+	}
+	.font-size-12px {
+		font-size: 24px;
+	}
+	.font-size-13px {
+		font-size: 26px;
+	}
+	.font-size-14px {
+		font-size: 28px;
+	}
+	.font-size-15px {
+		font-size: 30px;
+	}
+	.font-size-16px {
+		font-size: 32px;
+	}
+	.font-size-17px {
+		font-size: 34px;
+	}
+	.font-size-18px {
+		font-size: 36px;
+	}
+	.font-size-20px {
+		font-size: 40px;
+	}
+	.font-size-24px {
+		font-size: 48px;
+	}
+}

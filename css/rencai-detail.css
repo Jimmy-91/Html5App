@@ -1,0 +1,118 @@
+.renzheng {
+	/*height: 100px;*/
+	margin-top: 10px;
+	padding: 15px 0px;
+	position: relative;
+	height: 18.726%;
+	background-color: white;
+	border-top: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.mobile-renzheng {
+	background: url(../img/ic_iphine.png) no-repeat;
+}
+
+.renzheng-success .mobile-renzheng {
+	background: url(../img/ic_iphine_ed.png) no-repeat;
+}
+
+.email-renzheng {
+	background: url(../img/ic_emal.png) no-repeat;
+}
+
+.renzheng-success .email-renzheng {
+	background: url(../img/ic_emali_ed.png) no-repeat;
+}
+
+.realname-renzheng {
+	background: url(../img/ic_people.png) no-repeat;
+}
+
+.renzheng-success .realname-renzheng {
+	background: url(../img/ic_people_ed.png) no-repeat;
+}
+
+.bank-renzheng {
+	background: url(../img/ic_banlk.png) no-repeat;
+}
+
+.renzheng-success .bank-renzheng {
+	background: url(../img/ic_banlk_ed.png) no-repeat;
+}
+
+.enterprise-renzheng {
+	background: url(../img/ic_qiye.png) no-repeat;
+}
+
+.renzheng-success .enterprise-renzheng {
+	background: url(../img/ic_qiye_ed.png) no-repeat;
+}
+
+.renzheng-menu-img {
+	position: relative;
+	left: 0;
+	right: 0;
+	margin: auto;
+	width: 44px;
+	height: 44px;
+	background-size: 44px 44px;
+}
+
+.shouye-task-type-text {
+	color: #7f7f7f;
+}
+
+.renzheng-success .shouye-task-type-text {
+	color: black;
+}
+
+.rencai-work-pingjia {
+	margin-top: 10px;
+	padding: 15px 0px 15px 15px;
+	position: relative;
+	background-color: white;
+	border-top: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.rencai-work-pingjia div {
+	padding: 5px 0;
+}
+
+.rencai-work-pingjia-text {
+	vertical-align: bottom;
+	font-size: 17px;
+	line-height: 17px;
+	font-family: simhei;
+}
+
+.send-message-img {
+	background: url(../img/ic_massge_normal.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.send-message-img:active {
+	background: url(../img/ic_massge_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.guanzhu-img {
+	background: url(../img/ic_guanzhu_normal.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.guanzhu-img:active {
+	background: url(../img/ic_guanzhu_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.cancel-guanzhu-img {
+	background: url(../img/ic_quxiaoguanzhu_normal.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.cancel-guanzhu-img:active {
+	background: url(../img/ic_quxiaoguanzhu_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}

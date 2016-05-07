@@ -1,0 +1,105 @@
+.baoming-canshu {
+	background: white;
+	padding: 0px 15px;
+	margin-bottom: 11px;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.baoming-canshu-item {
+	height: 45px;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.baoming-canshu-item:last-child {
+	border-bottom: none;
+}
+
+.baoming-canshu-item:last-child:active {
+	background: #DDDDDD;
+}
+
+.baoming-canshu * {
+	height: 45px;
+	line-height: 45px;
+}
+
+.baoming-canshu input,
+.baoming-canshu .input {
+	color: #DDDDDD;
+	border: none;
+	width: 60%;
+	float: right;
+	padding-right: 9px;
+	text-align: right;
+}
+
+.baoming-canshu .input.action {
+	color: black;
+}
+
+.baoming-canshu input {
+	line-height: 21px;
+	color: black;
+}
+
+.baoming-canshu .title {
+	float: left;
+}
+
+.baoming-canshu .unit {
+	float: right;
+}
+
+.baoming-content {
+	height: 150px;
+	padding: 15px;
+	border-top: 1px solid #DDDDDD;
+	border-bottom: 1px solid #DDDDDD;
+	overflow: hidden;
+	background: white;
+}
+
+
+/*******************************/
+
+textarea {
+	margin: 0;
+	color: inherit;
+	overflow: auto;
+	-webkit-tap-highlight-color: transparent;
+	line-height: 21px;
+	-webkit-user-select: none;
+	width: 100%;
+	border: none;
+	outline: 0;
+	-webkit-appearance: none;
+	height: auto;
+	resize: none;
+}
+
+textarea:focus {
+	-webkit-tap-highlight-color: transparent;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-user-modify: read-write-plaintext-only;
+	outline-offset: -2px;
+	f
+}
+
+.mui-android.mui-android-4-0 input:focus,
+.mui-android.mui-android-4-0 textarea:focus {
+	-webkit-user-modify: inherit
+}
+
+.more-hint {
+	width: 8px;
+	background: url(../img/ic_baoming_more_normal.png) no-repeat 50%;
+	background-size: contain;
+}
+
+.baoming-detail {
+	color: #DDDDDD;
+}
+
+.baoming-detail.select {
+	color: black;
+}

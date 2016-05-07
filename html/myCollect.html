@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/shouye-yewudetail.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<style>
+			.renwu-list {
+				top: 50px;
+			}
+			.renwu-list-item {
+				background: #FFFFFF;
+			}
+			.renwu-list-item:active {
+				background: #F5F5F9;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">收藏任务列表</span>
+			</div>
+		</div>
+		<div class="renwu-list">
+			<!--<div class="renwu-list-item">
+				<div class="renwu-describe">
+					<span class="rewu-desribe-title single-line">个人网站搭建</span>
+					<div class="rewu-zhao"></div>
+					<p class="rewu-desribe-content single-line">程序阿达嘎嘎社工裤人家的那个就程序阿达嘎嘎社工裤人家的那个就</p>
+				</div>
+				<span class="renwu-money">￥1000</span>
+			</div>-->
+		</div>
+		<div class="center-tips">
+			<span>无收藏任务</span>
+		</div>
+		<script>
+		var delID = "";
+			mui.plusReady(function() {
+				var webView = plus.webview.currentWebview();
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					webView.close("slide-out-right", 300);
+				});
+				DataRequest.getData(Constant.IP2 + Constant.CollectTaskList, [{
+					key: "u_id",
+					value: 296
+				}, {
+					key: "page",
+					value: 1
+				}], successFL, errorFL);
+			});
+			var successFL = function(jsonStr) {
+				console.log(jsonStr);
+				var jsonlist = $.parseJSON(jsonStr);
+				mui.plusReady(function() {
+					Common.saveJson("mycollcetlist", jsonStr);
+				});
+				refreshPanel(jsonlist.result);
+			};
+			function refreshPanel(taskdata){
+				var $TaskList = $(".renwu-list");
+				if ($TaskList.children().length > 0) {
+					$TaskList.empty();
+				}
+				var $TaskListNull = $(".center-tips");
+				if ($TaskListNull.children().length > 0) {
+					$TaskListNull.empty();
+				}
+				if (taskdata == null) {
+					var $TaskListNullItem = $("<span>无此条件任务</span>");
+					$TaskListNull.append($TaskListNullItem);
+					return;
+				}
+				for (var i = 0; i < taskdata.length; i++) {
+					var li = document.createElement("li");
+					var $TaskListItem = $("<div class='renwu-list-item' id=" + taskdata[i].obj_id + "></div>");
+					$TaskListItem.click(function() {
+						alert($(this).attr("id"));
+						var id = $(this).attr("id");
+						var btnArray = ['否', '是'];
+						mui.confirm('是否删除此收藏任务？', '', btnArray, function(e) {
+							if (e.index == 1) {
+								DataRequest.getData(Constant.IP2 + Constant.DelTaskList, [{
+									key: "u_id",
+									value: 296
+								}, {
+									key: "f_id",
+									value: id
+								}], successDT, errorDT);
+							}
+						})
+					});
+					var $TaskListItemDC = $("<div class='renwu-describe'></div>");
+					var $TaskListItemDCTitle = $("<span class='rewu-desribe-title single-line'></span>").text(taskdata[i].obj_name);
+					if (taskdata[i].obj_type == "sreward") {
+						var $TaskListItemType = $("<div class='rewu-zhao'></div>")
+							//						var $TaskListItemMoney = $("<span class='renwu-money'></span>").text("￥" + taskdata[i].task_cash + "元");
+					} else {
+						var $TaskListItemType = $("<div class='rewu-shang'></div>")
+							//						var $TaskListItemMoney = $("<span class='renwu-money'></span>").text("￥" + taskdata[i].cove_desc);
+					}
+					var $TaskListItemTime = $("<span class='renwu-money'></span>").text(getDate(taskdata[i].on_date));
+					var $TaskListItemPa = $("<p class='rewu-desribe-content single-line'></p>").text(taskdata[i].task_desc);
+					$TaskListItemDC.append($TaskListItemDCTitle);
+					$TaskListItemDC.append($TaskListItemType);
+					$TaskListItemDC.append($TaskListItemPa);
+					$TaskListItem.append($TaskListItemDC);
+					$TaskListItem.append($TaskListItemTime);
+					//					$TaskListItem.append($TaskListItemMoney);
+					$TaskList.append($TaskListItem);
+				}
+			}
+			function getDate(tm) {
+				var tt = new Date(parseInt(tm) * 1000).toLocaleString().replace(/年|月/g, ".").replace(/日/g, " ").substr(0, 30);
+				tt = tt.replace("GMT+8", "");
+				return tt;
+			}
+			var errorFL = function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("get data error");
+			};
+			function successDT(jsonStr) {
+				var data = $.JSObject(jsonStr);
+				mui.toast(data.msg);
+				//取消收藏成功后执行
+//				refreshPanel(); 
+			}
+			function errorDT(jsonStr) {
+				mui.toast(jsonStr);
+			}
+		</script>
+	</body>
+
+</html>

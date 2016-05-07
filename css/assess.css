@@ -1,0 +1,53 @@
+.pingfen-bar {
+	background: white;
+	padding: 15px;
+	padding-top: 5px;
+	margin-bottom: 16px;
+}
+
+.pingjia-bar {
+	padding-top: 15px;
+	/*padding-bottom: 18px;*/
+	border: none;
+	height: 20px;
+}
+
+.pingjia-item {
+	text-align: center;
+	border: none;
+}
+
+.pingjia-item:active {
+	background: none;
+}
+
+.pingjia-title {
+	height: 20px;
+	line-height: 20px;
+	padding-left: 10px;
+	vertical-align: middle;
+}
+
+.pingjia {
+	height: 20px;
+	width: 20px;
+	background: url(../img/ic_pingjia_noraml.png) no-repeat;
+	background-size: contain;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.action[flag="1"] .pingjia {
+	background: url(../img/ic_pingjia_good.png) no-repeat;
+	background-size: contain;
+}
+
+.action[flag="2"] .pingjia {
+	background: url(../img/ic_pingjia_soso.png) no-repeat;
+	background-size: contain;
+}
+
+.action[flag="3"] .pingjia {
+	background: url(../img/ic_pingjia_bad.png) no-repeat;
+	background-size: contain;
+}

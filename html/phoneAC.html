@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/pay.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<style>
+			.table-view-cell {
+				height: 62px;
+				border-bottom: 1px #DFE0E2 solid;
+				-webkit-user-select: none;
+				padding-left: 17px;
+				list-style: none;
+				background: white;
+			}
+			
+			.desribe-title {
+				padding-top: 15px;
+				text-align: left;
+				width: 150px;
+				font-size: 17px;
+				line-height: 30px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">手机认证</span>
+			</div>
+		</div>
+		<div id="renzheng" class="content">
+			<li class="table-view-cell">
+				<span>认证手机号：</span><span id="emailvalue" class="desribe-title" />
+			</li>
+			<li class="table-view-cell">
+				<input id="emailvalue" class="desribe-title" placeholder="请输入新手机号" />
+			</li>
+			<div id="btnCommit" class="pay_button font-size-18px">
+				更改
+			</div>
+		</div>
+		<div id="weirenzheng" class="content">
+			<li class="table-view-cell">
+				<input id="emailvalue" class="desribe-title" placeholder="请输入邮箱" />
+			</li>
+			<div id="btnCommit" class="pay_button font-size-18px">
+				提交
+			</div>
+		</div>
+	</body>
+	<script>
+		
+		mui.plusReady(function(){
+			var target = plus.webview.currentWebview();
+			var id = target.id;
+			var obj = target.data;
+			console.log(obj);
+			if(id == "已认证"){
+				$("#weirenzheng").css("display","none");
+				document.getElementById("emailvalue").innerHTML = obj;
+			}else{
+				$("#renzheng").css("display","none");
+			}
+			$(".back").click(function() {
+			$(".content").css("display", "none");
+			target.close("slide-out-right", 300);
+		});
+			
+		});
+		$("#btnCommit").click(function() {
+			if (Common.isEmail(document.getElementById("emailvalue").value)) {
+				var inputtext = document.getElementById("emailvalue").value;
+				DataRequest.getData(Constant.IP + Constant.EmailAC, [{
+					key: "uid",
+					value: 295
+				}, {
+					key: "email",
+					value: inputtext
+				}], successFL, errorFL);
+			} else {
+				mui.toast("邮箱格式错误，请重新输入！");
+			}
+		});
+
+		function successFL(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			mui.toast(json.msg);
+		}
+
+		function errorFL(jsonStr) {
+			mui.toast(jsonStr);
+		}
+	</script>

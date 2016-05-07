@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/login.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">登录</span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="input">
+				<li class="table-view-cell">
+					<span class="input-flag font-size-17px">帐号</span>
+					<input id="account" class="input-detail font-size-17px" maxlength="11" value="15623073205" onkeyup='this.value=this.value.replace(/\D/gi,"")' type="text" placeholder="请输入手机号" />
+				</li>
+				<li class="table-view-cell">
+					<span class="input-flag font-size-17px">密码</span>
+					<input id="password" class="input-detail font-size-17px" type="password" placeholder="请输入密码" value="lh86546801" />
+				</li>
+			</div>
+			<div id="login-button" class="pay_button font-size-18px">
+				确定
+			</div>
+			<div class="login-button-bottom-bar font-size-15px">
+				<span class="login-button-bottom-left">免费注册</span>
+				<span class="login-button-bottom-right">忘记密码?</span>
+			</div>
+		</div>
+	</body>
+	<script>
+		var isClickLogin = false;
+		var show = false;
+		/**************************关闭窗口start*****************************/
+		mui.plusReady(function() {
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", 300);
+			});
+		});
+		/**************************关闭窗口end*****************************/
+		var loginSuccess = function(jsonStr) {
+			isClickLogin = false;
+			console.log(jsonStr);
+			var json = JSON.parse(jsonStr);
+			if (json.status == "success") {
+				mui.toast("登录成功");
+				var result = json.result;
+				mui.plusReady(function() {
+					Common.saveJson(Common.u_Id_Key, result.uid);
+					Common.saveJson(Common.u_Validate_Key, result.validate);
+				});
+				var target = plus.webview.currentWebview();
+				mui.preload({
+					url: 'wode.html',
+					id: 'wode'
+				});
+				var pages = plus.webview.getWebviewById('wode');
+				mui.fire(pages, 'refreshWDpanel', {
+					id: "s"
+				});
+				target.close("slide-out-right", 300);
+			} else {
+				mui.toast("登录失败");
+			}
+		}
+		var loginFail = function(jsonStr) {
+			isClickLogin = false;
+			console.log(jsonStr);
+		}
+		$("#login-button").click(function() {
+			if (!isClickLogin) {
+				isClickLogin = true;
+				var account = $("#account").val();
+				var password = $("#password").val();
+				var accountFlag = $.trim(account);
+				var passwordFlag = $.trim(password);
+				if (accountFlag == null || accountFlag == "") {
+					mui.toast("手机号不能为空");
+					return false;
+				} else {
+					if (!Common.isPhone(accountFlag)) {
+						mui.toast("手机号格式不对");
+						return false;
+					}
+				}
+				if (passwordFlag == null || passwordFlag == "") {
+					mui.toast("密码不能为空");
+					return false;
+				}
+				DataRequest.postData(Constant.IP2 + Constant.login, [{
+					key: "password",
+					value: password
+				}, {
+					key: "account",
+					value: account
+				}], loginSuccess, loginFail);
+				return false;
+			}
+		});
+		//注册
+		$(".login-button-bottom-left").click(function() {
+			if (!show) {
+				show = true;
+				mui.plusReady(function() {
+					targetTab = Common.createWeb("register.html", "注册", Constant.allScreen_style);
+					plus.webview.show(targetTab, "slide-in-right", 300);
+					targetTab.addEventListener("close", function() {
+						show = false;
+					});
+				});
+			}
+		});
+		//忘记密码
+		$(".login-button-bottom-right").click(function() {
+			if (!show) {
+				show = true;
+				mui.plusReady(function() {
+					targetTab = Common.createWeb("SetNamePw.html", "忘记密码", Constant.allScreen_style);
+					//					targetTab.loadURL("yanshou_download.html?taskId=" + task_id + "&u_id=" + Common.u_Id + "&agreeId=" + agree_id + "&file_ids=" + task_file_ids);
+					plus.webview.show(targetTab, "slide-in-right", 300);
+					targetTab.addEventListener("close", function() {
+						show = false;
+					});
+				});
+			}
+		});
+	</script>
+
+</html>

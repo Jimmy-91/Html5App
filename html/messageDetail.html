@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js" ></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<style>
+			.message-list-item {}
+			
+			.footer {
+				background: #FFFFFF;
+				height: 43px;
+				position: fixed;
+				bottom: 0px;
+				left: 0px;
+				width: 100%;
+			}
+			
+			.footer-inputtext {
+				display: inline-table;
+				margin-top: 5px;
+				margin: 5px 10px;
+				text-align: left;
+				height: 31px;
+				width: 80%;
+				line-height: 31px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: 1px solid #DDDDDD;
+			}
+			
+			.footer-inputtext input {
+				font-size: 20px;
+				border: none;
+			}
+			
+			.footer-text {
+				font-size: 15px;
+				margin: 10px 13px 10px 13px;
+				border: none;
+			}
+			
+			.li-top {
+				list-style: none;
+				width: 100%;
+				/*overflow:hidden;*/
+			}
+			
+			.span-text-time {
+				font-size: 12px;
+				color: #7F7F7F;
+				text-align: center;
+			}
+			
+			.span-text-panel {
+				background: #FFFFFF;
+				display: inline-table;
+				margin: 5px 5%;
+				width: 90%;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: 1px solid #DDDDDD;
+				word-break: break-all;
+			}
+			
+			.send-message {
+				margin-top: 10px;
+				margin-right: 3%;
+				float: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">系统消息</span>
+			</div>
+		</div>
+
+		<div class="li-top content">
+			<li>
+				<p class="span-text-time">11:30</p>
+				<div class="span-text-panel">
+					<div class="footer-text">
+						<span>asdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdasdasdasdasdadsasdasdasdasdasdasdasdasdasdas</span>
+					</div>
+				</div>
+			</li>
+			<li>
+				<p class="span-text-time">12:30</p>
+				<div class="span-text-panel">
+					<div class="footer-text">
+						<span>asdasdasdasd2323245asdasdasdasdas</span>
+					</div>
+				</div>
+			</li>
+
+		</div>
+		<div id="isperson" class="footer ">
+			<div class="footer-inputtext">
+				<input type="text" />
+			</div>
+			<span class="send-message">发送</span>
+		</div>
+	</body>
+	<script>
+		mui.plusReady(function() {
+			var webView = plus.webview.currentWebview();
+			var username = webView.username;
+			var uid = webView.uid;
+			console.log(username + "::" + uid);
+			$(".title")[0].innerHTML = title;
+			var data = webView.data;
+			var title = webView.id;
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				webView.close("slide-out-right", 300);
+			});
+			var $List = $(".li-top");
+			if ($List.children().length > 0) {
+				$List.empty();
+			}
+			for (var i = 0; i < data.length; i++) {
+				var li = document.createElement("li");
+				var $itemtime = $("<p class='span-text-time'></p>").text(getDate(data[i].on_time));
+				var $itemp = $("<div class='span-text-panel'></div>");
+				var $items = $("<div class='footer-text'></div>");
+				if (title != "系统消息") {
+					var $itemdetail = $("<span></span>").text(data[i].content);
+				} else {
+					var $itemdetail = $("<span></span>").text(data[i].des);
+				}
+				$items.append($itemdetail);
+				$itemp.append($items);
+				$List.append($itemtime);
+				$List.append($itemp);
+			}
+			$EmptyItem = $("<div class='empty' style='height: 51px;'></div>");
+			$List.append($EmptyItem);
+		});
+
+		function getDate(tm) {
+			var tt = new Date(parseInt(tm) * 1000).toLocaleString().replace(/年|月/g, ".").replace(/日/g, " ").substr(0, 30);
+			tt = tt.replace("GMT+8", "");
+			return tt;
+		}
+	</script>
+
+</html>

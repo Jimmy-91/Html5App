@@ -1,0 +1,237 @@
+/********************************************搜索栏start******************************************/
+
+.rencai-search-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 51px;
+	/*7.96%;*/
+	/*background: black;*/
+	z-index: 100;
+}
+
+.rencai-search {
+	position: absolute;
+	background-color: white;
+	width: 91.9%;
+	height: 33px;
+	/*62.7%;*/
+}
+
+.rencai-search-flag {
+	position: absolute;
+	height: 80%;
+	text-align: center;
+}
+
+.rencai-search-flag .rencai-search-flag-img {
+	width: 4.16%;
+	height: 15px;
+	display: inline-block;
+	background: url(../img/ic_rencai_search.png) no-repeat 50% 0;
+	background-size: contain;
+	vertical-align: middle;
+	margin-right: 1.11%;
+}
+
+.rencai-search-flag .rencai-search-flag-text {
+	color: #7F7F7F;
+	height: 32px;
+	vertical-align: middle;
+}
+
+.recai-search-input {
+	position: absolute;
+	width: 90.9%;
+	left: 0;
+	right: 0;
+	background: transparent;
+	border: none;
+	outline: none;
+	margin: auto;
+	height: 100%;
+	line-height: 46.9%;
+}
+
+
+/********************************************搜索栏end******************************************/
+
+.rencai-list {
+	position: relative;
+	top: 50px;
+}
+
+.rencai-list-item {
+	list-style-type: none;
+	border-bottom: 1px solid #DDDDDD;
+	background-color: white;
+	padding: 0px 15px;
+}
+
+.rencai-list-item:active {
+	background-color: #DDDDDD;
+}
+
+.rencai-list-item-header {
+	width: 71px;
+	height: 71px;
+	background: #DDDDDD;
+}
+
+.rencai-list-item-img {
+	width: 71px;
+	height: 71px;
+	border: 1px #DDDDDD solid;
+	border-radius: 8px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 10px 0px;
+	vertical-align: left;
+	background: url(../img/head.jpeg) no-repeat;
+	background-size: contain;
+}
+
+.rencai-list-item-level-flag {
+	position: relative;
+	width: 22px;
+	height: 22px;
+	background: url(../img/ic_lv..png) no-repeat;
+	background-size: contain;
+	text-align: center;
+}
+
+.rencai-list-item-level-flag .rencai-list-item-level-flag-text {
+	font-family: "微软雅黑";
+	color: #EFA500;
+	font-size: 6px;
+}
+
+.rencai-list-item-describe {
+	margin-top: 10px;
+	margin-left: 10px;
+	width: 240px;
+	display: inline-block;
+	vertical-align: top;
+}
+
+.rencai-list-item-describe .rencai-list-item-title {
+	color: black;
+	font-size: 17px;
+	overflow: hidden;
+	display: block;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+	/*强制不换行*/
+	/*不允许出现半汉字截断*/
+}
+
+.rencai-list-item-flag {
+	display: block;
+	height: 34px;
+	overflow: hidden;
+}
+
+.rencai-list-item-flag .rencai-list-item-flag-item {
+	display: inline-block;
+	/*list-style-type: none;*/
+	border-radius: 2px;
+	margin: 8px 0px;
+	font-size: 13px;
+	line-height: 18px;
+	padding: 0px 5px;
+	border: 1px #00B7EE solid;
+	color: #00B7EE;
+	margin-right: 10px;
+	/*float: left;*/
+}
+
+.rencai-list-item-describe .rencai-list-item-detail {
+	font-family: simhei;
+	color: #7F7F7F;
+	font-size: 13px;
+	overflow: hidden;
+	display: block;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+	/*强制不换行*/
+	/*不允许出现半汉字截断*/
+}
+
+.rencai-header {
+	position: relative;
+	height: 90px;
+	padding-left: 15px;
+	background-color: white;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.rencai-user-img {
+	width: 71px;
+	height: 71px;
+	border: 1px #DDDDDD solid;
+	border-radius: 4px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 10px 0px;
+	vertical-align: left;
+	background: url(http://www.duorenwei.com/data/avatar/system/26_small.jpg) no-repeat center;
+	background-size: contain;
+}
+
+.rencai-user-title {
+	color: black;
+	font-size: 17px;
+	overflow: hidden;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+	/*强制不换行*/
+	/*不允许出现半汉字截断*/
+}
+
+.rencai-user-describe {
+	color: #7F7F7F;
+	line-height: 20px;
+	overflow: hidden;
+	display: block;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.rencai-user-level-flag {
+	position: relative;
+	width: 22px;
+	height: 22px;
+	background: url(../img/ic_lv..png) no-repeat;
+	background-size: contain;
+	text-align: center;
+}
+
+.rencai-user-level-flag-text {
+	font-family: "微软雅黑";
+	color: #EFA500;
+	font-size: 6px;
+}
+
+.rencai-user-item-flag {
+	display: block;
+	height: 25px;
+	overflow: hidden;
+}
+
+.rencai-user-item-flag-item {
+	display: inline-block;
+	border-radius: 2px;
+	margin: 3px 0px 5px 0px;
+	font-size: 13px;
+	padding: 0px 3px;
+	border: 1px #00B7EE solid;
+	color: #00B7EE;
+	margin-right: 7px;
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/base.css" />
+		<link rel="stylesheet" href="../css/myTips.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+		<!-- 头部 -->
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的标签</h1>
+			<a id="delTip" class="remove">删除</a>
+		</header>
+
+		<!-- 主体 -->
+		<div id="skilllist" class="mui-content mb-70">
+			<!--<div class="box">网络安全处理</div>
+			<div id= "addskill" class="box xu">+</div>-->
+		</div>
+	</body>
+	<script>
+		mui.plusReady(function() {
+			DataRequest.getData(Constant.IP + Constant.MyTips, [{
+				key: "action",
+				value: "skill_list"
+			}], successGetMyTip, errorGetMyTip);
+		});
+
+		function refreshPanel() {
+			DataRequest.getData(Constant.IP + Constant.MyTips, [{
+				key: "action",
+				value: "skill_list"
+			}], successGetMyTip, errorGetMyTip);
+		}
+
+		function successGetMyTip(jsonStr) {
+			console.log(jsonStr);
+			Common.saveJson("tips", jsonStr);
+			var $list = $("#skilllist");
+			$list.empty();
+			var data = $.parseJSON(jsonStr);
+			console.log(data.result.lenth);
+			for (var i = 0; i < data.result.length + 1; i++) {
+				console.log(i);
+				if (i < data.result.length) {
+					var $listitem = $("<div class='box'>" + data.result[i].indus_name + "</div>");
+				} else {
+					var $listitem = $("<div id ='addskill' class='box xu'>+</div>");
+					$listitem.click(function() {
+						var targetTab = plus.webview.create("myTipsAdd.html", "添加标签", null);
+						plus.webview.show(targetTab, "slide-in-right", 300);
+						targetTab.addEventListener("close", function() {
+							refreshPanel();
+						});
+					})
+				}
+				$list.append($listitem);
+			}
+		};
+
+		function errorGetMyTip(jsonStr) {
+			console.log("error=" + jsonStr);
+		}
+		$("#delTip").click(function() {
+			var targetdel = plus.webview.create("myTipsDel.html", "删除标签", null);
+			plus.webview.show(targetdel, "slide-in-right", 300);
+			targetdel.addEventListener("close", function() {
+				refreshPanel();
+			});
+		});
+	</script>
+
+</html>

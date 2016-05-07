@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<!--<link rel="stylesheet" href="../css/mui.min.css" />-->
+		<link rel="stylesheet" href="../css/pull.css" />
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/rencai.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script>
+			var searchOnBlur = function() {
+				if ($(".recai-search-input")[0].value === "") {
+					$('.rencai-search-flag').css('display', 'block');
+				}
+			}
+		</script>
+		<title></title>
+	</head>
+
+	<body>
+		<div class="rencai-search-bar">
+			<div class="rencai-search vertical-center horizontal-center">
+				<div class="rencai-search-flag vertical-center horizontal-center">
+					<div class="rencai-search-flag-img"></div><span class="rencai-search-flag-text font-size-15px">搜索</span>
+				</div>
+				<form id="search">
+					<input class="recai-search-input font-size-15px" type="text" onfocus="$('.rencai-search-flag').css('display','none')" onblur="searchOnBlur()" />
+				</form>
+			</div>
+		</div>
+		<header class="mui-bar mui-bar-nav">
+		</header>
+		<div class="mui-content"></div>
+		<script type="text/javascript">
+			var height = $(".rencai-search-bar").height();
+			console.log("height::" + height);
+			$(".mui-content").css("top", height + 1 + "px");
+			//启用双击监听
+			mui.init({
+				subpages: [{
+					url: 'rencai-sub.html',
+					id: 'rencai-sub.html',
+					styles: {
+						top: height + 1 + "px",
+						bottom: '0px',
+					}
+				}]
+			});
+			var contentWebview = null;
+			//查询人才
+			$("#search").submit(function() {
+				alert("submit");
+				if (contentWebview == null) {
+					contentWebview = plus.webview.currentWebview().children()[0];
+				}
+				var keyw = $(".recai-search-input").val();
+				contentWebview.evalJS("location.reload();");
+				setTimeout(function() {
+					contentWebview.evalJS("getData('" + keyw + "')");
+				}, 1000);
+				return false;
+			});
+		</script>
+	</body>
+
+</html>

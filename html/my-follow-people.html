@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/rencai.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+		<title></title>
+		<script>
+			var yanshouSuccess_ChangedUI = function($this) {
+				var currentState = $this.attr("buyer_status");
+				console.log("当前状态是:" + who + ":" + mIntTaskStatus + ":" + currentState);
+				var changedState = Common.changedState(who, mIntTaskStatus, currentState);
+				console.log("改变后的状态是:" + changedState.state);
+				console.log(changedState.enable + ":::" + changedState.msg + "::::" + changedState.state);
+				if (changedState.msg != undefined) {
+					$this.text(changedState.msg); //改变按钮文字
+					$this.attr("buyer_status", changedState.state); //改变按钮状态
+					$this.attr("functionName", changedState.functionName);
+					if (!changedState.enable) {
+						$this.unbind("click").addClass("noclick");
+					} else {
+						var $Item = $this.parent().parent();
+						var agree_id = $Item.attr("agree_id");
+						var task_id = $Item.attr("task_id");
+						Common.task.agree_id = agree_id;
+						Common.task.task_id = task_id;
+						$this.unbind("click").bind("click", function() { //重新绑定方法
+							console.log("state.functionName************click:::" + $(this).attr("functionName"));
+							var fn = eval($(this).attr("functionName"));
+							new fn($(this), Common.task);
+							return false;
+						});
+					}
+				}
+			};
+			//创建人才
+			var show = false;
+			var CreaterRenCaiItem = function(RencaiItem) {
+				var $item = $("<div class='line-3 rencai-header rencai-list-item'></div>");
+				$item.attr("uid", RencaiItem.focus_uid + "");
+				$item.attr("retime", RencaiItem.on_time + "");
+				$item.click(function() {
+					if (!show) {
+						show = true;
+						$_this = $(this);
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("rencai-detail.html", "人才详情", Constant.allScreen_style);
+							targetTab.loadURL("rencai-detail.html?uid=" + $_this.attr("uid"));
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						});
+					}
+				});
+				//用户头像
+				var $userHeader = $("<div class='rencai-user-img'></div>").css("background", "url(" + RencaiItem.pic + ") no-repeat").css("background-size", "contain");
+				//用户等级
+				var $userLevel = $("<div class='rencai-user-level-flag'></div>");
+				var $userLevelNumber = $("<span class='rencai-user-level-flag-text'></span>").text(RencaiItem.seller_level.level);
+				$userLevel.append($userLevelNumber);
+				$userHeader.append($userLevel);
+				$item.append($userHeader);
+				//用户介绍
+				var $userDescribe = $("<div class='left vertical-center'></div>")
+					//用户名
+				var $userName = $("<span class='rencai-user-title'></span>").text(RencaiItem.focus_username);
+				$userDescribe.append($userName);
+				//						用户标签
+				var flags = RencaiItem.skill_ids;
+				if (flags !== null) {
+					var $userFlag = $("<ul class='rencai-user-item-flag'></ul>");
+					for (var j = 0, length = flags.length; j < length; j++) {
+						var $flagItem = $("<li class='rencai-user-item-flag-item font-size-13px'>").text(flags[j]);
+						$userFlag.append($flagItem);
+					}
+					$userDescribe.append($userFlag);
+				}
+				//						用户简介
+				var $userDetail = $("<span class='rencai-user-describe font-size-13px'></span>").text("简介：" + RencaiItem.summary);
+				$userDescribe.append($userDetail);
+				$item.append($userDescribe);
+				return $item;
+			};
+			var initLayout = function() {
+				$(".line-3").each(function() {
+					Common.left_right_layout($(this));
+				});
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">我的关注</span>
+			</div>
+		</div>
+		<div class="content"></div>
+		<script>
+			/**************************关闭窗口start*****************************/
+			mui.plusReady(function() {
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					plus.webview.currentWebview().close("slide-out-right", 300);
+				});
+			});
+			/**************************关闭窗口end*****************************/
+			var folowPeopleData_SuccessFn = function(jsonStr) {
+				console.log(jsonStr);
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					var $List = $(".content");
+					if (json.result != undefined && json.result.length > 0) {
+						for (var i = 0; i < json.result.length; i++) {
+							var RenCaiItem = CreaterRenCaiItem(json.result[i]);
+							$List.append(RenCaiItem);
+						}
+					}
+					initLayout();
+				} else {
+					mui.toast(json.msg);
+				}
+				mui.toast(json.msg);
+			};
+			var folowPeopleData_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			var folowPeopleData = function() {
+				DataRequest.postData(Constant.IP2 + Constant.MyFollowPeople, null, folowPeopleData_SuccessFn, folowPeopleData_ErrorFn);
+			};
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link href="../css/mui.listpicker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+
+		<style type="text/css">
+			.table-view-cell {
+				height: 62px;
+				border-bottom: 1px #DFE0E2 solid;
+				-webkit-user-select: none;
+				padding-left: 17px;
+				list-style: none;
+				background: white;
+			}
+			
+			.desribe-title {
+				text-align: left;
+				margin-left: 45px;
+				width: 80%;
+				font-size: 17px;
+				line-height: 60px;
+				color: black;
+				font-family: SimHei;
+				border: none;
+			}
+			
+			.advise-title {
+				line-height: 60px;
+				vertical-align: middle;
+				position: absolute;
+			}
+			
+			.advise-submit {
+				position: absolute;
+			}
+			
+			.advise-textarea {
+				margin-top: 5px;
+				border: 1px red solid;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">建议</span>
+			</div>
+		</div>
+		<div class="content">
+			<li class="table-view-cell">
+				<span class="advise-title">标题</span>
+				<input id="password" class="desribe-title" type="text" placeholder="请输入密码" />
+			</li>
+			<li id="type" class="table-view-cell">
+				<span class="advise-title">类型</span>
+			</li>
+			<li class="table-view-cell">
+				<span class="advise-title">姓名</span>
+				<input id="password" class="desribe-title" type="text" placeholder="请输入密码" />
+			</li>
+			<li class="table-view-cell">
+				<span class="advise-title">邮箱</span>
+				<input id="password" class="desribe-title" type="text" placeholder="请输入密码" />
+			</li>
+			<div class="advise-textarea">
+				<textarea rows="10" placeholder="建议详情" style="overflow:auto;border: none;width: 100%;"></textarea>
+			</div>
+			<div id="submit" class=" pay_button font-size-18px">
+				提交
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="../js/DataRequest.js"></script>
+	<script type="text/javascript" src="../js/Common.js"></script>
+	<script type="text/javascript" src="../js/Constant.js"></script>
+	<script type="text/javascript" src="../js/mui.picker.js"></script>
+	<script type="text/javascript" src="../js/mui.poppicker.js"></script>
+	<script type="text/javascript">
+		(function($, doc) {
+			$.init();
+			$.ready(function() {
+				var typePicker = new $.PopPicker();
+				typePicker.setData([{
+					value: '1',
+					text: '建议'
+				}, {
+					value: '2',
+					text: '问题'
+				}]);
+				var showUserPickerButton = doc.getElementById('type');
+				//				var userResult = doc.getElementById('userResult');
+				showUserPickerButton.addEventListener('tap', function(event) {
+					alert("zxc1");
+					typePicker.show(function(items) {
+						alert(JSON.stringify(items[0]));
+						//						userResult.innerText = JSON.stringify(items[0]);
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+					});
+				}, false);
+			});
+		})(mui, document);
+		//		mui.plusReady(function() {
+		//			var webView = plus.webview.currentWebview();
+		//			$(".back").click(function() {
+		//				$(".content").css("display", "none");
+		//				webView.hide("slide-out-right", 300);
+		//			});
+		//		});
+		//		$("#submit").click(function() {
+		//			DataRequest.postData(Constant.IP + Constant.Advise, [{
+		//				key: "title",
+		//				value: "11"
+		//			}, {
+		//				key: "type",
+		//				value: 1
+		//			}, {
+		//				key: "name",
+		//				value: "11"
+		//			}, {
+		//				key: "email",
+		//				value: "11@qq.com"
+		//			}, {
+		//				key: "content",
+		//				value: "aaaaa"
+		//			}], successGetAdvise, errorGetAdvise);
+		//		});
+		//
+		//		function successGetAdvise(jsonstr) {
+		//			console.log(jsonstr);
+		//		}
+		//
+		//		function errorGetAdvise(jsonstr) {
+		//			console.log(jsonstr);
+		//		}
+	</script>
+
+</html>

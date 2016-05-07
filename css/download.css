@@ -1,0 +1,196 @@
+.download-file {
+	float: left;
+	margin: 5px;
+	width: 55px;
+	height: 55px;
+}
+
+.download-button {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	background: transparent;
+	height: 23px;
+	width: 23px;
+}
+
+
+/*下载按钮*/
+
+.download-file[flag='default-download'] .download-button {
+	display: block;
+	background: url(../img/ic_dwonle.png) no-repeat;
+	background-size: contain;
+}
+
+.download-file[flag='start-download'] .download-button {
+	display: none;
+	background: url(../img/ic_dwonle.png) no-repeat;
+	background-size: contain;
+}
+
+.download-file .progress-bar {
+	display: none;
+}
+
+.download-file[flag='start-download'] .progress-bar {
+	display: block;
+}
+
+.download-file[flag='pause-download'] .download-button {
+	display: block;
+	background: url(../img/ic_zhanting.png) no-repeat;
+	background-size: contain;
+}
+
+.download-file .download-file-src {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.download-file[flag='over-download'] .download-file-src {
+	position: relative;
+	height: 100%;
+	width: 100%;
+	background-color: transparent;
+}
+
+.circleProgress {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	width: 34px;
+	height: 34px;
+}
+
+.progress-text {
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	width: 34px;
+	height: 34px;
+	text-align: center;
+	font-size: 10px;
+	line-height: 34px;
+	color: white;
+}
+
+.circleProgress-progress {
+	position: absolute;
+	width: 17px;
+	height: 34px;
+	top: 0;
+	overflow: hidden;
+}
+
+.circleProgress-progress.right {
+	right: 0;
+}
+
+.circleProgress-progress.left {
+	left: 0;
+}
+
+.progress {
+	width: 30px;
+	height: 30px;
+	border: 2px solid white;
+	border-radius: 50%;
+	position: absolute;
+	top: 0;
+	-webkit-transform: rotate(45deg);
+}
+
+.circleProgress-right {
+	right: 0;
+	border-top: 2px solid rgba(255, 255, 255, 0.4);
+	border-right: 2px solid rgba(255, 255, 255, 0.4);
+	-webkit-transform: rotate(45deg);
+}
+
+.circleProgress-left {
+	left: 0;
+	border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+	border-left: 2px solid rgba(255, 255, 255, 0.4);
+	-webkit-transform: rotate(45deg);
+}
+
+
+/*pdf文件*/
+
+.pdf {
+	background: url(../img/pdf.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*音频文件*/
+
+.mic {
+	background: url(../img/mic.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*图片文件*/
+
+.pic {
+	background: url(../img/pic.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*视频文件*/
+
+.video {
+	background: url(../img/video.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*未知文件*/
+
+.wenhao {
+	background: url(../img/wenhuao.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*txt文件*/
+
+.txt {
+	background: url(../img/txt.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*word文件*/
+
+.word {
+	background: url(../img/word.png) no-repeat;
+	background-size: contain;
+}
+
+
+/*s*/
+
+.excel {
+	background: url(../img/s.png) no-repeat;
+	background-size: contain;
+}
+
+.ppt {
+	background: url(../img/PPT.png) no-repeat;
+	background-size: contain;
+}

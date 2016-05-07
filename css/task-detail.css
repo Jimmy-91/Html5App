@@ -1,0 +1,230 @@
+.task-header {
+	position: relative;
+	height: 76px;
+	padding-left: 15px;
+	margin-bottom: 10px;
+	background-color: white;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.task-user-img {
+	width: 56px;
+	height: 56px;
+	border: 1px #DDDDDD solid;
+	border-radius: 4px;
+	display: inline-block;
+	vertical-align: top;
+	margin: 10px 0px;
+	vertical-align: left;
+	background: url(../img/head.jpeg) no-repeat;
+	background-size: contain;
+}
+
+.task-user-describe {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	padding-left: 10px;
+	display: inline-block;
+	margin: auto;
+}
+
+.task-user-title {
+	color: black;
+	font-size: 17px;
+	overflow: hidden;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+	/*强制不换行*/
+	/*不允许出现半汉字截断*/
+}
+
+.task-user-level-flag {
+	position: relative;
+	width: 22px;
+	height: 22px;
+	background: url(../img/ic_lv..png) no-repeat;
+	background-size: contain;
+	text-align: center;
+}
+
+.task-user-level-flag .task-user-level-flag-text {
+	font-family: "微软雅黑";
+	color: #EFA500;
+	font-size: 6px;
+}
+
+.task-user-item-flag {
+	display: block;
+	/*height: 34px;*/
+	overflow: hidden;
+}
+
+.task-user-item-flag-item {
+	display: inline-block;
+	border-radius: 2px;
+	margin: 3px 0px 5px 0px;
+	line-height: 16px;
+	padding: 0px 3px;
+	border: 1px #00B7EE solid;
+	color: #00B7EE;
+	margin-right: 7px;
+}
+
+.task-user-send-message {
+	position: absolute;
+	right: 0px;
+	padding: 0px 15px;
+	display: inline-block;
+	width: 20px;
+	height: 100%;
+	background: url(../img/ic_message_normal.png) no-repeat 50% 50%;
+	background-size: 20px;
+}
+
+.task-user-zhongbiao {
+	position: absolute;
+	right: 15px;
+	display: inline-block;
+	height: 100%;
+	border: 1px solid #E8565A;
+	color: #E8565A;
+	padding: 3px 5px;
+	border-radius: 3px;
+}
+
+.not-zhongbiao {
+	border-color: #DDDDDD;
+	color: #DDDDDD;
+}
+
+.task-user-send-message:active {
+	background: url(../img/ic_message_pressed.png) no-repeat 50% 50%;
+	background-size: 20px;
+}
+
+.task-describe {
+	border-top: 1px #DDDDDD solid;
+	background-color: white;
+}
+
+.task-describe #task-end-residue-time {
+	margin: 2px 0px;
+}
+
+.task-describe #task-star-time {}
+
+.task-need-describe {
+	padding: 0 15px;
+}
+
+.task-need-describe p {
+	margin-top: 10px;
+}
+
+.task-enclosure img {
+	width: 55px;
+	height: 55px;
+	border: 1px #DDDDDD solid;
+}
+
+.task-enclosure {
+	padding: 15px 15px;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.task-enclosure .task-enclosure-img {
+	padding-top: 10px;
+}
+
+.task-enclosure .task-enclosure-img img {
+	margin-right: 10px;
+}
+
+.task-join-people {
+	border-top: 1px #DDDDDD solid;
+	margin-top: 10px;
+	padding-top: 15px;
+	background-color: white;
+}
+
+.task-join-people-header {
+	position: relative;
+	height: 66px;
+	padding-left: 15px;
+	background-color: white;
+}
+
+.task-join-people .title-color {
+	padding-left: 15px;
+}
+
+.task-join-people .task-user-img {
+	width: 46px;
+	height: 46px;
+}
+
+.task-join-people .task-user-item-flag-item {
+	font-size: 11px;
+}
+
+.task-zhao-money-img {
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+}
+
+.task-zhao-time-img {
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
+}
+
+.task-zhao-money-text {
+	color: #FF7D14;
+	margin-right: 8px;
+}
+
+.task-zhao-time-text {
+	color: #FF7D14;
+}
+
+.task-join-people-user {
+	display: inline-block;
+}
+
+.bmInfoItem {
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.soucang-img {
+	background: url(../img/ic_soucang_normal.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.soucang-img:active {
+	background: url(../img/ic_soucang_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.cancel-soucang-img {
+	background: url(../img/ic_quxiaoshoucang_noraml.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.cancel-soucang-img:active {
+	background: url(../img/ic_quxiaoshoucang_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.baoming-img {
+	background: url(../img/ic_baoming_noraml.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}
+
+.baoming-img:active {
+	background: url(../img/ic_baoming_pressed.png) no-repeat 25% 0;
+	background-size: 18px 18px;
+}

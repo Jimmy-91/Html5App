@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script src='../js/feedback.js'></script>
+		<script src="../js/feedback-page.js"></script>
+	</head>
+
+	<body>
+		<header id="header-bar" class="header">
+			<div id="header-title-bar" class="header-title">
+				<div class="header-back-img"></div>
+				<span class="header-title-text">关于多人维</span>
+			</div>
+		</header>
+		<div class="mui-page">
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell mui-plus-visible">
+								<a id="welcome" class="mui-navigate-right">欢迎页</a>
+							</li>
+							<li class="mui-table-view-cell mui-plus-visible">
+								<a id="rate" class="mui-navigate-right">评分鼓励</a>
+							</li>
+							<li class="mui-table-view-cell mui-plus-visible">
+								<a id="share" class="mui-navigate-right">分享推荐</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a id="tel" class="mui-navigate-right">客服电话</a>
+							</li>
+							<li class="mui-table-view-cell">
+								<a id="feedback-btn" href="#feedback" class="mui-navigate-right">问题反馈</a>
+							</li>
+							<li class="mui-table-view-cell mui-plus-visible">
+								<a id="update" class="mui-navigate-right">检查更新</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!--<div id="feedback" class="mui-page feedback">
+				<div class="mui-navbar-inner mui-bar mui-bar-nav">
+					<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+						<span class="mui-icon mui-icon-left-nav"></span>关于MUI
+					</button>
+					<h1 class="mui-center mui-title">问题反馈</h1>
+				</div>
+				<div class="mui-page-content">
+					<p>问题和意见</p>
+					<div class="row mui-input-row">
+						<textarea id='question' class="mui-input-clear question" placeholder="请详细描述你的问题和意见..."></textarea>
+					</div>
+					<p>图片(选填,提供问题截图)</p>
+					<div id='image-list' class="row image-list">
+					</div>
+					<p>QQ/邮箱</p>
+					<div class="mui-input-row">
+						<input id='contact' type="text" class="mui-input-clear  contact" placeholder="(选填,方便我们联系你 )" />
+					</div>
+					<button id='submit' type="button" class="mui-btn mui-btn-green">提交</button>
+				</div>
+				<p>此示例基于环信 “WebIM SDK” + 环信 “移动客服” 实现，在环信 “移动客服面板” 能够查阅反馈信息。</p>
+			</div>-->
+	</body>
+	<script>
+		mui.plusReady(function() {
+			var webView = plus.webview.currentWebview();
+			$(".header-back-img").click(function() {
+				webView.hide("slide-out-right", 300);
+			});
+		});
+		//去评分
+		document.getElementById("rate").addEventListener('tap', function() {
+			if (mui.os.ios) {
+				location.href = 'https://itunes.apple.com/us/app/yun-jing/id1047162940?l=zh&ls=1&mt=8';
+			} else if (mui.os.android) {
+				plus.runtime.openURL("market://details?id=io.dcloud.HelloMUI", function(e) {
+					plus.runtime.openURL("market://details?id=io.dcloud.HelloMUI", function(e) {
+						mui.alert("360手机助手和应用宝，你一个都没装，暂时无法评分，感谢支持");
+					}, "com.qihoo.appstore");
+				}, "com.tencent.android.qqdownloader");
+			}
+		});
+		//客服电话
+		document.getElementById("tel").addEventListener('tap', function() {
+			if (mui.os.plus) {
+				plus.device.dial("027-87367823");
+			} else {
+				location.href = 'tel:027-87367823';
+			}
+		});
+		//检测更新
+		document.getElementById("update").addEventListener('tap', function() {
+			if (mui.os.plus) {
+				mui.toast("请求ios更新地址");
+			} else {
+				alert("请求android更新地址");
+			}
+		});
+	</script>
+
+</html>

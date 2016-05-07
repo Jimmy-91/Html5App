@@ -1,0 +1,91 @@
+/*首页菜单*/
+
+.home-menu-img {
+	background: url(../img/ic_home_normal.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*首页菜单点击*/
+
+.menu-action .home-menu-img {
+	background: url(../img/ic_home_pressed.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*人才菜单*/
+
+.people-menu-img {
+	background: url(../img/ic_people_normal.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*人才菜单点击*/
+
+.menu-action .people-menu-img {
+	background: url(../img/ic_people_pressed.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*发需求菜单*/
+
+.add-menu-img {
+	background: url(../img/ic_add_normal.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*发需求菜单点击*/
+
+.menu-action .add-menu-img {
+	background: url(../img/ic_add_pressed.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*消息菜单*/
+
+.message-menu-img {
+	background: url(../img/ic_message_normal.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*消息菜单点击*/
+
+.menu-action .message-menu-img {
+	background: url(../img/ic_message_pressed.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*我的菜单*/
+
+.my-menu-img {
+	background: url(../img/ic_my_normal.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+
+/*我的菜单点击*/
+
+.menu-action .my-menu-img {
+	background: url(../img/ic_my_pressed.png) no-repeat 50% 0;
+	background-size: contain;
+}
+
+.menu-action .footer-menu-text {
+	color: #E8565A;
+}
+
+.sendtask-voice {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(178, 178, 178, 0.7);
+}

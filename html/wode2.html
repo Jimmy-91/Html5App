@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/wode.css" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+	</head>
+
+	<body>
+		<div class="wode-header">
+			<div class="wode-setting-bt"></div>
+			<div class="wode-user-head">
+				<div class="wode-user-level-flag">
+					<span class="wode-user-level-flag-text">9</span>
+				</div>
+			</div>
+			<span class="wode-user-name">欢乐的逗比</span>
+		</div>
+
+		<!--<div class="wode-list-menu">
+			<div class="wode-list-menu-item wode-list-menu-item-left" flag="2">
+				<div class="wode-list-menu-item-img wode-list-menu-item-love"></div>
+				<span class="wode-list-menu-item-text">我的关注</span>
+			</div>
+			<div class="wode-list-menu-item wode-list-menu-item-right" flag="3">
+				<div class="wode-list-menu-item-img wode-list-menu-item-mark"></div>
+				<span class="wode-list-menu-item-text">我的收藏</span>
+			</div>
+			<div class="wode-list-menu-item wode-list-menu-item-left" flag="4">
+				<div class="wode-list-menu-item-img wode-list-menu-item-tit"></div>
+				<span class="wode-list-menu-item-text">我的标签</span>
+			</div>
+			<div class="wode-list-menu-item wode-list-menu-item-right" flag="5">
+				<div class="wode-list-menu-item-img wode-list-menu-item-yanzhen"></div>
+				<span class="wode-list-menu-item-text">账号认证</span>
+			</div>
+		</div>-->
+		<div id="content">
+			<div class="wode-money">
+				<span class="wode-money-balance">余额:</span>
+				<span class="wode-money-balance-text">1886</span>
+				<span class="wode-money-balance-distill">提现</span>
+				<span class="wode-money-balance-recharge">充值</span>
+			</div>
+			<div id="safe-news" class="grid-table-menu">
+				<div class="grid-row-menu">
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-fabu"></div>
+						<span class="wode-list-menu-item-text">发布的任务</span>
+					</div>
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-get"></div>
+						<span class="wode-list-menu-item-text">承接的任务</span>
+					</div>
+				</div>
+				<div class="grid-row-menu">
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-love"></div>
+						<span class="wode-list-menu-item-text">我的关注</span>
+					</div>
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-mark"></div>
+						<span class="wode-list-menu-item-text">我的收藏</span>
+					</div>
+				</div>
+				<div class="grid-row-menu">
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-tit"></div>
+						<span class="wode-list-menu-item-text">我的标签</span>
+					</div>
+					<div class="grid-cell-menu">
+						<div class="wode-list-menu-item-img wode-list-menu-item-yanzhen"></div>
+						<span class="wode-list-menu-item-text">账号认证</span>
+					</div>
+				</div>
+			</div>
+			<input type="button" class="wode-exit-login" value="退出登录">
+			</input>
+		</div>
+
+		<script>
+			var width = $("#content").parent().width() / 2 * 0.8;
+			$(".grid-cell-menu").css("width", width + "px");
+			var targetHtmlArray = ["my-release-task.html", "my-accept-task.html"];
+			var targetWebViewArray = [];
+			mui.plusReady(function() {
+				for (var i = 0; i < targetHtmlArray.length; i++) {
+					targetWebViewArray.push(Common.createWeb(targetHtmlArray[i], targetHtmlArray[i], Constant.allScreen_style));
+				}
+			});
+			var open = true;
+			$(".wode-list-menu-item:lt(2)").click(function() {
+				var flag = $(this).attr("flag");
+				var target = targetWebViewArray[flag];
+				var targetHtml = targetHtmlArray[flag];
+				if (open) {
+					open = false;
+					mui.plusReady(function() {
+						plus.webview.show(target, "slide-in-right", 300);
+						target.addEventListener("show", function() {
+							open = true;
+						});
+						target.addEventListener("close", function() {
+							targetTabArray[0] = plus.webview.create(targetHtml, targetHtml, login_style);
+						});
+					});
+				}
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/base.css" />
+		<link rel="stylesheet" href="../css/myTipsDel.css" />
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js" ></script>
+		<script type="text/javascript" src="../js/Common.js" ></script>
+		<script type="text/javascript" src="../js/DataRequest.js" ></script>
+		<script type="text/javascript" src="../js/Constant.js" ></script>
+		<script type="text/javascript" charset="utf-8">
+			mui.init();
+		</script>
+	</head>
+
+	<body>
+
+		<!-- 头部 -->
+		<header class="mui-bar mui-bar-nav top">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">删除标签</h1>
+			<a id="delTips" class="complish">完成</a>
+		</header>
+
+		<!-- 主体 -->
+		<div id="list" class="mui-content mb-70">
+			<!--<div class="box">
+				<span class="mui-badge mui-badge-danger">
+              <span class="mui-icon mui-icon-closeempty"></span>
+				</span>
+				网络安全处理
+			</div>-->
+		</div>
+
+	</body>
+
+</html>
+<script>
+var delTipsArr = [];
+var HaveTips = [];
+	mui.plusReady(function() {
+		var jsontips = $.parseJSON(Common.getJson("tips"));
+		HaveTips = jsontips.result;
+		var $list = $("#list");
+		$list.empty();
+		for (var i = 0; i < HaveTips.length; i++) {
+			var $listitem = $("<div id="+i+" class='box'></div>");
+			var $listitemsp1 = $("<span class='mui-icon-closeempty'></span>");
+			var $listitemsp2 = $("<span class='mui-badge mui-badge-danger'></span>");
+			var $listitemsp3 = $("<span>"+HaveTips[i].indus_name+"</span>");
+			
+			$listitem.bind("click", function() {
+				var id = $(this).attr("id");
+				$(this).children().children().toggleClass("mui-icon");
+				dorefreshTips(HaveTips[id].indus_id);
+			});
+			$listitemsp2.append($listitemsp1);
+			$listitem.append($listitemsp2);
+			$listitem.append($listitemsp3);
+			$list.append($listitem);
+		}
+	});
+	function dorefreshTips(id){
+		var ck = delTipsArr.indexOf(id);
+		if(ck < 0){
+			delTipsArr.push(id);
+		}else{
+			delTipsArr.splice(ck,1);
+		}
+	}
+	$("#delTips").click(function(){
+		var needtips = "";
+		var arr = HaveTips.concat(); 
+		console.log(arr.length+"    "+delTipsArr.length);
+		for(var i=0;i<delTipsArr.length;i++){
+			for(var j=0;j<arr.length;j++){
+				if(delTipsArr[i] == arr[j].indus_id){
+					arr.splice(j,1);
+				}
+			}
+		}
+		for(var k=0;k<arr.length;k++){
+			if(k == arr.length-1){
+				needtips = needtips + arr[k].indus_id;
+			}else{
+				needtips = needtips + arr[k].indus_id + ",";
+			}
+			
+		}
+		DataRequest.getData(Constant.IP + Constant.MyTips, [{
+			key: "action",
+			value: "skill"
+		}, {
+			key: "skill",
+			value: needtips
+		}], successDelMyTip, errorDelMyTip);
+	});
+	function successDelMyTip(jsonStr) {
+		var data = $.parseJSON(jsonStr);
+		mui.toast(data.msg);
+		var target = plus.webview.currentWebview();
+		target.close("slide-out-right", 300);
+	}
+
+	function errorDelMyTip(jsonStr) {
+		console.log(jsonStr);
+	}
+</script>

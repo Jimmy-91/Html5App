@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/wode.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<style>
+			.safe-background {
+				background: #919190;
+				width: 100px;
+				height: 300px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="wode-header">
+			<div id="btnSetting" class="wode-setting-bt"></div>
+			<div id="pic" class="wode-user-head">
+				<div class="wode-user-level-flag">
+					<span class="wode-user-level-flag-text">9</span>
+				</div>
+			</div>
+			<span id="name" class="wode-user-name">未登录</span>
+		</div>
+		<div class="wode-money">
+			<span class="wode-money-balance">余额:</span>
+			<span id="num" class="wode-money-balance-text">0</span>
+			<span class="wode-money-balance-distill">提现</span>
+			<span class="wode-money-balance-recharge">充值</span>
+		</div>
+		<div class="wode-list-menu">
+			<div class="wode-list-menu-item half-screen-1px border-right-bottom" flag="0">
+				<div class="center">
+					<img class="wode-list-menu-item-img " src="../img/ic_fabu.png">
+					<span class="wode-list-menu-item-text ">发布的任务</span>
+				</div>
+			</div>
+			<div class="wode-list-menu-item half-screen-1px border-bottom" flag="1">
+				<div class="center">
+					<img class="wode-list-menu-item-img " src="../img/ic_get.png">
+					<span class="wode-list-menu-item-text ">承接的任务</span>
+				</div>
+			</div>
+			<div class="wode-list-menu-item half-screen-1px border-right-bottom" flag="2">
+				<div class="center">
+					<img class="wode-list-menu-item-img " src="../img/ic_love.png">
+					<span class="wode-list-menu-item-text ">我的关注&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</div>
+			</div>
+			<div class="wode-list-menu-item half-screen-1px border-bottom" flag="3">
+				<div class="center">
+					<img class="wode-list-menu-item-img " src="../img/ic_mark.png">
+					<span class="wode-list-menu-item-text ">我的收藏&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</div>
+			</div>
+			<div class="wode-list-menu-item half-screen-1px border-right-bottom" flag="4">
+				<div class="center">
+					<img class="wode-list-menu-item-img wode-list-menu-item-tit " src="../img/ic_tit.png">
+					<span class="wode-list-menu-item-text ">我的标签&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</div>
+			</div>
+			<div class="wode-list-menu-item half-screen-1px border-bottom" flag="5">
+				<div class="center">
+					<img class="wode-list-menu-item-img " src="../img/ic_yanzhen.png">
+					<span class="wode-list-menu-item-text ">账号认证&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				</div>
+			</div>
+		</div>
+		<input type="button" class="wode-exit-login" value="登录">
+		<script>
+			function successGetUseInfo(jsonStr) {
+				Common.saveJson("info", jsonStr);
+				var obj = $.parseJSON(jsonStr);
+				console.log(obj.status);
+				if(obj.result.user_pic){
+					$("#pic").css("background","url("+obj.result.user_pic+") no-repeat");
+				}
+				if(obj.result.balance){
+					$("#num").text(obj.result.balance);
+				}
+				if(obj.result.username){
+					$("#name").text(obj.result.username);
+				}
+			}
+
+			function errorGetUseInfo(jsonStr) {
+				console.log(jsonStr);
+			}
+			var login_style = {
+				top: '0px',
+				bottom: '0px'
+			}
+			var targetHtmlArray = ["my-release-task.html", "my-accept-task.html", "my-follow-people.html", "myCollect.html", "myTips.html", "AccountAC.html"];
+			var show = false;
+			$(".wode-list-menu-item:lt(6)").click(function() {
+				if (!show) {
+					show = true;
+					console.log(show);
+					var $_this = this;
+					var flag = $(this).attr("flag");
+					var targetHtml = targetHtmlArray[flag];
+					mui.plusReady(function() {
+						var target;
+						if (target == null) {
+							target = Common.createWeb(targetHtml, targetHtml, Constant.allScreen_style);
+						}
+						plus.webview.show(target, "slide-in-right", 300);
+						target.addEventListener("close", function() {
+							show = false;
+						});
+					});
+				};
+			});
+			document.getElementById("btnSetting").addEventListener('tap', function() {
+				console.log("点击设置界面");
+				var mycoolect = plus.webview.create("Setting.html", "个人资料", login_style);
+				var self = plus.webview.currentWebview();
+				plus.webview.show(mycoolect, "slide-in-right", 300);
+				self.parent().append(mycoolect);
+			});
+			var set_style = {
+				top: '0px',
+				bottom: '0px'
+			}
+			$(".wode-exit-login").click(function() {
+				mui.plusReady(function() {
+					Common.u_Id = Common.getJson(Common.u_Id_Key);
+					console.log(Common.u_Id);
+					if (Common.u_Id == null) {
+						if (!show) {
+							show = true;
+							mui.plusReady(function() {
+								targetTab = Common.createWeb("login.html", "忘记密码", Constant.allScreen_style);
+								//					targetTab.loadURL("yanshou_download.html?taskId=" + task_id + "&u_id=" + Common.u_Id + "&agreeId=" + agree_id + "&file_ids=" + task_file_ids);
+								plus.webview.show(targetTab, "slide-in-right", 300);
+								targetTab.addEventListener("close", function() {
+									show = false;
+									//请求登录后的个人信息
+									DataRequest.getData(Constant.IP2 + Constant.useinfo, [{
+										key: "action",
+										value: "info "
+									}], successGetUseInfo, errorGetUseInfo);
+								});
+							});
+						}
+					} else {
+						Dialog.showDialog("是否退出登录?", function() {
+							Common.removeJson(Common.u_Id_Key);
+							Common.removeJson(Common.u_Validate_Key);
+							Dialog.closeDialog();
+						}, Dialog.closeDialog);
+					}
+				});
+			});
+			var open = true;
+			$(".wode-money-balance-distill").click('tap', function(e) {
+				var btnArray = ['取消', '提交'];
+				mui.prompt('请输入安全码', '初始安全码为个人密码', '多人维', btnArray, function(e) {
+					if (e.index == 1) {
+						console.log("sure=" + e.value);
+						if (open) {
+							open = false;
+							var targetTab = plus.webview.create("reflect.html", "提现", set_style);
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("show", function() {
+								open = true;
+							});
+						}
+					} else {
+						console.log("cancel");
+					}
+				})
+			});
+			$(".wode-money-balance-recharge").click(function() {
+				alert("为了测试登录点击了登录uid=296");
+				mui.plusReady(function() {
+					Common.saveJson("login_uId", "296");
+					Common.saveJson("login_uMoney", "10624.69");
+					Common.saveJson("login_uPhone", "15623073205");
+				});
+				if (open) {
+					open = false;
+					var targetTab = plus.webview.create("charge.html", "充值", set_style);
+					plus.webview.show(targetTab, "slide-in-right", 300);
+					targetTab.addEventListener("show", function() {
+						open = true;
+					});
+				}
+			});
+		</script>
+	</body>
+
+</html>

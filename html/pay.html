@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/pay.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">委托预算</span>
+			</div>
+		</div>
+		<div class="content" style="display: none;">
+			<div class="poy-money-bar">
+				<p class="pay-title font-size-15px">委托资金</p>
+				<div class="pay-money">
+					<span class="pay-money-money">2000</span><span class="pay-moeny-unit font-size-15px">元</span>
+				</div>
+			</div>
+			<div class="pay_code_bar">
+				<input class="pay_code font-size-15px" type="text" placeholder="输入短信验证码" onKeyUp="value=value.replace(/\D/g,'')" maxlength="4" />
+				<div class="get_code_button">获取验证码</div>
+			</div>
+			<div class="pay_button font-size-18px">
+				使用余额支付
+			</div>
+		</div>
+	</body>
+	<script>
+		/**************************关闭窗口start*****************************/
+		mui.plusReady(function() {
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", 300);
+			});
+		});
+		/**************************关闭窗口end*****************************/
+		var params = Common.urlParam(window.location);
+		var money, taskId, task_model;
+		money = params.money
+		taskId = params.taskId;
+		task_model = params.task_model;
+		console.log("task_id::" + taskId + "task_money::" + money + "task_model::" + task_model);
+		$(".pay-money-money").text(money);
+		/**************************查询余额start*****************************/
+		var login_uMoney;
+		mui.plusReady(function() {
+			login_uMoney = Common.getJson("login_uMoney");
+			console.log("login_uMoney::" + login_uMoney + "money::" + money);
+			if (login_uMoney - money < 0) {
+				var $pay_button = $(".pay_button");
+				$pay_button.unbind("click");
+				$pay_button.text("余额不足").addClass("disable_pay_button").removeClass("pay_button");
+			}
+			$(".content").css("display", "block");
+		});
+		/**************************查询余额end*****************************/
+		//调用获取验证码的接口
+		var successFn = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			//			alert(json.status);
+		};
+		var errorFn = function(jsonStr) {
+			//			var json = $.parseJSON(jsonStr);
+			//			alert(json.status);
+		};
+		var getCode = function(phone) {
+			DataRequest.getData(Constant.IP2 + Constant.getCode, [{
+				key: "phone",
+				value: phone
+			}], successFn, errorFn);
+		};
+		$(".get_code_button").click(function() {
+			getCode(Common.u_Phone);
+			return false;
+		});
+		//付款接口调用
+		var paySuccessFn = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			console.log("jsonStr：" + jsonStr);
+			if (json.status == "success") {
+				mui.toast(json.msg);
+				mui.plusReady(function() {
+					Common.saveJson("flag", "true");
+					Common.saveJson("login_uMoney", json.result.balance);
+				});
+			} else {
+				mui.toast(json.msg);
+			}
+		}
+		var payErrorFn = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			alert(json.msg);
+		}
+		var payApi = function(taskId, code, apiAccess) {
+			console.log("taskId::" + taskId + "code::" + code);
+			DataRequest.postData(Constant.IP2 + apiAccess, [{
+				key: "taskId",
+				value: taskId
+			}, {
+				key: "phone_code",
+				value: code
+			}], paySuccessFn, payErrorFn);
+		};
+		$(".pay_button").bind("click", function() {
+			var code = $(".pay_code").val();
+			if (code != undefined) {
+				if (task_model == 1) {
+					payApi(taskId, code, Constant.XuanPay);
+				} else {
+					payApi(taskId, code, Constant.JingPay);
+				}
+			}
+			return false;
+		});
+	</script>
+
+</html>

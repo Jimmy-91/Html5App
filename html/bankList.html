@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>银行卡列表</title>
+		<link href="../css/default.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/app.css" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<style>
+			/*.border{border: 1px solid black;}*/
+			
+			.bank {
+				width: 90%;
+				height: 120px;
+				margin: 3% auto;
+				border-top-left-radius: 5px;
+				border-top-right-radius: 5px;
+				background-color: #f46161;
+			}
+			
+			.icon {
+				width: 15%;
+				height: 100%;
+				float: left;
+			}
+			
+			.icon img {
+				width: 80%;
+				height: auto;
+				border-radius: 100px;
+				margin: 40% 0 0 30%;
+				float: left;
+				position: relative;
+			}
+			
+			.bank-list1 {
+				float: left;
+				position: relative;
+				color: white;
+				font-size: 20px;
+				width: 50%;
+				margin: 6% 0 0 5%;
+				font: "微软雅黑";
+			}
+			
+			.bank-list2 {
+				float: left;
+				position: relative;
+				color: white;
+				font-size: 15px;
+				width: 60%;
+				margin: 1% 0 5% 5%;
+				font-family: "微软雅黑";
+			}
+			
+			.bank-list3 {
+				float: left;
+				position: relative;
+				color: white;
+				font-size: 20px;
+				width: 80%;
+				margin: 0 0 0 5%;
+				font-family: "微软雅黑";
+			}
+			
+			.addr {
+				margin-left: 50%;
+			}
+			
+			.liststyle {
+				list-style: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-28px">银行卡认证</span>
+			</div>
+			<div class="header-right-elem">
+				<div id="addBankCard" class="add addr">
+				</div>
+			</div>
+		</div>
+
+		<div id="banklist" class="content">
+			<!--<li class="liststyle">
+				<a href="#picture">
+					<div class="bank">
+						<div class="icon border"><img src="../img/icon/icbc.jpg" /></div>
+						<div class="bank-list1 border">招商银行</div>
+						<div class="bank-list2 border">储蓄卡</div>
+						<div class="bank-list3 border">**** **** **** 3350</div>
+					</div>
+				</a>
+			</li>-->
+		</div>
+		<div id="bankaction" class="mui-popover mui-popover-action mui-popover-bottom">
+			<ul id="listtype" class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="">解除绑定</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">取消认证</a>
+				</li>
+				<li class="mui-table-view-cell">
+					<a href="#">删除认证</a>
+				</li>
+			</ul>
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell">
+					<a href="#picture"><b>取消</b></a>
+				</li>
+			</ul>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js" ></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/city.data-3.js"></script>
+		<script>
+			mui('body').on('tap', '.mui-popover-action li>a', function() {
+				var a = this,
+					parent;
+				//根据点击按钮，反推当前是哪个actionsheet
+				for (parent = a.parentNode; parent != document.body; parent = parent.parentNode) {
+					if (parent.classList.contains('mui-popover-action')) {
+						break;
+					}
+				}
+				//关闭actionsheet
+				mui('#' + parent.id).popover('toggle');
+				console.log("你刚点击了\"" + a.innerHTML + "\"按钮");
+				switch (a.innerHTML) {
+					case "解除绑定":
+					
+						break;
+					case "取消认证":
+						break;
+					case "删除认证":
+						break;
+					default:
+						break;
+				}
+			})
+			mui.plusReady(function() {
+				DataRequest.getData(Constant.IP + Constant.BankList, [{
+					key: "uid",
+					value: 296
+				}], successFL, errorFL)
+			});
+
+			function successFL(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				console.log(jsonStr);
+				var arr = json.result;
+				if (json.status == "success") {
+					var $BankList = document.getElementById("banklist");
+					$BankList.innerHTML = "";
+					for (var i = 0; i < arr.length; i++) {
+						var li = document.createElement('li');
+						li.className = 'liststyle';
+						li.innerHTML = '<a href="#bankaction"><div class="bank"><div class= "icon border"><img src="../img/icon/' + arr[i].bank_name + '.jpg"/></div><div class="bank-list1 border">' + arr[i].bank_full_name + '</div><div class="bank-list2 border">储蓄卡</div><div class="bank-list3 border">' + numRefresh(arr[i].card_num) + '</div></div></a>';
+						$BankList.appendChild(li);
+					}
+				}
+			}
+			function errorFL(jsonStr) {
+				mui.toast(jsonStr);
+			}
+			function numRefresh(num) {
+				num = num.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, "$1 ");
+				return num;
+			}
+			function doNextStep(type){
+				
+			}
+			$(".back").click(function() {
+				var target = plus.webview.currentWebview();
+				$(".content").css("display", "none");
+				target.close("slide-out-right", 300);
+			});
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" href="../css/default.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<style>
+			.message-list {
+				list-style: none;
+				height: 80px;
+				border-bottom: 1px #DFE0E2 solid;
+				-webkit-user-select: none;
+				list-style: none;
+			}
+			
+			.head-pic {
+				margin-top: 10px;
+				width: 60px;
+				height: 60px;
+				margin-left: 15px;
+			}
+			
+			.message-title {
+				font-size: 17px;
+				color: #030303;
+				position: absolute;
+				margin-top: 21px;
+				margin-left: 15px;
+				width: 50%;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			
+			.message-detail {
+				position: absolute;
+				font-size: 15px;
+				color: #7F7F7F;
+				width: 70%;
+				margin-top: 45px;
+				margin-left: 15px;
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+			}
+			
+			.message-time {
+				font-size: 12px;
+				color: #7F7F7F;
+				margin-top: 21px;
+				/*margin-left: 180px;*/
+				margin-right: 15px;
+				float: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="message-panel">
+			<!--<li class="message-list">
+				<img class="head-pic" src="../img/ic_xitongmassges.png" />
+				<span class="message-title">系统消息</span>
+				<span class="message-detail">系统消息系统系统消息系统系统消息系统系统消息系统</span>
+				<span class="message-time">2016.03.14</span>
+			</li>
+			<li class="message-list">
+				<img class="head-pic" src="../img/ic_gengduo.png" />
+				<span class="message-title">小花的消息小花的消息小花的消息小花的消息小花的消息</span>
+				<span class="message-detail">as打扫打扫打扫打扫打扫的系统消息系统系统消息系统系统消息系统系统系统消息系统系统消息系</span>
+				<span class="message-time">2016.03.14</span>
+			</li>-->
+		</div>
+		<script>
+			var checknotice = false;
+			var checkprivate = false;
+			mui.plusReady(function() {
+				//请求系统消息
+				DataRequest.getData(Constant.IP2 + Constant.Message, [{
+					key: "action",
+					value: "notice"
+				}, {
+					key: "u_id",
+					value: "296"
+				}], successGetFL, errorGetFL);
+				//请求私人消息
+				DataRequest.getData(Constant.IP2 + Constant.Message, [{
+					key: "action",
+					value: "private"
+				}, {
+					key: "u_id",
+					value: "296"
+				}], successGetPM, errorGetPM);
+			});
+			var successGetFL = function(jsonStr) {
+				mui.plusReady(function() {
+					Common.saveJson("message", jsonStr);
+					refreshPanel();
+				});
+			};
+			var errorGetFL = function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("get message error");
+			};
+			var successGetPM = function(jsonStr) {
+				mui.plusReady(function() {
+					Common.saveJson("pmessage", jsonStr);
+					refreshPanel2();
+				});
+			};
+			var errorGetPM = function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("get pmessage error");
+			};
+			var refreshPanel = function() {
+				checknotice = true;
+				dorefreshPane();
+			}
+			var refreshPanel2 = function() {
+				checkprivate = true;
+				dorefreshPane();
+			}
+			var dorefreshPane = function() {
+				if (checknotice && checkprivate) {
+					checknotice = false;
+					checkprivate = false;
+					var mes = Common.getJson("message");
+					var pmes = Common.getJson("pmessage")
+					if (mes != null || pmes != null) {
+						var $fenleiList = $(".message-panel");
+						if ($fenleiList.children().length > 0) {
+							$fenleiList.empty();
+						}
+						/*********系统消息*********/
+						var json = $.parseJSON(mes);
+//						console.log(json.result[0].title);
+						var data = json.result;
+						for (var i = 0; i < 1; i++) {
+							var $ListItem = $("<div class='message-list'></div>");
+							$ListItem.click(function() {
+								var mycoolect = plus.webview.create("messageDetail.html", "系统消息", {}, {
+									"data": data
+								});
+								console.log(data[0].title);
+								var self = plus.webview.currentWebview();
+								plus.webview.show(mycoolect, "slide-in-right", 300);
+								self.parent().append(mycoolect);
+							})
+							var $ListItemHead = $("<img class='head-pic'></img>").attr("src", "../img/ic_xitongmassges.png");
+							var $ListItemTitle = $("<span class='message-title'></span>").text(data[i].title);
+							var $ListItemDetail = $("<span class='message-detail'></span>").text(data[i].des);
+							var $ListItemTime = $("<span class='message-time'></span>").text(getDate(data[i].on_time));
+							$ListItem.append($ListItemHead);
+							$ListItem.append($ListItemTitle);
+							$ListItem.append($ListItemDetail);
+							$ListItem.append($ListItemTime);
+							$fenleiList.append($ListItem);
+						}
+						/*********私人消息*********/
+						var pjson = $.parseJSON(pmes);
+						var pdata = pjson.result;
+						for (var key in pdata) {
+							var $PListItem = $("<div class='message-list'></div>");
+							$PListItem.attr("flag", key);
+							$PListItem.attr("needdata", pdata[key]);
+							$PListItem.click(function() {
+								var targ = $(this).attr("flag");
+								var needdata = $(this).attr("needdata");
+								var pmycoolect = plus.webview.create("messageDetail.html", targ, {}, {
+									"data": pdata[key]
+								});
+								var pself = plus.webview.currentWebview();
+								plus.webview.show(pmycoolect, "slide-in-right", 300);
+								pself.parent().append(pmycoolect);
+							});
+							var $PListItemHead = $("<img class='head-pic'></img>").attr("src", pdata[key][0].user_pic);
+							var $PListItemTitle = $("<span class='message-title'></span>").text(key);
+							var $PListItemDetail = $("<span class='message-detail'></span>").text(pdata[key][0].content);
+							var $PListItemTime = $("<span class='message-time'></span>").text(getDate(pdata[key][0].on_time));
+							$PListItem.append($PListItemHead);
+							$PListItem.append($PListItemTitle);
+							$PListItem.append($PListItemDetail);
+							$PListItem.append($PListItemTime);
+							$fenleiList.append($PListItem);
+						}
+					}
+				}
+			}
+
+			function getDate(tm) {
+				var tt = new Date(parseInt(tm) * 1000).toLocaleString().replace(/年|月/g, ".").replace(/日/g, " ").substr(0, 10)
+				return tt;
+			}
+		</script>
+	</body>
+	<script>
+	</script>
+
+</html>

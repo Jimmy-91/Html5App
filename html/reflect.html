@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<!--<link rel="stylesheet" href="../css/mui.min.css" />-->
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<style>
+			.table-top {
+				left: 0;
+				right: 0;
+				background: white;
+				padding-left: 17px;
+				padding-top: 15px;
+				border-bottom: 1px #DFE0E2 solid;
+			}
+			
+			.table-top2 {
+				margin-top: 40px;
+				left: 0;
+				right: 0;
+				background: white;
+				padding-left: 17px;
+				padding-top: 15px;
+				padding-bottom: 15px;
+				border-top: 1px #DFE0E2 solid;
+				border-bottom: 1px #DFE0E2 solid;
+			}
+			
+			.item-cell {
+				list-style: none;
+				border-bottom: 1px #DFE0E2 solid;
+				height: 55px;
+			}
+			
+			.desribe-title {
+				padding-top: 15px;
+				text-align: left;
+				width: 150px;
+				font-size: 17px;
+				line-height: 30px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+			}
+			
+			.btncommit {
+				position: relative;
+				height: 45px;
+				font-size: 15px;
+				line-height: 30px;
+				padding: 15px 120px;
+				color: #FFFFFF;
+				border-radius: 2px;
+				background: #DD3C38;
+			}
+			
+			.btncommit:active {
+				background: #c43431;
+				color: white;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">提现</span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="table-top">
+			<span>到账支付宝</span>
+			<li class="item-cell">
+				<input id="id" class="desribe-title" onkeyup="" type="text" placeholder="请输入支付宝帐号" name="newpw" />
+			</li>
+			<li class="item-cell" style="border-bottom:none">
+				<input id="name" class="desribe-title" onkeyup="" type="text" placeholder="请输入支付宝名称" name="newpw" />
+			</li>
+		</div>
+		<div class="table-top2">
+			<span>提现金额</span>
+			<div>
+				<span style="font-size: 25px;">￥</span>
+				<input id="cash" class="desribe-title" type="text" placeholder="请输入提现金额" />
+			</div>
+		</div>
+		<!--<div class="table-top3">
+			<span class="btncommit">提现</span>
+		</div>-->
+		<div class="pay_button font-size-18px">
+			提现
+		</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		mui.plusReady(function() {
+			var webView = plus.webview.currentWebview();
+			var title = webView.id;
+			$(".title")[0].innerHTML = title;
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				webView.hide("slide-out-right", 300);
+			});
+		});
+		$(".btncommit").click(function() {
+			var name = $("#name").val();
+			var id = $("#id").val();
+			var cash = $("#cash").val();
+			if (id == "") {
+				mui.toast("请输入正确的支付宝帐号！");
+				return;
+			}
+			if (name == "") {
+				mui.toast("请输入正确的支付宝名称！");
+				return;
+			}
+			if (cash == "") {
+				mui.toast("请输入提款金额");
+				return;
+			}
+			DataRequest.getData(Constant.IP2 + Constant.Reflect, [{
+				key: "u_id",
+				value: 296
+			}, {
+				key: "intWithdrawCash",
+				value: cash
+			}, {
+				key: "pay_account",
+				value: id
+			}, {
+				key: "pay_username",
+				value: name
+			}], successFL, errorFL)
+		});
+
+		function successFL(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			mui.toast(json.msg);
+		}
+
+		function errorFL(jsonStr) {
+			mui.toast(jsonStr);
+		}
+	</script>
+
+</html>

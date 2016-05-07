@@ -1,0 +1,24 @@
+.title-bar h3 {
+	margin: 5px 0px;
+}
+
+.content {
+	margin: 0px 10px;
+}
+
+.title-bar {
+	margin-bottom: 15px;
+}
+
+.title {
+	line-height: 24px;
+}
+
+.new-attach-msg {
+	font-size: 12px
+}
+
+.new-content img {
+	width: 100%;
+	height: auto;
+}

@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link href="../css/default.css" rel="stylesheet" />
+		<link href="../css/mui.listpicker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/texiao.css" />
+
+	</head>
+	<style>
+		body {
+			font-family: simhei;
+		}
+		
+		.b {
+			background: white;
+			text-align: center;
+		}
+		
+		.d1 {
+			height: 40px;
+		}
+		
+		.d2 {
+			height: 40px;
+		}
+		
+		.font {
+			margin: 0 0 2% 0;
+			position: relative;
+		}
+		
+		.font2 {
+			margin: 10% 0 2% 0;
+			position: relative;
+			width: 20%;
+			height: auto;
+		}
+		
+		.model: {
+			width: 30px;
+		}
+		
+		.model1: {
+			float: left;
+			width: 30px;
+			height: 30px;
+			position: relative;
+		}
+		
+		.xz {
+			width: 90%;
+			height: auto;
+			margin: 3% auto 0 auto;
+		}
+		
+		.xzz {
+			width: 90%;
+			height: auto;
+			margin: 18% auto 0 auto;
+		}
+		
+		.xz1 {
+			width: 90%;
+			height: auto;
+			margin: 3% auto;
+		}
+		
+		.x1 {
+			width: 48%;
+			height: 40px;
+			float: left;
+			margin-top: 8px;
+		}
+		
+		.x2 {
+			width: 48%;
+			height: 40px;
+			float: right;
+			margin-top: 8px;
+		}
+		
+		.cont {
+			width: 100%;
+			height: 140px;
+			margin: auto;
+			background: white;
+		}
+		
+		.cont-fn {
+			margin: auto;
+			position: relative;
+		}
+		
+		.cont-fn p {
+			padding-top: 65px;
+			text-align: center;
+		}
+		
+		.pic {
+			width: 90%;
+			height: 54px;
+			border: white solid 1px;
+			margin: auto;
+		}
+		
+		.sbox {
+			width: 40px;
+			height: 40px;
+			border: red solid 1px;
+			float: left;
+			margin: 7px 0 0 5px;
+		}
+		
+		.ys-left {
+			float: left;
+			width: 48%;
+		}
+		
+		.ys-right {
+			float: right;
+			width: 48%;
+		}
+		
+		.pict {
+			width: 100%;
+			height: 30px;
+		}
+		
+		.pict img {
+			width: auto;
+			height: 100%;
+			float: right;
+		}
+		
+		.picf {
+			float: left;
+			/*margin-right: 60%;*/
+		}
+		
+		.img-style {
+			margin-top: 3px;
+			margin-left: 5px;
+			width: 17px;
+			height: 17px;
+		}
+		
+		.input-type {
+			border: 0px;
+			width: 285px;
+			height: 40px;
+		}
+		
+		.b {
+			border: 1px solid #DDDDDD;
+		}
+		
+		.addpic-style {
+			width: 55px;
+			height: 55px;
+			margin-top: 5px;
+			margin-left: 3px;
+			border: 1px red solid;
+		}
+		
+		.addvoice-style {
+			float: left;
+			width: 55px;
+			height: 55px;
+			margin-top: 5px;
+			margin-left: 3px;
+			border: 1px red solid;
+			background: url(../img/ic_playyuyin.png) no-repeat;
+			background-position-x: center;
+		}
+		
+		.addvoice-time {
+			margin-left: auto;
+			margin-right: auto;
+			display: block;
+			text-align: center;
+			margin-top: 30px;
+		}
+	</style>
+
+	<body>
+		<div>
+			<div class="xz">
+				<div class="font">任务分类</div>
+				<div id="taskftype" class="x1 b" style="border: 1px solid #DDDDDD;">
+					<p style="padding-top:10px;">
+						<span id="txt1" style="">请选择任务分类</span>
+						<img src="../img/ic_more_normal.png" style="float: right;margin-right: 6%;" />
+					</p>
+				</div>
+				<div class="x2 b" style="border: 1px solid #DDDDDD;">
+					<p style="padding-top:10px;"><span id="txt2">请选择任务子类</span><img src="../img/ic_more_normal.png" style="float: right;margin-right: 6%;" /></p>
+				</div>
+			</div>
+
+			<div class="xzz">
+				<div class="font2">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</div>
+				<div id="txtTitle" class=""><input type="text" placeholder="请输入标题" class="input-type" /></div>
+			</div>
+
+			<div class="xz">
+				<div id="wrap" class="model">任务模式：
+					<input name="f1" type="radio" style="margin-left: 10px;" value="1" />
+					<img class="img-style" src="../img/ic_shang.png" />
+					<span style="margin-left:5px;">悬赏</span>
+					<input name="f1" type="radio" style="margin-left: 15px;" value="4" />
+					<img class="img-style" src="../img/ic_zhao.png" />
+					<span style="margin-left:5px;">多人竞标</span>
+				</div>
+			</div>
+			<div class="xz1">
+				<div class="picf">需求详情</div>
+				<div class="pict">
+					<img id="btnAddPhoto" style="width:25px;height:25px;" src="../img/ic_phone_noraml.png" />
+					<img id="btnAddVoice" style="width:25px;height:25px;margin-right: 10px;" src="../img/ic_yuying_noraml.png" />
+				</div>
+				<div class="cont" style="border: 1px solid #DDDDDD;">
+					<textarea id="textarea" style="height:100%;width:100%;border: none;">
+					</textarea>
+					<!--<div class="cont-fn">
+						<p id="detail">请输入需求详情</p>
+					</div>-->
+				</div>
+			</div>
+			<div id=addPicAndVoice style="margin-left: 15px;">
+				<!--<img class='addpic-style' src="../img/head.jpeg"></img>
+				<div class="addvoice-style">
+					<span class="addvoice-time">00:00</span>
+				</div>-->
+			</div>
+			<div class="xz">
+				<div class="ys-left" style="float: left;">
+					<p style="color: black;">预算</p>
+					<input id="txtCash" style="width: 100%;" type="text" placeholder="请输入预算"/>
+				</div>
+				<div class="ys-right" style="float: right;">
+					<p style="color: black;">报名截止时间</p>
+					<div class="b d2">
+						<p style="padding-top:10px;">
+							<span id="pickDateBtn">报名截止时间</span>
+							<img src="../img/ic_more_normal.png" />
+						</p>
+					</div>
+				</div>
+				<br style="clear: both;" />
+			</div>
+			<div id="btnCommit" class="pay_button font-size-18px">
+				提交
+			</div>
+
+			<div id="con">
+				<div class="top b">
+					<li class="spinner">
+						<div class="rect1"></div>
+						<div class="rect2"></div>
+						<div class="rect3"></div>
+						<div class="rect4"></div>
+						<div class="rect5"></div>
+					</li>
+					<li class="spinner">
+						<div class="rect1"></div>
+						<div class="rect2"></div>
+						<div class="rect3"></div>
+						<div class="rect4"></div>
+						<div class="rect5"></div>
+					</li>
+					<span id="voicetime">00:00</span>
+				</div>
+				<div class="bottom">
+					<div class="ma">
+						<div id="deletevoice" class="left">
+							<div class="del"><img src="../img/ic_delete.png" /></div>
+							<div class="dr">----</div>
+						</div>
+						<div id="addvoice" class="auto">
+							<div class="auto-img"><img src="../img/ic_playluzhi-.png" /></div>
+						</div>
+						<div id="deletevoice" class="right">
+							<div class="dr1">----</div>
+							<div class="del1"><img src="../img/ic_delete.png" /></div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div id="zz" style="background:black;width: 100%;height: 100%;position:fixed;bottom:0;z-index: 1;"></div>
+	</body>
+	<script type="text/javascript" src="../js/DataRequest.js"></script>
+	<script type="text/javascript" src="../js/Common.js"></script>
+	<script type="text/javascript" src="../js/mui.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+	<script type="text/javascript" src="../js/Constant.js"></script>
+	<script src="../js/mui.listpicker.js"></script>
+	<script src="../js/mui.poppicker.js"></script>
+	<script>
+		(function($, doc) {
+			$.init();
+//			setTimeout(function() {
+//				
+//			}, 1000);
+$.ready(function() {
+					var cityPicker = new $.PopPicker({
+						layer: 2
+					});
+					var fenleidata = Common.getJson("fenlei");
+					var json = $.parseJSON(fenleidata);
+					if (json != null) {
+						console.log(json.result.cates[0].indus_name);
+						var data = json.result.cates[0];
+						var arr = [];
+						arr.push(data);
+						cityPicker.setData(arr);
+					} else {
+						alert("get data error");
+					};
+					document.getElementById("taskftype").addEventListener('click', function() {
+						cityPicker.show(function(items) {
+							document.getElementById("txt1").innerText = items[0].indus_name;
+							document.getElementById("txt2").innerText = items[1].indus_name;
+							childid = items[1].indus_id;
+							fatherid = items[0].indus_id;
+						});
+					});
+				});
+		})(mui, document);
+		$(document).ready(function() {
+			$("#btnAddVoice").click(function() {
+				showAddvoicePanel();
+			});
+			$("#zz").click(function() {
+				hideAddvoicePanel();
+			});
+		});
+		var fatherid = ""; //主分类
+		var childid = ""; //子分类
+		var selectTime = ""; //截止时间
+		var PicAndVoiceArr = []; //存放照片与声音数组
+		var PVID = []; // 存放需要发需求上传附件ID
+		$("#pickDateBtn").click(function() {
+			var dDate = new Date();
+			dDate.setFullYear(dDate.getFullYear(), dDate.getMonth(), dDate.getDate());
+			var maxDate = new Date();
+			maxDate.setFullYear(dDate.getFullYear(), dDate.getMonth() + 1, dDate.getDate());
+			plus.nativeUI.pickDate(function(e) {
+				var d = e.date;
+				console.log('您选择的日期是:' + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate());
+				selectTime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+				document.getElementById("pickDateBtn").innerText = selectTime;
+			}, function(e) {}, {
+				title: "请选择截止日期",
+				date: dDate,
+				minDate: dDate,
+				maxDate: maxDate
+			});
+		})
+		$("#btnAddPhoto").click(function() {
+			if (PicAndVoiceArr.length > 4) {
+				mui.toast("最多添加5个附件");
+				return;
+			}
+			if (mui.os.plus) {
+				var a = [{
+					title: "拍照"
+				}, {
+					title: "从手机相册选择"
+				}];
+				plus.nativeUI.actionSheet({
+					title: "选择上传照片",
+					cancel: "取消",
+					buttons: a
+				}, function(b) {
+					switch (b.index) {
+						case 0:
+							console.log(0000);
+							break;
+						case 1:
+							console.log("拍照");
+							var cmr = plus.camera.getCamera();
+							cmr.captureImage(function(path) {
+								plus.io.resolveLocalFileSystemURL(path, function(entry) {
+									var s = entry.toLocalURL() + "?version=" + new Date().getTime();
+									console.log(s);
+									appendFile(s, 0);
+								}, function(e) {
+									console.log("读取拍照文件错误：" + e.message);
+								});
+							}, function(err) {});
+							break;
+						case 2:
+							console.log("从手机相册选择");
+							plus.gallery.pick(function(path) {
+								console.log("zxc1=" + path);
+								appendFile(path, 0);
+							}, function(err) {}, null);
+							break;
+						default:
+							break
+					}
+				})
+			}
+		});
+
+		function appendFile(p, type) {
+			console.log("type1=" + type);
+			var wt = plus.nativeUI.showWaiting();
+			var task = plus.uploader.createUpload(Constant.uploadfile, {
+					method: "POST"
+				},
+				function(t, status) { //上传完成
+					if (status == 200) {
+						console.log(t.responseText);
+						var json = $.parseJSON(t.responseText);
+						var fid = json.result.fileid;
+						console.log("type=" + type);
+						PVID.push(fid);
+						var obj = {};
+						obj.p = p;
+						obj.fid = fid;
+						obj.type = type;
+						PicAndVoiceArr.push(obj);
+						refreshPanel();
+					} else {
+						console.log("上传失败：" + status);
+					}
+					wt.close();
+				}
+			);
+			task.addFile(p, {
+				key: "upload"
+			});
+			task.start();
+		}
+
+		function refreshPanel() {
+			var $PVList = $("#addPicAndVoice");
+			if ($PVList.children().length > 0) {
+				$PVList.empty();
+			}
+			for (var i = 0; i < PicAndVoiceArr.length; i++) {
+				if (PicAndVoiceArr[i].type == 0) {
+					var $PVListItem = $("<img class='addpic-style'></img>").attr("src", PicAndVoiceArr[i].p);
+				} else {
+					var $PVListItem = $("<div class='addvoice-style'><span class='addvoice-time'>00:00</span></div>");
+				}
+				$PVListItem.attr("flag", PicAndVoiceArr[i].fid);
+				$PVListItem.attr("type", PicAndVoiceArr[i].type);
+				var timeout = null;
+				if ($PVListItem.attr("type") == 1) {
+					$PVListItem.bind("click", function(e) {
+						e.stopPropagation();
+						console.log("单击声音");
+					});
+				}
+				$PVListItem.bind("touchstart", function() {
+					var id = this.getAttribute("flag");
+					timeout = setTimeout(function() {
+						doDeleteFun(id);
+					}, 2000);
+				});
+				$PVListItem.bind("touchend", function() {
+					clearTimeout(timeout);
+				});
+				$PVList.append($PVListItem);
+			}
+		}
+
+		function doDeleteFun(id) {
+			var btnArray = ['否', '是'];
+			mui.confirm('是否删除此附件', '多人维', btnArray, function(e) {
+				if (e.index == 1) {
+					console.log("xzccccccccc=" + PicAndVoiceArr[0].fid);
+					for (var i = 0; i < PicAndVoiceArr.length; i++) {
+						if (PicAndVoiceArr[i].fid == id) {
+							PicAndVoiceArr.splice(i, 1);
+							refreshPanel();
+							break;
+						}
+					}
+				} else {
+					console.log('否');
+				}
+			})
+		}
+		var timer
+		var check = false; //录音与暂停状态判断;
+		var ct = false; //取消与保存录音状态判断;
+		$("#addvoice").bind("click", function(event) {
+			check = !check;
+			if (check) {
+				var num = 0;
+				var time = 0;
+				console.log("start");
+				timer = window.setInterval(function() {
+					num--;
+					if (num > 0) {
+						$("#text2").text(num + "秒后开始录音");
+					} else {
+						startRecord();
+						time++;
+						console.log(time);
+						$("#voicetime").text(refreshTime(time));
+					}
+				}, 1000);
+			} else {
+				ct = true;
+				stopRecord();
+				clearInterval(timer);
+			}
+			//			$("#showAddVoice").css("display", "inline");
+		});
+		$("#deletevoice").bind("touchend", function(event) {
+			console.log("end2");
+			ct = false;
+			stopRecord();
+			clearInterval(timer);
+		});
+
+		function refreshTime(time) {
+			var str = "";
+			if (time < 60) {
+				if (time < 10) {
+					time = "0" + time;
+				}
+				str = "00:" + time;
+			} else {
+				if (time < 70) {
+					console.log("11=" + time);
+					time = "0" + (time % 60);
+					console.log("22=" + time);
+					str = "01:" + time;
+				} else {
+					str = "01:" + (time - 60);
+				}
+			}
+			return str;
+		};
+		document.addEventListener("plusready", onPlusReady, false);
+		var r = null;
+		// 扩展API加载完毕，现在可以正常调用扩展API 
+		function onPlusReady() {
+			r = plus.audio.getRecorder();
+		}
+
+		function startRecord() {
+			if (r == null) {
+				alert("Device not ready!");
+				return;
+			}
+			r.record({
+				filename: "_doc/audio/"
+			}, function(p) {
+				console.log("Audio record success!" + p);
+				hideAddvoicePanel();
+				if (ct) {
+					appendFile(p, 1);
+				}
+			}, function(e) {
+				alert("Audio record failed: " + e.message);
+			});
+		}
+
+		function stopRecord() {
+			r.stop();
+		}
+
+		function showAddvoicePanel() {
+			$("#con").css("display", "block");
+			$("#zz").css("display", "block").css("overflow", "hidden");
+		}
+
+		function hideAddvoicePanel() {
+			$("#con").css("display", "none");
+			$("#zz").css("display", "none");
+		}
+		$("#btnCommit").click(function() {
+			var id = $('#wrap input[name="f1"]:checked ').val();
+			var title = document.getElementById("txtTitle").value; //标题
+			if (title == "") {
+				alert("标题不能为空！");
+				return;
+			}
+			var detail = document.getElementById("textarea").value; //需求详情
+			if (detail == "") {
+				alert("需求详情不能为空！");
+				return;
+			}
+			if (selectTime == "") {
+				alert("请选择截止日期！");
+				return;
+			}
+			var cash = document.getElementById("txtCash").value; //预算
+			if (cash == "") {
+				alert("预算金额不能为空！");
+				return;
+			}
+			var fileIds = "";
+			for (var i = 0; i < PicAndVoiceArr.length; i++) {
+				if(i<PicAndVoiceArr.length-1){
+					fileIds = fileIds + PicAndVoiceArr[i].fid + "|";
+				}else{
+					fileIds = fileIds + PicAndVoiceArr[i].fid;
+				}
+			}
+			console.log(fileIds);
+			var btnArray = ['确定', '取消'];
+			mui.confirm('提交后，将不能更改，确定提交？', null, btnArray, function(e) {
+				if (e.index == 0) {
+					DataRequest.getData(Constant.IP2 + Constant.pubtask, [{
+						key: "u_id", //用户ID
+						value: 296
+					}, {
+						key: "id", //任务模式
+						value: id
+					}, {
+						key: "task_title", //任务标题
+						value: title
+					}, {
+						key: "task_desc", //需求详情
+						value: detail
+					}, {
+						key: "indus_pid", //分类父id
+						value: fatherid
+					}, {
+						key: "indus_id", //分类子id
+						value: childid
+					}, {
+						key: "txt_task_day", //截止日期
+						value: selectTime
+					}, {
+						key: "txt_task_cash", //预算 悬赏模式必填
+						value: cash
+					}, {
+						key: "task_cash_cove", // 区间价格 多人竞标模式必填
+						value: "1-1000"
+					}, {
+						key: "file_ids", // 任务附件
+						value: fileIds
+					}], successSendFn, errorSendFn);
+				} else {
+					console.log("点击取消后触发");
+				}
+			})
+		});
+
+		function successSendFn(jsonStr) {
+			var data = $.parseJSON(jsonStr);
+			mui.toast(data.msg);
+		}
+
+		function errorSendFn(jsonStr) {
+			mui.toast(jsonStr);
+		}
+	</script>
+
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" type="text/css" href="../css/app.css" />
+		<link href="../css/mui.listpicker.css" rel="stylesheet" />
+		<link href="../css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/mui.min.css" />
+		<link rel="stylesheet" href="../css/sendTask.css" />
+		<link rel="stylesheet" href="../css/default.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<style>
+			.sendtask-top {
+				top: 100px;
+				left: 15px;
+			}
+			
+			.sendtask-title {
+				size: 20px;
+			}
+			
+			.sendtask-type-item {
+				position: relative;
+				top: 5px;
+				height: 45px;
+				font-size: 13px;
+				line-height: 30px;
+				padding: 10px 26px;
+				color: #C5C5C5;
+				border-radius: 2px;
+				background: #FFFFFF;
+			}
+			
+			.sendtask-type-item-leftimg {
+				width: 16px;
+				height: 16px;
+				position: absolute;
+				left: 130px;
+				display: inline-block;
+				border-radius: 10px;
+				margin-top: 12px;
+				background: url(../img/ic_more_normal.png) no-repeat;
+			}
+			
+			.sendtask-type-item-rightimg {
+				width: 16px;
+				height: 16px;
+				position: absolute;
+				right: 15px;
+				display: inline-block;
+				border-radius: 10px;
+				margin-top: 12px;
+				background: url(../img/ic_more_normal.png) no-repeat;
+			}
+			
+			.sendtask-type-item-rightimg2 {
+				width: 16px;
+				height: 16px;
+				position: absolute;
+				right: 23px;
+				display: inline-block;
+				border-radius: 10px;
+				margin-top: 12px;
+				background: url(../img/ic_more_normal.png) no-repeat;
+			}
+			
+			.add-top {
+				margin-left: 15px;
+				margin-top: 15px;
+				list-style: none;
+			}
+			
+			.desribe-title {
+				padding-top: 4px;
+				text-align: left;
+				width: 285px;
+				font-size: 13px;
+				line-height: 30px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+				border-radius: 1px;
+				border: 1px solid #DDDDDD;
+			}
+			
+			.desribe-text {
+				text-align: left;
+				width: 285px;
+				font-size: 13px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+				border-radius: 1px;
+				border: 1px solid #DDDDDD;
+			}
+			
+			.add-photo-btn {
+				width: 28px;
+				height: 28px;
+				margin-top: -10px;
+				margin-left: 150px;
+				position: absolute;
+				background: url(../img/ic_phone_noraml.png) no-repeat;
+				background-size: 28px 28px;
+			}
+			
+			.add-photo-btn:active {
+				background: url(../img/ic_phone_pressed.png) no-repeat;
+				background-size: 28px 28px;
+			}
+			
+			.add-voice-btn {
+				width: 28px;
+				height: 28px;
+				margin-top: -10px;
+				margin-left: 185px;
+				position: absolute;
+				background: url(../img/ic_yuying_noraml.png) no-repeat;
+				background-size: 28px 28px;
+			}
+			
+			.add-voice-btn:active {
+				background: url(../img/ic_yuying_pressed.png) no-repeat;
+				background-size: 28px 28px;
+			}
+			
+			.img-style {
+				margin-top: 3px;
+				margin-left: 22px;
+				width: 17px;
+				height: 17px;
+				position: absolute;
+			}
+			
+			.last-time {
+				margin-top: -67px;
+				margin-left: 150px;
+				position: absolute;
+			}
+			
+			.sendtask-btnSure {
+				position: relative;
+				height: 45px;
+				font-size: 15px;
+				line-height: 30px;
+				padding: 15px 120px;
+				color: #FFFFFF;
+				border-radius: 2px;
+				background: #DD3C38;
+			}
+			
+			.sendtask-btnSure:active {
+				background: #c43431;
+				color: white;
+			}
+			
+			.picandvoice-style {
+				list-style: none;
+				display: inline;
+			}
+			
+			.addpic-style {
+				width: 55px;
+				height: 55px;
+				margin-top: 5px;
+				margin-left: 3px;
+			}
+			
+			.add-voice-bg {
+				margin-top: -300px;
+				margin-left: 30px;
+				width: 80%;
+				height: 250px;
+				background: #F5F5F9;
+				position: absolute;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="sendtask-top">
+			<li class="add-top">
+				<span class="sendtask-title">任务分类</span>
+				<div>
+					<span id="showFTypePicker" class="sendtask-type-item">请选择任务分类</span>
+					<span id="showCTypePicker" class="sendtask-type-item">请选择任务子分类</span>
+					<div class="sendtask-type-item-leftimg"></div>
+					<div class="sendtask-type-item-rightimg"></div>
+				</div>
+			</li>
+			<li class="add-top">
+				<span class="sendtask-title">标&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;题</span>
+				<div>
+					<input id="txtTitle" class="desribe-title" onkeyup="" type="text" placeholder="请输入标题" />
+				</div>
+			</li>
+			<li class="add-top">
+				<span class="sendtask-text">需求详情</span>
+				<span id="addphoto" class="add-photo-btn"></span>
+				<span id="addvoice" class="add-voice-btn"></span>
+				<div>
+					<input id="textarea" class="desribe-title" style="height: 100px;" type="text" placeholder="请输入需求详情" name="newpw" />
+				</div>
+				<div id=addPicAndVoice>
+				</div>
+			</li>
+			<li class="add-top">
+				<span class="sendtask-text">任务模式</span>
+				<form action="" method="get" style="margin:0px;">
+					<img class="img-style" src="../img/ic_shang.png" />
+					<label>
+						<input name="type" type="radio" value="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;悬赏模式
+					</label>
+					<img class="img-style" src="../img/ic_zhao.png" />
+					<label>
+						<input name="type" type="radio" value="" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;招标模式
+					</label>
+				</form>
+			</li>
+			<li class="add-top">
+				<span class="sendtask-title">预&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;算</span>
+			</li>
+		</div>
+		<div id="shang">
+			<input class="desribe-title" style="width: 130px;" type="text" placeholder="请输入预算" name="newpw" />
+		</div>
+		<div id="zhao">
+
+		</div>
+		<div class="last-time">
+			<span class="sendtask-title">报名截止时间</span>
+			<div class="mui-content-padded">
+				<button id='pickDateBtn' type="button" class="mui-btn mui-btn-block">选择日期</button>
+			</div>
+			<div class="sendtask-type-item-rightimg2"></div>
+		</div>
+		<div id="btnCommit" class="pay_button font-size-18px">
+			提交
+		</div>
+		<div id="showAddVoice" class="add-voice-bg">
+			<span id="text1">留言最多2分钟</span>
+			<span id="text2">3秒后开始录音</span>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/mui.listpicker.js"></script>
+		<script src="../js/mui.poppicker.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/AddPhoto.js"></script>
+		<script>
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					var cityPicker = new $.PopPicker({
+						layer: 2
+					});
+					var fenleidata = Common.getJson("fenlei");
+					var json = $.parseJSON(fenleidata);
+					if (json != null) {
+						console.log(json.result.cates[0].indus_name);
+						cityPicker.setData(json.result.cates);
+					} else {
+						alert("get data error");
+					};
+					var showCityPickerButton = doc.getElementById('showFTypePicker');
+					var showCTypePickerButton = doc.getElementById('showCTypePicker');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker.show(function(items) {
+							showCityPickerButton.innerText = items[0].indus_name;
+							showCTypePickerButton.innerText = items[1].indus_name;
+							selectType = items[1].indus_id;
+							fatherid = items[0].indus_id;
+						});
+					}, false);
+				});
+			})(mui, document);
+			var selectType = ""; //任务分类
+			var selectTaskType = ""; //任务模式
+			var fatherid = ""; //主分类
+			var selectTime = ""; //截止时间
+			var PicAndVoiceArr = []; //存放照片与声音数组
+			var PVID = []; // 存放需要发需求上传附件ID
+			document.getElementById("pickDateBtn").addEventListener('tap', function() {
+				var dDate = new Date();
+				dDate.setFullYear(dDate.getFullYear(), dDate.getMonth(), dDate.getDate());
+				var maxDate = new Date();
+				maxDate.setFullYear(dDate.getFullYear(), dDate.getMonth() + 1, dDate.getDate());
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					console.log('您选择的日期是:' + d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate());
+					selectTime = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					document.getElementById("pickDateBtn").innerText = selectTime;
+				}, function(e) {}, {
+					title: "请选择截止日期",
+					date: dDate,
+					minDate: dDate,
+					maxDate: maxDate
+				});
+			})
+			document.getElementById("addphoto").addEventListener('tap', function() {
+				if (PicAndVoiceArr.length > 4) {
+					mui.toast("最多添加5个附件");
+					return;
+				}
+				if (mui.os.plus) {
+					var a = [{
+						title: "拍照"
+					}, {
+						title: "从手机相册选择"
+					}];
+					plus.nativeUI.actionSheet({
+						title: "修改头像",
+						cancel: "取消",
+						buttons: a
+					}, function(b) {
+						switch (b.index) {
+							case 0:
+								console.log(0000);
+								break;
+							case 1:
+								console.log("拍照");
+								var cmr = plus.camera.getCamera();
+								cmr.captureImage(function(path) {
+									appendFile(path);
+								}, function(err) {});
+								break;
+							case 2:
+								console.log("从手机相册选择");
+								plus.gallery.pick(function(path) {
+									appendFile(path);
+								}, function(err) {}, null);
+								break;
+							default:
+								break
+						}
+					})
+				}
+			});
+
+			function appendFile(p) {
+				var wt = plus.nativeUI.showWaiting();
+				var task = plus.uploader.createUpload(Constant.uploadfile, {
+						method: "POST"
+					},
+					function(t, status) { //上传完成
+						if (status == 200) {
+							console.log(t.responseText);
+							var json = $.parseJSON(t.responseText);
+							var fid = json.result.fileid;
+							PVID.push(fid);
+							PicAndVoiceArr.push({
+								p,
+								fid
+							});
+							refreshPanel();
+						} else {
+							console.log("上传失败：" + status);
+						}
+						wt.close();
+					}
+				);
+				task.addFile(p, {
+					key: "upload"
+				});
+				task.start();
+			}
+
+			function showAudio() {
+				if (title == "修改昵称") {
+					mui("#showPW").css("display", "inline"); //默认显示
+				} else {
+					mui("#showName").css("display", "none"); //不显示
+				}
+			}
+
+			function doDeleteFun(id) {
+				var btnArray = ['否', '是'];
+				mui.confirm('是否删除此附件', '多人维', btnArray, function(e) {
+					if (e.index == 1) {
+						console.log('是');
+						console.log("xzccccccccc=" + PicAndVoiceArr[0].fid);
+						for (var i = 0; i < PicAndVoiceArr.length; i++) {
+							if (PicAndVoiceArr[i].fid == id) {
+								PicAndVoiceArr.splice(i, 1);
+								refreshPanel();
+								break;
+							}
+						}
+					} else {
+						console.log('否');
+					}
+				})
+			}
+
+			function refreshPanel() {
+				var $PVList = $("#addPicAndVoice");
+				if ($PVList.children().length > 0) {
+					$PVList.empty();
+				}
+				for (var i = 0; i < PicAndVoiceArr.length; i++) {
+					var $PVListItem = $("<img class='addpic-style'></img>").attr("src", PicAndVoiceArr[i].p);
+					$PVListItem.attr("flag", PicAndVoiceArr[i].fid);
+					var timeout = null;
+					$PVListItem.bind("touchstart", function() {
+						var id = this.getAttribute("flag");
+						timeout = setTimeout(function() {
+							doDeleteFun(id);
+						}, 2000);
+					});
+					$PVListItem.bind("touchend", function() {
+						clearTimeout(timeout);
+					});
+					$PVList.append($PVListItem);
+				}
+			}
+			var timer
+			$("#addvoice").click(function() {
+				$("#showAddVoice").css("display", "inline");
+				var num = 3;
+				var time = 0;
+				timer = window.setInterval(function() {
+					num--;
+					if (num > 0) {
+						$("#text2").text(num + "秒后开始录音");
+					} else {
+						startRecord();
+						time++;
+						console.log(time);
+						if (time > 15) {
+							stopRecord();
+							clearInterval(timer);
+						}
+						$("#text1").text('正在录音');
+						$("#text2").text(refreshTime(time));
+					}
+				}, 1000);
+			});
+
+			function refreshTime(time) {
+				var str = "";
+				if (time < 60) {
+					if (time < 10) {
+						time = "0" + time;
+					}
+					str = "00:" + time;
+				} else {
+					if (time < 70) {
+						console.log("11=" + time);
+						time = "0" + (time % 60);
+						console.log("22=" + time);
+						str = "01:" + time;
+					} else {
+						str = "01:" + (time - 60);
+					}
+				}
+				return str;
+			};
+			document.addEventListener("plusready", onPlusReady, false);
+			var r = null;
+			// 扩展API加载完毕，现在可以正常调用扩展API 
+			function onPlusReady() {
+				r = plus.audio.getRecorder();
+			}
+
+			function startRecord() {
+				if (r == null) {
+					alert("Device not ready!");
+					return;
+				}
+				r.record({
+					filename: "_doc/audio/"
+				}, function(p ) {
+					alert("Audio record success!"+p);
+					appendFile(p);
+				}, function(e) {
+					alert("Audio record failed: " + e.message);
+				});
+			}
+
+			function stopRecord() {
+				r.stop();
+			}
+		</script>
+	</body>
+
+</html>

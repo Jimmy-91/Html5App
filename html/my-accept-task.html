@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<!--<link rel="stylesheet" href="../css/task-detail.css" />-->
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script>
+			var yanshouSuccess_ChangedUI = function($this) {
+				var currentState = $this.attr("seller_status");
+				console.log("当前状态是:" + currentState);
+				var changedState = Common.changedState(2, intTaskStatus, currentState);
+				console.log("改变后的状态是:" + changedState.state);
+				console.log(changedState.enable + ":::" + changedState.msg + "::::" + changedState.state);
+				if (changedState.msg != undefined) {
+					$this.text(changedState.msg); //改变按钮文字
+					$this.attr("seller_status", changedState.state); //改变按钮状态
+					$this.attr("functionName", changedState.functionName);
+					if (!changedState.enable) {
+						$this.unbind("click").addClass("noclick");
+					} else {
+						var $Item = $this.parent().parent();
+						var agree_id = $Item.attr("agree_id");
+						var task_id = $Item.attr("task_id");
+						Common.task.agree_id = agree_id;
+						Common.task.task_id = task_id;
+						$this.unbind("click").bind("click", function() { //重新绑定方法
+							console.log("state.functionName************click:::" + $(this).attr("functionName"));
+							var fn = eval($(this).attr("functionName"));
+							new fn($(this), Common.task);
+							return false;
+						});
+					}
+				}
+			};
+			//威客确定协议
+			//待确认的接口调用悬赏模式第一步
+			var $seller_Confirm_Agreement_Button;
+			var seller_Confirm_Agreement_SuccessFn = function(jsonStr) {
+				console.log("seller_Confirm_Agreementseller_Confirm_Agreementseller_Confirm_Agreementseller_Confirm_Agreement**********************");
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					yanshouSuccess_ChangedUI($seller_Confirm_Agreement_Button);
+				}
+				mui.toast(json.msg);
+			};
+			var seller_Confirm_Agreement_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			var seller_Confirm_Agreement = function($this, task) {
+				$seller_Confirm_Agreement_Button = $this;
+				console.log("task_id::" + task.task_id + "agree_id::" + task.agree_id);
+				DataRequest.postData(Constant.IP2 + Constant.YanShouSetup1, [{
+					key: "taskId",
+					value: task.task_id
+				}, {
+					key: "agreeId",
+					value: task.agree_id
+				}], seller_Confirm_Agreement_SuccessFn, seller_Confirm_Agreement_ErrorFn);
+			};
+			//上传附件
+			var uploader = function($this, task) {
+				console.log("show:::" + show);
+				if (!show) {
+					show = true;
+					console.log("task_id::" + task.task_id + "agree_id::" + task.agree_id);
+					mui.plusReady(function() {
+						targetTab = Common.createWeb("uploader.html", "付款", Constant.allScreen_style);
+						targetTab.loadURL("uploader.html?taskId=" + task.task_id + "&agreeId=" + task.agree_id);
+						plus.webview.show(targetTab, "slide-in-right", 300);
+						targetTab.addEventListener("close", function() {
+							show = false;
+							var flag = Common.getJson("flag");
+							if (flag == "true") { //上传文件提交成功
+								yanshouSuccess_ChangedUI($this);
+							}
+						});
+					});
+				}
+			};
+			//评价
+			var pingjia = function($this, task) {
+					console.log("show:::" + show);
+					if (!show) {
+						show = true;
+						var $Item = $this.parent().parent();
+						var task_id = $Item.attr("task_id");
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("assess.html", "评价", Constant.allScreen_style);
+							targetTab.loadURL("assess.html?taskId=" + task_id + "&isSendTask=false");
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+								var flag = Common.getJson("flag");
+								console.log("pingjia:" + flag);
+								if (flag == "true") { //付款是否成功
+									$Item.remove();
+									Common.saveJson("flag", "false");
+								}
+							});
+						});
+					}
+				}
+				//待确认的接口调用悬赏模式第二步上传附件
+			var $JingApplyPay_Button;
+			var JingApplyPay_SuccessFn = function(jsonStr) {
+				console.log("JingApplyPay_SuccessFn**********************");
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					$JingApplyPay_Button.parent().parent().remove();
+				}
+				mui.toast(json.msg);
+			};
+			var JingApplyPay_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var JingApplyPay = function($this, task) {
+				$JingApplyPay_Button = $this;
+				console.log("task_id::" + task.task_id);
+				DataRequest.postData(Constant.IP2 + Constant.JingApplyPay, [{
+					key: "taskId",
+					value: task.task_id
+				}], JingApplyPay_SuccessFn, JingApplyPay_ErrorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">承接的任务</span>
+			</div>
+			<div class="header-right-elem border">
+				<div class="task-mode-select-img" model_id="1"></div>
+			</div>
+		</div>
+		<div class="search-list" style="display: none;">
+			<div class="select-list-item select-list-item-action" model_id="1">
+				<span>悬赏模式</span>
+				<div class="check-select-item"></div>
+			</div>
+			<div class="select-list-item" model_id="4">
+				<span>招标模式</span>
+				<div class="check-select-item"></div>
+			</div>
+		</div>
+		<div class="header-bar-bottom-menu-content">
+			<div class="header-bar-bottom-menu">
+				<span class="table-menu-item menu-action" intTaskStatus="2" page="0">
+			<span class="header-bar-menu-text font-size-15px" >已报名</span>
+				</span>
+				<span id="none" class="table-menu-item " intTaskStatus="4" page="3">
+			<span class="header-bar-menu-text font-size-15px" >托管赏金</span>
+				</span>
+				<span class="table-menu-item" intTaskStatus="6" page="1">
+			<span class="header-bar-menu-text font-size-15px" >待确认</span>
+				</span>
+				<span class="table-menu-item" intTaskStatus="7" mark="1" page="2">
+			<span class="header-bar-menu-text font-size-15px">待评论</span>
+				</span>
+				<div class="menu-action-flag"></div>
+			</div>
+			<div class="content" style="display: none;">
+				<div class="line-2 border-bottom">
+					<div class="left vertical-center">
+						<div class="linearlayout-vertical">
+							<div class="linearlayout-horizontal">
+								<span id="task-title" class="font-size-17px title-color middle text-simple-line">个人网站的搭建个人网站的搭建个人网站的搭建个人网站的搭建个人网站的搭建个人网站的搭建</span><img class="task-mode middle" src="../img/ic_zhao.png" /><span class="task-money middle">￥1000</span>
+							</div>
+							<div class="linearlayout-horizontal">
+								<p id="task-end-residue-time" class="font-size-12px content-color">截止时间：2015-12-30 19:80:04</p>
+								<p id="task-star-time" class="font-size-12px content-color">发布时间：2015-12-20 19:80:04</p>
+							</div>
+						</div>
+					</div>
+					<div class="right vertical-center">
+						<div class='task-right-button font-size-12px md-trigger' data-modal='modal-2'>付款</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		/**************************初始化布局start*****************************/
+		//请求数据
+		var model_id, intTaskStatus, mark;
+		var show = false;
+		var init_layout = function() {
+			$(".content").css("display", "block");
+			$(".line-2").each(function() {
+				Common.left_right_layout($(this));
+			});
+		};
+		/**************************初始化布局end*****************************/
+		/**************************关闭窗口start*****************************/
+		mui.plusReady(function() {
+			$(".back").click(function() {
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", 300);
+			});
+		});
+		/**************************关闭窗口end*****************************/
+		/*************************下拉选择任务模式start************************/
+		$(".task-mode-select-img").click(function() {
+			if ($(".search-list").css("display") == "none") {
+				$(".search-list").css("display", "block");
+			} else {
+				$(".search-list").css("display", "none");
+			}
+		});
+		$(".select-list-item").click(function() {
+			$(this).parent().children().removeClass("select-list-item-action");
+			$(this).addClass("select-list-item-action");
+			var model_id = $(this).attr("model_id");
+			$(".task-mode-select-img").attr("model_id", model_id + "");
+			if (model_id == 4) {
+				$(".table-menu-item[page='3']").attr("id", "");
+				Common.initPager();
+				$(".table-menu-item[page='1']").attr("intTaskStatus", "5");
+			} else {
+				$(".table-menu-item[page='3']").attr("id", "none");
+				if ($(".menu-action").attr("page") == 3) { //从竞标模式变到悬赏模式改变当前选择
+					$(".table-menu-item[page='0']").addClass("menu-action");
+				}
+				Common.initPager();
+				$(".table-menu-item[page='1']").attr("intTaskStatus", "6");
+			}
+			$(this).parent().css("display", "none");
+		});
+		//		/*************************下拉选择任务模式end************************/
+		/*************************创建任务列表start************************/
+		var SameLayout = function(taskInfoItem) {
+			var $Item = $("<div id='task-item' class='line-2 border-bottom'></div>");
+			$Item.attr("task_id", taskInfoItem.task_id);
+			$Item.attr("agree_id", taskInfoItem.agree_id);
+			var src;
+			if (taskInfoItem.model_id == 1) {
+				src = "../img/ic_shang.png";
+			} else {
+				src = "../img/ic_zhao.png";
+			}
+			var $Left = $("<div class='left vertical-center'></div>");
+			var $Left_layout = $("<div class='linearlayout-vertical'></div>");
+			var $Left_layout_top = $("<div class='linearlayout-horizontal'></div>").append($("<span id='task-title'class='font-size-17px title-color middle text-simple-line'>" + taskInfoItem.task_title + "</span>")).append($("<img class='task-mode middle'/>").attr("src", src));
+			var endTime = new Date(parseInt(taskInfoItem.sub_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+			var startTime = new Date(parseInt(taskInfoItem.start_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+			var $Left_layout_bottom = $("<div class='linearlayout-horizontal'><p id='task-end-residue-time' class='font-size-12px content-color'>截止时间：" + endTime + "</p><p id='task-star-time' class='font-size-12px content-color'>发布时间：" + startTime + "</p></div>");
+			$Left_layout.append($Left_layout_top).append($Left_layout_bottom);
+			$Left.append($Left_layout);
+			$Item.append($Left);
+			$Item.click(function() {
+				if (!show) {
+					show = true;
+					//任务详情
+					var $_this = $(this);
+					mui.plusReady(function() {
+						targetTab = Common.createWeb("task-detail.html", "任务详情", Constant.allScreen_style);
+						var intTaskStatus = $(".menu-action").attr("intTaskStatus");
+						var seller_status = $Item.find(".task-right-button").attr("seller_status");
+						targetTab.loadURL("task-detail.html?taskId=" + $_this.attr("task_id") + "&isMyTask=true&isSendTask=false" + "&intTaskStatus=" + intTaskStatus + "&seller_status=" + seller_status);
+						plus.webview.show(targetTab, "slide-in-right", 300);
+						targetTab.addEventListener("close", function() {
+							show = false;
+							var flag = Common.getJson("flag");
+							console.log("my-release-task:" + flag);
+							if (flag == "true") {
+								if (intTaskStatus == 6) { //悬赏模式待验收
+									var $Button = $_this.find(".task-right-button");
+									yanshouSuccess_ChangedUI($Button);
+								} else if (intTaskStatus == 7) {
+									$_this.remove();
+								}
+								Common.saveJson("flag", "false");
+							}
+						});
+					});
+				}
+			});
+			return $Item;
+		};
+		/*************************创建任务列表end************************/
+		//创建待审核的列表和招标中列表的Item
+		var createNoAuditing = function(json) {
+			var taskInfo = json.result.taskinfo;
+			var $Content = $(".content");
+			for (var i = 0; i < taskInfo.length; i++) {
+				var $Item = SameLayout(taskInfo[i]);
+				var money;
+				console.log("model_id:::" + model_id);
+				if (model_id == 1) {
+					money = taskInfo[i].task_cash;
+				} else {
+					var flag = taskInfo[i].task_cash_coverage - 34;
+					if (flag >= 0 && flag < Common.xuanMoney.length) {
+						money = Common.xuanMoney[flag];
+					} else {
+						money = undefined;
+					}
+					console.log("flag::" + flag + "money::" + money);
+				}
+				var $Right = $("<div class='right vertical-center'><div class='task-money'>￥" + money + "</div></div>");
+				$Item.append($Right);
+				$Content.append($Item);
+			}
+		};
+		//创建待确认的列表的Item
+		var createNoQueRen = function(json) {
+			var taskInfo = json.result.taskinfo;
+			var $Content = $(".content");
+			for (var i = 0; i < taskInfo.length; i++) {
+				var taskInfoItem = taskInfo[i];
+				var $Item = SameLayout(taskInfoItem);
+				var money;
+				console.log("model_id:::" + model_id);
+				if (model_id == 1) {
+					money = taskInfo[i].task_cash;
+				} else {
+					var flag = taskInfo[i].task_cash_coverage - 34;
+					if (flag >= 0 && flag < Common.xuanMoney.length) {
+						money = Common.xuanMoney[flag];
+					} else {
+						money = undefined;
+					}
+					console.log("flag::" + flag + "money::" + money);
+				}
+				$Item.find("#task-title").parent().append($("<span class='task-money middle'>￥" + money + "</span>"));
+				var $Right = $("<div class='right vertical-center'></div>");
+				console.log("taskInfoItem.seller_status:::" + taskInfoItem.seller_status);
+				console.log("taskInfoItem.buyer_status:::" + taskInfoItem.buyer_status);
+				var seller_status = parseInt(taskInfoItem.seller_status);
+				var buyer_status = parseInt(taskInfoItem.buyer_status);
+				console.log("seller_status:::" + seller_status);
+				console.log("buyer_status:::" + buyer_status);
+				var seller_status = seller_status + "" + buyer_status;
+				console.log("seller_status_end:::" + seller_status);
+				var $Right_Button = $("<div class='task-right-button font-size-12px'></div>");
+				var state = Common.getState(2, intTaskStatus, seller_status);
+				if (state.msg != undefined) { //悬赏模式
+					$Right_Button.text(state.msg);
+					$Right_Button.attr("seller_status", seller_status);
+					$Right_Button.attr("functionName", state.functionName);
+					console.log("state.functionName:::" + state.functionName);
+					$Right_Button.bind("click", function() {
+						var $Item = $(this).parent().parent();
+						var agree_id = $Item.attr("agree_id");
+						var task_id = $Item.attr("task_id");
+						Common.task.agree_id = agree_id;
+						Common.task.task_id = task_id;
+						console.log("state.functionName************click:::" + $(this).attr("functionName"));
+						var fn = eval($(this).attr("functionName"));
+						new fn($(this), Common.task);
+						return false;
+					});
+					if (!state.enable) {
+						$Right_Button.unbind("click");
+						$Right_Button.addClass("noclick");
+					}
+				} else { //招标模式
+					$Right_Button.text("确认");
+				}
+				$Right.append($Right_Button);
+				$Item.append($Right);
+				$Content.append($Item);
+			}
+		};
+		var successFn = function(jsonStr) {
+			var json = $.parseJSON(jsonStr);
+			console.log("jsonStr::" + jsonStr);
+			$(".content").empty();
+			if (json.status == "success" && json.result.taskinfo.length > 0) {
+				//					//			var json = $.parseJSON("{\"status\":\"success\",\"msg\":\"连接成功\",\"result\":{\"taskinfo\":[{\"task_id\":\"4422\",\"task_cash\":\"10.00\",\"task_title\":\"ddddddddddddfff\",\"model_id\":\"1\",\"task_cash_coverage\":\"\",\"task_status\":\"6\",\"start_time\":\"1456466683\",\"sub_time\":\"1457762683\",\"end_time\":\"1457849083\",\"uid\":\"296\",\"view_num\":\"1\",\"contact\":\"15623073205\",\"agree_id\":\"472\",\"work_id\":\"2612\",\"agree_status\":\"2\",\"buyer_uid\":\"296\",\"buyer_status\":\"3\",\"seller_uid\":\"284\",\"seller_status\":\"3\",\"file_ids\":\"6979|6980\"}]}}");
+				var flag = parseInt(intTaskStatus);
+				switch (flag) {
+					case 2:
+						createNoAuditing(json);
+						break;
+					case 4:
+					case 5:
+					case 6:
+						createNoQueRen(json);
+						break;
+					case 7:
+						createNoQueRen(json);
+						break;
+				}
+				init_layout();
+			}
+		}
+		var errorFn = function() {}
+		var requestData = function(intTaskStatus, model_id) {
+			console.log("intTaskStatus::" + intTaskStatus + "model_id::" + model_id);
+			DataRequest.postData(Constant.IP2 + Constant.MyAcceptTask, [{
+				key: "model_id",
+				value: model_id
+			}, {
+				key: "intTaskStatus",
+				value: intTaskStatus
+			}], successFn, errorFn);
+		};
+		var request_PingJia_Data = function(mark, model_id) {
+			console.log("mark::" + mark + "model_id::" + model_id);
+			DataRequest.postData(Constant.IP2 + Constant.MyAcceptTask, [{
+				key: "model_id",
+				value: model_id
+			}, {
+				key: "mark",
+				value: mark
+			}], successFn, errorFn);
+		};
+		$(function() {
+			mui.plusReady(function() {
+				intTaskStatus = $(".menu-action").attr("intTaskStatus");
+				model_id = $(".task-mode-select-img").attr("model_id");
+				mark = $(".menu-action").attr("mark");
+				console.log("mark::" + mark);
+				if (mark == undefined) {
+					requestData(intTaskStatus, model_id);
+				} else {
+					request_PingJia_Data(mark, model_id);
+				}
+			});
+		});
+		$(".table-menu-item").click(function() {
+			intTaskStatus = $(this).attr("intTaskStatus");
+			model_id = $(".task-mode-select-img").attr("model_id");
+			mark = $(this).attr("mark");
+			console.log("mark::" + mark);
+			if (mark == undefined) {
+				requestData(intTaskStatus, model_id);
+			} else {
+				request_PingJia_Data(mark, model_id);
+			}
+		});
+		$(".select-list-item").click(function() {
+			intTaskStatus = $(".menu-action").attr("intTaskStatus");
+			mark = $(".menu-action").attr("mark");
+			model_id = $(".task-mode-select-img").attr("model_id");
+			console.log("mark::" + mark);
+			if (mark == undefined) {
+				requestData(intTaskStatus, model_id);
+			} else {
+				request_PingJia_Data(mark, model_id);
+			}
+		});
+	</script>
+
+</html>

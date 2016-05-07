@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<style>
+			.table-top {
+				position: fixed;
+				top: 49px;
+				left: 0;
+				right: 0;
+				background: white;
+			}
+			
+			.table-view-cell {
+				height: 62px;
+				border-bottom: 1px #DFE0E2 solid;
+				-webkit-user-select: none;
+				padding-left: 17px;
+				list-style: none;
+			}
+			.desribe-title {
+				padding-top: 15px;
+				text-align: left;
+				width: 150px;
+				font-size: 17px;
+				line-height: 30px;
+				color: black;
+				font-family: SimHei;
+				display: inline-block;
+				border: none;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">帐号认证</span>
+			</div>
+		</div>
+		<div class="table-top">
+			<li class="table-view-cell">
+				<span class="desribe-title" type="text">手机认证</span>
+			</li>
+		<script>
+			mui.plusReady(function() {
+				var webView = plus.webview.currentWebview();
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					webView.hide("slide-out-right", 300);
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,73 @@
+.mui-bar-nav{
+        background:#DD3C38;
+}
+.mui-icon{
+        color: #fff;
+}
+.mui-bar-nav h1{
+        color: #fff;
+}
+.mui-bar-nav .add{
+        color: #fff;
+        float:right;
+}
+.mui-bar-nav .add>span{
+        padding:0px;
+        font-size: 40px;
+        margin-top:4px;
+}
+
+
+
+.leftMenu{
+        float:left;
+        background:#F5F5F9;
+        width:120px;
+}
+        .leftMenu .list{
+                margin:0px;
+                padding:0px;
+                font-size: 15px;
+                width:auto;
+                overflow:auto;
+        }
+                .leftMenu .list li{
+                        height:50px;
+                        border-bottom:1px solid #ddd;
+                        text-align:center;
+                        line-height:50px;
+                }
+                .leftMenu .list .active{
+                        background:#fff;
+                        color:#DC291E;
+                }
+        .title{
+                margin-top:5px;
+                margin-left:10px;
+        }
+
+
+.box{
+        float:left;
+        padding:5px;
+        border:1px solid #1CBFF0;
+        font-size:13px;
+        margin:5px;
+        
+}
+.box-add{
+	background: #34C6F1;
+}
+.box-exist{
+	background: #DFE0E2;
+}
+
+
+
+
+
+
+
+
+
+

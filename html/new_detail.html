@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/new_detail.css" />
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script>
+			var successFn = function(jsonStr) {
+				console.log(jsonStr);
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					$(".title-bar .title").empty();
+					$(".title-bar .title").text(json.result.art_title); //新闻标题
+					var new_attach_msg = "";
+					//新闻发布时间
+					var time = new Date(parseInt(json.result.pub_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+					new_attach_msg += time;
+					//新闻来源
+					new_attach_msg += "来源: ";
+					if (json.result.art_source == "") {
+						new_attach_msg += "多人维"
+					} else {
+						new_attach_msg += json.result.art_source;
+					}
+					//新闻编辑人
+					new_attach_msg += "责编: ";
+					if (json.result.author == "") {
+						new_attach_msg += "匿名"
+					} else {
+						new_attach_msg += json.result.author;
+					}
+					$(".title-bar .new-attach-msg").empty();
+					$(".title-bar .new-attach-msg").text(new_attach_msg); //新闻附件信息
+					$(".new-content").empty();
+					var doc = $.parseHTML(json.result.content); //新闻内容
+					var html = $(doc).text();
+					$(".new-content").append($(html));
+				} else {
+					mui.toast(json.msg);
+				}
+			};
+			var errorFn = function(jsonStr) {};
+			var getNewDetail = function() {
+				console.log("nId::" + nId);
+				DataRequest.getData(Constant.IP2 + Constant.ShouYeNewsDetail, [{
+					key: "nid",
+					value: nId
+				}], successFn, errorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">新闻</span>
+			</div>
+		</div>
+		<div class="content">
+			<div class="title-bar">
+				<!--315晚会曝免费Wi-Fi安全隐患 多人维网教你规避黑Wi-Fi-->
+				<h3 class="title"></h3>
+				<!--2015-01-29 15:05:03 来源：多人维 责编：匿名-->
+				<p class="new-attach-msg"></p>
+			</div>
+			<div class="new-content">
+				<!--<p><span style="TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; DISPLAY: inline !important; FONT: 14px/28px 宋体; WHITE-SPACE: normal; FLOAT: none; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; -webkit-text-stroke-width: 0px">在今年的315晚会上，央视曝光了免费Wi-Fi所存在的巨大隐患——利用伪造的Wi-Fi热点，不法分子可以在几分钟之内获得上网用户的设备运行数据、网络账户、密码、照片等私密信息，甚至可以窃取用户网银资产，晚会现场的实际演示让很多观众触目惊心。那么，不法分子是如何利用免费Wi-Fi进行攻击的呢，趋势科技安全专家对攻击原理进行了解释。</span></p>
+				<p style="TEXT-ALIGN: center"><img title="1426562853642033.jpg" alt="wKiom1UGplSD-dHiAAJvISrgKs0803.jpg" src="http://upload.duorenwei.com/data/upload/image/20150317/1426562853642033.jpg" /></p>
+				<p style="TEXT-ALIGN: center; PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">【今年的315晚会现场，曝光了不法分子通过黑客技术获取到的观众关键信息】</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">黑客最惯用的伎俩是伪造一个与常见公共Wi-Fi名称类似的开放Wi-Fi，由于这些Wi-Fi看起来很像运营商、车站、机场等提供的官方Wi-Fi，很多人就放心的进行连接。但实际上，这只是不法分子挖的一个“陷阱”，在连接之后，用户联网的所有数据都会经过不法分子安装的网络嗅探软件。借助于软件，攻击者可以很容易地窃取你上网的内容，包括你在社交平台上发布的照片、购物支付信息等。</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">第二种方式是内网监听攻击。由于公共Wi-Fi很少验证使用者的真实身份，因此攻击者可以轻易的进入到内网之中，并发动针对公共网络内部的ARP攻击、混杂模式监听等攻击。一旦得手，攻击者就可以收到网内所有的广播流量，从中分析出用户的个人信息。</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">趋势科技(中国区)业务发展总监童宁表示：“公共Wi-Fi日渐流行，国内公共Wi-Fi的数量更是达到了几千万个，其中很大一部分存在着安全漏洞。然而，越来越多的用户习惯于享用‘免费’的网络大餐，忽略了其中的风险，使得不法分子有了可乘之机。而且，利用一些Wi-Fi共享软件，不法分子还能在不改变Wi-Fi名称的情况下，将私有Wi-Fi转变成实际上的公共Wi-Fi，吸引用户‘自投罗网’，监管难度也更大。”</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px"><strong style="TEXT-ALIGN: center; FONT-WEIGHT: bold">要避免隐私信息被“免费”Wi-Fi窃走，趋势科技建议用户采取以下措施：</strong></p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">1、 在连接之前严格审核Wi-Fi的名称与正规性。一般来说，连接机场、餐厅等地的公共Wi-Fi都会要求用户进行密码或短信验证。如果可以不经过验证直接接入某个公共Wi-Fi，就需要特别留意其安全性。</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">2、 关闭移动设备的无线网络自动连接功能，在很多情况下，你的手机会在自动连接伪装成常见Wi-Fi的“钓鱼Wi-Fi”，用户的个人信息也会在不知不觉中被泄露。</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">3、 尽量不要在公共Wi-Fi环境下进行网络购物、第三方支付，这些应用往往会包含个人网络支付账号、密码等高度隐私信息，这是不法分子最有兴趣的高价值目标。</p>
+				<p style="PADDING-BOTTOM: 0px; TEXT-TRANSFORM: none; BACKGROUND-COLOR: rgb(248,248,248); TEXT-INDENT: 28px; MARGIN: 10px 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FONT: 14px/28px 宋体; WHITE-SPACE: normal; LETTER-SPACING: normal; COLOR: rgb(51,51,51); WORD-SPACING: 0px; PADDING-TOP: 0px; -webkit-text-stroke-width: 0px">4、 在使用公共Wi-Fi时，建议用户选择趋势科技移动安全防护个人版等软件作为上网安全助手，趋势科技移动安全防护个人版具备领先的隐私扫描防护功能，能主动侦测透过APP、网页、短信等传送的恶意程序，防堵其进行个人信息的搜集，保护个人信息免于外泄。</p>
+				<p> </p>-->
+			</div>
+		</div>
+		<script>
+			/**************************关闭窗口start*****************************/
+			mui.plusReady(function() {
+				$(".back").click(function() {
+					$(".content").css("display", "none");
+					plus.webview.currentWebview().close("slide-out-right", 300);
+				});
+			});
+			/**************************关闭窗口end*****************************/
+			var params = Common.urlParam(window.location);
+			var nId = params.n_id;
+			$(function() {
+				getNewDetail();
+			});
+		</script>
+	</body>
+
+</html>

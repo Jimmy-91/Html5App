@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>back=true</title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<link rel="stylesheet" href="../css/task-detail.css" />
+		<link rel="stylesheet" href="../css/dialog.css" />
+		<link rel="stylesheet" href="../css/download.css" />
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/Dialog.js"></script>
+		<script type="text/javascript" src="../js/radialIndicator.js"></script>
+		<script type="text/javascript" src="../js/jquery.md5.js"></script>
+		<script type="text/javascript" src="../js/filemanager.js"></script>
+		<script type="text/javascript" src="../js/download.js"></script>
+		<script>
+			var closePager = function() {
+				if (openPingjiaFlag == "true") {
+					Common.saveJson("flag", "true");
+				}
+				$(".content").css("display", "none");
+				plus.webview.currentWebview().close("slide-out-right", 300);
+			};
+			var Success_ChangedUI = function($Item) {
+				var changedState = Common.changedState(who, mIntTaskStatus, currentState);
+				console.log("msg::" + changedState.msg + "state::" + changedState.state + "intTaskStatus::" + changedState.intTaskStatus + "functionName:::" + changedState.functionName + "enable::" + changedState.enable);
+				if (changedState.msg != undefined) {
+					$Item.text(changedState.msg);
+					currentState = changedState.state;
+					mIntTaskStatus = changedState.intTaskStatus;
+					if (!changedState.enable) {
+						$Item.unbind("click").addClass("noclick");
+					} else {
+						$Item.unbind("click").bind("click", function() { //重新绑定方法
+							console.log("state.functionName************click:::" + changedState.functionName);
+							var fn = eval(changedState.functionName);
+							new fn($Item);
+							return false;
+						});
+					}
+				}
+				mui.plusReady(function() {
+					Common.saveJson("flag", "true");
+				});
+			};
+			//待确认的接口调用悬赏模式第一步确认协议
+			var $buyer_Confirm_Agreement_button;
+			var buyer_Confirm_Agreement_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//协议签订成功后改变UI
+				if (json.status == "success") {
+					Success_ChangedUI($buyer_Confirm_Agreement_button);
+				}
+				mui.toast(json.msg);
+			};
+			var buyer_Confirm_Agreement_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var buyer_Confirm_Agreement = function($this) {
+				$buyer_Confirm_Agreement_button = $this;
+				console.log("task_id::" + task_id + "agree_id::" + agree_id);
+				DataRequest.postData(Constant.IP2 + Constant.YanShouSetup1, [{
+					key: "taskId",
+					value: task_id
+				}, {
+					key: "agreeId",
+					value: agree_id
+				}], buyer_Confirm_Agreement_SuccessFn, buyer_Confirm_Agreement_ErrorFn);
+			};
+			//待确认的接口调用悬赏模式第三步确认验收
+			var $buyer_Confirm_Check_Button;
+			var buyer_Confirm_Check_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//确认验收成功后改变UI
+				if (json.status == "success") {
+					mui.plusReady(function() {
+						Common.saveJson("flag", "true");
+					});
+				}
+				mui.toast(json.msg);
+			};
+			var buyer_Confirm_Check_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			var buyer_Confirm_Check = function($this) {
+				$buyer_Confirm_Check_Button = $this;
+				console.log("task_id::" + task_id + "agree_id::" + agree_id);
+				if (task_file_ids == "") {
+					DataRequest.postData(Constant.IP2 + Constant.YanShouSetup3, [{
+						key: "taskId",
+						value: task_id
+					}, {
+						key: "agreeId",
+						value: agree_id
+					}], buyer_Confirm_Check_SuccessFn, buyer_Confirm_Check_ErrorFn);
+				} else {
+					//					alert("查看附件");
+					if (!show) {
+						show = true;
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("yanshou_download.html", "查看附件", Constant.allScreen_style);
+							targetTab.loadURL("yanshou_download.html?taskId=" + task_id + "&agreeId=" + agree_id + "&file_ids=" + task_file_ids);
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+							});
+						});
+					}
+				}
+			};
+			//威客确定协议
+			//待确认的接口调用悬赏模式第一步
+			var $seller_Confirm_Agreement_Button;
+			var seller_Confirm_Agreement_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					yanshouSuccess_ChangedUI($seller_Confirm_Agreement_Button);
+				}
+				alert(json.msg);
+			};
+			var seller_Confirm_Agreement_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			var seller_Confirm_Agreement = function($this) {
+				$seller_Confirm_Agreement_Button = $this;
+				console.log("task_id::" + task_id + "agree_id::" + agree_id);
+				DataRequest.postData(Constant.IP2 + Constant.YanShouSetup1, [{
+					key: "taskId",
+					value: task_id
+				}, {
+					key: "agreeId",
+					value: agree_id
+				}], seller_Confirm_Agreement_SuccessFn, seller_Confirm_Agreement_ErrorFn);
+			};
+			//上传附件
+			var uploader = function($this) {
+				console.log("show:::" + show);
+				if (!show) {
+					show = true;
+					mui.plusReady(function() {
+						targetTab = Common.createWeb("upload.html", "付款", Constant.allScreen_style);
+						targetTab.loadURL("upload.html?taskId=" + task_id + "&agreeId=" + agree_id);
+						plus.webview.show(targetTab, "slide-in-right", 300);
+						targetTab.addEventListener("close", function() {
+							show = false;
+							//								var flag = Common.getJson("flag");
+							//								console.log("task-detail-pay:" + flag);
+							//								if (flag == "true") { //付款是否成功
+							//									if (task_model == 1) {
+							//										$this.unbind("click").addClass("noclick").text("待审核"); //??
+							//									} else {
+							//										Success_ChangedUI($this);
+							//									}
+							//								}
+						});
+					});
+				}
+			};
+			//付款
+			var pay = function($this) {
+					console.log("show:::" + show);
+					if (!show) {
+						show = true;
+						mui.plusReady(function() {
+							targetTab = Common.createWeb("pay.html", "付款", Constant.allScreen_style);
+							targetTab.loadURL("pay.html?taskId=" + task_id + "&money=" + task_money + "&task_model=" + task_model);
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+								var flag = Common.getJson("flag");
+								console.log("task-detail-pay:" + flag);
+								if (flag == "true") { //付款是否成功
+									if (task_model == 1) {
+										$this.unbind("click").addClass("noclick").text("待审核"); //??
+									} else {
+										Success_ChangedUI($this);
+										//										var changedState = Common.changedState(who, mIntTaskStatus, currentState);
+										//										console.log("msg::" + changedState.msg + "state::" + changedState.state + "intTaskStatus::" + changedState.intTaskStatus + "functionName:::" + changedState.functionName + "enable::" + changedState.enable);
+										//										if (changedState.msg != undefined) {
+										//											$this.text(changedState.msg);
+										//											currentState = changedState.state;
+										//											if (!changedState.enable) {
+										//												$Item.unbind("click").addClass("noclick");
+										//											} else {
+										//											}
+										//										}
+									}
+								}
+							});
+						});
+					}
+				}
+				//竞标模式下待确认的接口，确认打款接口
+			var $queren_Button;
+			var queren_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				//确认验收成功后改变UI
+				if (json.status == "success") {
+					Success_ChangedUI($queren_Button);
+					//					$queren_Button.
+				}
+				mui.toast(json.msg);
+			};
+			var queren_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				alert(json.msg);
+			};
+			var queren = function($this) {
+				$queren_Button = $this;
+				console.log("task_id::" + task_id);
+				DataRequest.postData(Constant.IP2 + Constant.JingQueRen, [{
+					key: "taskId",
+					value: task_id
+				}], queren_SuccessFn, queren_ErrorFn);
+			};
+			//评价
+			var pingjia = function($this) {
+					console.log("show:::" + show);
+					if (!show) {
+						show = true;
+						console.log("task_id::" + task_id + "agree_id::" + agree_id);
+						mui.plusReady(function() {
+							openPingjiaFlag = Common.getJson("flag");
+							if (openPingjiaFlag == "true") {
+								Common.saveJson("flag", "false");
+							}
+							targetTab = Common.createWeb("assess.html", "评价", Constant.allScreen_style);
+							if (who == 1) {
+								targetTab.loadURL("assess.html?taskId=" + task_id + "&isSendTask=true");
+							} else if (who == 2) {
+								targetTab.loadURL("assess.html?taskId=" + task_id + "&isSendTask=false");
+							}
+							plus.webview.show(targetTab, "slide-in-right", 300);
+							targetTab.addEventListener("close", function() {
+								show = false;
+								var flag = Common.getJson("flag");
+								console.log("pingjia:" + flag);
+								if (flag == "true") { //付款是否成功
+									closePager();
+								}
+							});
+						});
+					}
+				}
+				//任务收藏
+			var $TaskCollectAdd;
+			var TaskCollectAdd_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					changedButton(true);
+					mIsCollect = true;
+				}
+				mui.toast(json.msg);
+			};
+			var TaskCollectAdd_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var taskCollectAdd = function($this) {
+				$TaskCollectAdd = $this;
+				console.log("task_id::" + mTaskId);
+				DataRequest.postData(Constant.IP2 + Constant.TaskCollectAdd, [{
+					key: "f_id",
+					value: mTaskId
+				}], TaskCollectAdd_SuccessFn, TaskCollectAdd_ErrorFn);
+			};
+			//任务取消收藏
+			var $TaskCollectCancel;
+			var TaskCollectCancel_SuccessFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					var flag = $TaskCollectCancel.attr("mIsfavorite");
+					changedButton(false);
+					mIsCollect = false;
+				}
+				mui.toast(json.msg);
+			};
+			var TaskCollectCancel_ErrorFn = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+			};
+			var taskCollectCancel = function($this) {
+				$TaskCollectCancel = $this;
+				console.log("task_id::" + mTaskId);
+				DataRequest.postData(Constant.IP2 + Constant.TaskCollectCancel, [{
+					key: "f_id",
+					value: mTaskId
+				}], TaskCollectCancel_SuccessFn, TaskCollectCancel_ErrorFn);
+			};
+		</script>
+	</head>
+
+	<body>
+		<div class="header-bar">
+			<div class="header-left-elem border">
+				<div class="back"></div>
+			</div>
+			<div class="header-center-elem horizontal-center vertical-center">
+				<span class="title font-size-20px">任务详情</span>
+			</div>
+		</div>
+		<div class="content" style="display: none;">
+			<!--<div class="line-3 task-header">
+				<div class="task-user-img">
+					<div class="task-user-level-flag">
+						<span class="task-user-level-flag-text">2</span>
+					</div>
+				</div>
+				<div class="left vertical-center">
+					<span class="task-user-title">欢乐的陈许愿</span>
+					<ul class="task-user-item-flag">
+						<li class="task-user-item-flag-item">
+							后台监测
+						</li>
+						<li class="task-user-item-flag-item">
+							安卓开发
+						</li>
+					</ul>
+				</div>
+				<div class="task-user-send-message">
+				</div>
+			</div>
+
+			<div class="task-describe">
+				<div class="line-2">
+					<div class="left vertical-center">
+						<div class="linearlayout-vertical">
+							<div class="linearlayout-horizontal">
+								<span class="font-size-17px title-color middle">个人网站的搭建</span><img class="task-mode middle" src="../img/ic_zhao.png" />
+							</div>
+							<div class="linearlayout-horizontal">
+								<p id="task-end-residue-time" class="font-size-12px content-color">截止时间：2015-12-30 19:80:04</p>
+								<p id="task-star-time" class="font-size-12px content-color">发布时间：2015-12-20 19:80:04</p>
+							</div>
+						</div>
+					</div>
+					<div class="right vertical-center">
+						<div class="task-money">￥1000</div>
+					</div>
+				</div>
+				<div class="task-need-describe">
+					<span class="font-size-17px title-color">需求详情：</span>
+					<p class=" font-size-15px content-color">微信公众平台已经认证拉奥，微信支付也认证通过，使用微信公众平台自带的微信小店进行产品推广，现在需要深度开发一下微信卡券功能和会员卡功能，具体要求可电话聊。第三方平台请不要联系我，因为公司不和第三方平台合作，都使用腾讯自带的功能。只求功能开发</p>
+				</div>
+				<div class="task-enclosure">
+					<span class="font-size-17px title-color">附件：</span>
+					<div class="task-enclosure-img">
+						<div class="download-file pic" flag="download" file_url="http://192.168.0.204:8080/startImage/1.jpg">
+							<div class="download-file-src">
+								<div class="progress">
+									<div class="indicatorContainer" style='display: none;'></div>
+								</div>
+								<div class="download-button download-button-download"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="task-join-people">
+				<span class="font-size-17px title-color">已报名的人</span>
+				<div class="line-3 task-join-people-header">
+					<div class="task-user-img">
+						<div class="task-user-level-flag">
+							<span class="task-user-level-flag-text">2</span>
+						</div>
+					</div>
+					<div class="left vertical-center">
+						<div class="task-join-people-user">
+							<span class="task-user-title middle">欢乐的陈许愿</span><img class="task-zhao-money-img middle" src="../img/ic_baojiao.png" /><span class="task-zhao-money-text middle font-size-15px">￥10000</span><img class="task-zhao-time-img middle" src="../img/ic_time.png"
+							/><span class="task-zhao-time-text middle font-size-15px">5天</span>
+						</div>
+						<ul class="task-user-item-flag">
+							<li class="task-user-item-flag-item">
+								后台监测
+							</li>
+							<li class="task-user-item-flag-item">
+								安卓开发
+							</li>
+						</ul>
+					</div>
+				</div>-->
+		</div>
+		<div class="empty"></div>
+		<footer id="float-task-status-button" class="line-menu float-task-status-bar">
+			<a class="line-menu-item">
+				确认
+			</a>
+		</footer>
+		<footer id="float-button" class="line-menu float-button-bar ">
+			<div id="soucang" class="line-menu-item float-button-item" mIsfavorite="true">
+				<div class="left">
+					<div class="img soucang-img middle"></div>
+					<span class="float-button middle">收藏</span>
+				</div>
+			</div>
+			<div id="baoming" class="line-menu-item  float-button-item" isfollow="-1">
+				<div class="right">
+					<div class="img baoming-img middle"></div>
+					<span class="float-button middle">报名</span>
+				</div>
+			</div>
+		</footer>
+		</div>
+
+		<script>
+			var show = false;
+			var mIsCollect = false; //是否可以收藏;
+			var mIsSignUp = false; //是否可以报名
+			var task_model;
+			var who; //验收的时候需要看是威客还是雇主
+			var currentState; //验收的时候当前的任务状态
+			var task_id, agree_id, task_money;
+			var webView;
+			var openPingjiaFlag; //打开评价页面的时候是否flag是true;
+			mui.plusReady(function() {
+				$(".back").click(function() {
+					closePager();
+				});
+			});
+			var init_layout = function() {
+				$(".line-3").each(function() {
+					Common.left_right_layout($(this));
+				})
+				$father = $(".line-2");
+				Common.left_right_layout($father);
+				$(".content").append($("<div class='empty'></div>"));
+			}
+			var init_Head = function(json) {
+				var userInfo = json.result.userinfo;
+				var $task_header = $("<div class='line-3 task-header'></div>");
+				if (mIsSendTask != "true") { //我发布的任务没有发送信息按钮
+					var $task_user_send_message = $("<div class='task-user-send-message'></div>")
+					$task_user_send_message.click(function() { //发送消息
+						if (!show) {
+							show = true;
+							$_this = $(this);
+							mui.plusReady(function() {
+								console.log(userInfo.uid + ":" + userInfo.username);
+								targetTab = plus.webview.create("messageDetail.html", "系统消息", Constant.allScreen_style, {
+									"uid": userInfo.uid,
+									"username": userInfo.username
+								});
+								plus.webview.show(targetTab, "slide-in-right", 300);
+								targetTab.addEventListener("close", function() {
+									show = false;
+								});
+							});
+						}
+					});
+					$task_header.append($task_user_send_message);
+				}
+				var $userHeader = $("<div class='task-user-img'></div>").css("background", "url(" + userInfo.image + ") no-repeat").css("background-size", "contain");
+				var $userLevel = $("<div class='task-user-level-flag'><span class='task-user-level-flag-text'>" + userInfo.buyer_level + "</span></div>");
+				$userHeader.append($userLevel);
+				$task_header.append($userHeader);
+				$task_header.append($("<div class='left vertical-center'><span class='task-user-title'>" + userInfo.username + "</span><ul class='task-user-item-flag'></ul></div>"));
+				var skill = userInfo.skill;
+				if (skill != null && skill.length > 0) {
+					for (var i = 0; i < skill.length; i++) {
+						$(".task-user-item-flag").append($("<li class='task-user-item-flag-item font-size-13px'>" + skill[i] + "</li>"));
+					}
+				}
+				var imgStr = "url(http://www.duorenwei.com/data/avatar/000/00/00/54_avatar_small.jpg) no-repeat";
+				return $task_header;
+			}
+			var init_task_describe = function(json) {
+					var taskInfo = json.result.taskinfo;
+					var $task_describe = $("<div class ='task-describe'></div>");
+					$task_describe.attr("task_id", taskInfo.task_id);
+					$task_describe.attr("agree_id", taskInfo.agree_id);
+					$task_describe.attr("task_money", taskInfo.task_cash);
+					var $task_descridbe_header = $("<div class='line-2'></div>");
+					var $task_descridbe_header_left = $("<div class='left vertical-center'></div>");
+					var $task_descridbe_header_left_vertical = $("<div class='linearlayout-vertical'></div>");
+					var $task_descridbe_header_left_top = $("<div class='linearlayout-horizontal'></div>");
+					var $task_title = $("<span id='task-title' class='font-size-17px title-color middle text-simple-line'>" + taskInfo.task_title + "</span>");
+					var $task_mode = $("<img class='task-mode middle'/>");
+					if (taskInfo.model_id == 1) { //悬赏模式
+						task_model = 1;
+						$task_mode.attr("src", "../img/ic_shang.png");
+					} else if (taskInfo.model_id == 4) { //招标模式
+						task_model = 4;
+						$task_mode.attr("src", "../img/ic_zhao.png");
+					}
+					$task_descridbe_header_left_top.append($task_title).append($task_mode);
+					var $task_descridbe_header_left_bottom = $("<div class='linearlayout-horizontal'></div>");
+					var endTime = new Date(parseInt(taskInfo.sub_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+					var $task_end_time = $("<p id='task-end-residue-time' class='font-size-12px content-color'>截止时间：" + endTime + "</p>");
+					var startTime = new Date(parseInt(taskInfo.start_time * 1000)).Format("yyyy-MM-dd HH:mm:ss");
+					var $task_start_time = $("<p id='task-star-time' class='font-size-12px content-color'>发布时间：" + startTime + "</p>");
+					$task_descridbe_header_left_bottom.append($task_end_time).append($task_start_time);
+					$task_descridbe_header_left_vertical.append($task_descridbe_header_left_top).append($task_descridbe_header_left_bottom);
+					$task_descridbe_header_left.append($task_descridbe_header_left_vertical);
+					var money;
+					console.log("model_id:::" + taskInfo.model_id);
+					if (taskInfo.model_id == 1) {
+						money = taskInfo.task_cash;
+					} else {
+						var flag = taskInfo.task_cash_coverage - 34;
+						if (flag >= 0 && flag < Common.xuanMoney.length) {
+							money = Common.xuanMoney[flag];
+						} else {
+							money = undefined;
+						}
+						console.log("flag::" + flag + "money::" + money);
+					}
+					var $task_money = $("<div class='right vertical-center'><div class='task-money'>￥" + money + "</div></div>");
+					$task_descridbe_header.append($task_descridbe_header_left).append($task_money);
+					var doc = $.parseHTML(taskInfo.task_desc);
+					var html = $(doc).text();
+					var $task_need_describe = $("<div class='task-need-describe'></div>").append($("<span class='font-size-17px title-color'>需求详情：</span>"));
+					$task_need_describe.append($(html));
+					var $task_enclosure = $("<div class='task-enclosure'></div>").append($("<span class='font-size-17px title-color'>附件：</span>"));
+					var $task_enclosure_img = $("<div class='task-enclosure-img'></div>");
+					$task_enclosure.append($task_enclosure_img);
+					$task_describe.append($task_descridbe_header);
+					$task_describe.append($task_need_describe);
+					$task_describe.append($task_enclosure);
+					//附件
+					if (taskInfo.task_files != null && taskInfo.task_files.length > 0) {
+						var $downloadItem = $("<div class='download-file'></div>").append("<div class='download-file-src'><div class='download-button download-button-download'></div><div class='progress-bar'><div class='circleProgress'><div class='circleProgress-progress right'><div class='progress circleProgress-right'></div></div><div class='circleProgress-progress left'><div class='progress circleProgress-left'></div></div></div><div class='progress-text'>0%</div></div></div>");
+						prepareDowload(taskInfo.task_files, $task_enclosure_img, $downloadItem);
+					}
+					return $task_describe;
+				}
+				//已报名的人
+				//中标接口
+			var $zhongbiaoItem;
+			var successFn1 = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					$zhongbiaoItem.children("span").text("已中标");
+					$zhongbiaoItem.unbind("click");
+					mui.plusReady(function() {
+						Common.saveJson("flag", "true");
+					});
+					Dialog.closeDialog();
+				}
+				mui.toast(json.msg);
+			}
+			var errorFn1 = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				mui.toast(json.msg);
+				Dialog.closeDialog();
+			}
+			var zhongbiao = function($Item, taskId, uId, bId) {
+				$zhongbiaoItem = $Item;
+				console.log("taskId::" + taskId + "uId::" + uId + "bId::" + bId);
+				DataRequest.postData(Constant.IP2 + Constant.MyReleaseSetZhongBiao, [{
+					key: "taskId",
+					value: taskId
+				}, {
+					key: "b_id",
+					value: bId
+				}, {
+					key: "status",
+					value: 4
+				}], successFn1, errorFn1);
+			};
+			var init_task_join_people = function(json) {
+				var bmInfo = json.result.bminfo;
+				if (bmInfo != null && bmInfo.length > 0) {
+					var $task_join_people = $("<div class='task-join-people'></div>");
+					$task_join_people.append($("<span class='font-size-17px title-color'>已报名的人</span>"));
+					for (var i = 0; i < bmInfo.length; i++) {
+						var dataItem = bmInfo[i];
+						var $bmInfoItem = $("<div class='line-3 task-join-people-header bmInfoItem'></div>");
+						$bmInfoItem.attr("task_id", dataItem.task_id);
+						$bmInfoItem.attr("b_id", dataItem.uid);
+						//用户头像
+						var $userHeader = $("<div class='task-user-img'></div>").css("background", "url(" + dataItem.image + ") no-repeat");
+						//用户级别
+						var $userLevel = $("<div class='task-user-level-flag'><span class='task-user-level-flag-text'>" + dataItem.seller_level + "</span></div>");
+						$userHeader.append($userLevel);
+						var $bmInfoItemLeft = $("<div class='left vertical-center'></div>");
+						//用户名称
+						var $bmInfoItemLeftUserName = $("<div class='task-join-people-user'><span id='task-user-title' class='task-user-title middle'>" + dataItem.username + "</span></div>");
+						//竞标模式下的描述
+						if (json.result.taskinfo.model_id == 4) {
+							var $bmInfoItemLeftZhaoDeatil = $("<img class='task-zhao-money-img middle' src='../img/ic_baojiao.png'/><span class='task-zhao-money-text middle font-size-15px'>" + dataItem.quote + "</span><img class='task-zhao-time-img middle' src='../img/ic_time.png'/><span class='task-zhao-time-text middle font-size-15px'>" + dataItem.cycle + "</span>");
+							$bmInfoItemLeftUserName.append($bmInfoItemLeftZhaoDeatil);
+						}
+						//用户标签
+						var $bmInfoItemLeftFlag = $("<ul class='task-user-item-flag'></ul>");
+						if (dataItem.skill != null && dataItem.skill.length > 0) {
+							for (var i = 0; i < dataItem.skill.length; i++) {
+								$bmInfoItemLeftFlag.append($("<li class='task-user-item-flag-item'>" + dataItem.skill[i] + "</li>"));
+							}
+						}
+						if (mIsMyTask == "true") {
+							console.log("mIntTaskStatus::" + mIntTaskStatus);
+							if (mIntTaskStatus == 2) { //操作用户是否中标
+								var $zhongbiao = $("<div class='task-user-zhongbiao vertical-center font-size-12px '></div>").append($("<span>中标</span>"));
+								if (mIsSendTask == "true") { //是我发布的任务
+									$zhongbiao.bind("click", function() {
+										var $_this = $(this);
+										var task_id = $_this.parent().attr("task_id");
+										var b_id = $_this.parent().attr("b_id");
+										console.log("task_id::" + task_id);
+										console.log("b_id::" + b_id);
+										var leftButtonFn = function() {
+											zhongbiao($_this, task_id, b_id);
+										};
+										Dialog.showDialog("是否设置为中标", leftButtonFn, Dialog.closeDialog);
+									});
+								} else { //不是我发布的任务
+									$zhongbiao.addClass("not-zhongbiao");
+								}
+								$bmInfoItem.append($zhongbiao);
+							} else {
+								if (dataItem.work_status == 4 || dataItem.bid_status == 4) { //标记用户是否中标
+									var $zhongbiao = $("<div class='task-user-zhongbiao vertical-center font-size-12px '></div>").append($("<span>已中标</span>"));
+									//设置悬赏任务付款金额
+									if (task_model == 4) {
+										$(".task-describe").attr("task_money", dataItem.quote);
+									}
+									$bmInfoItem.append($zhongbiao);
+								} else {
+									var $zhongbiao = $("<div class='task-user-zhongbiao vertical-center font-size-12px not-zhongbiao'></div>").append($("<span>未中标</span>"));
+									$bmInfoItem.append($zhongbiao);
+								}
+							}
+						} else {
+							if (dataItem.bid_status == 4) {
+								var $zhongbiao = $("<div class='task-user-zhongbiao vertical-center font-size-12px '></div>").append($("<span>已中标</span>"));
+								$bmInfoItem.append($zhongbiao);
+							} else {
+								//								var $zhongbiao = $("<div class='task-user-zhongbiao vertical-center font-size-12px not-zhongbiao'></div>").append($("<span>未中标</span>"));
+								//								$bmInfoItem.append($zhongbiao);
+							}
+						}
+						$bmInfoItemLeft.append($bmInfoItemLeftUserName).append($bmInfoItemLeftFlag);
+						$bmInfoItem.append($userHeader).append($bmInfoItemLeft);
+						$task_join_people.append($bmInfoItem);
+					}
+				}
+				return $task_join_people;
+			}
+			var changedButton = function(isfavorite) {
+				console.log("mIsfavorite::" + isfavorite);
+				if (!isfavorite) {
+					$("#soucang").attr("mIsfavorite", isfavorite + "");
+					$("#soucang").find(".cancel-soucang-img").removeClass("cancel-soucang-img").addClass("soucang-img");
+					$("#soucang").find(".float-button").text("收藏");
+				} else if (isfavorite) {
+					$("#soucang").attr("mIsfavorite", isfavorite + "");
+					$("#soucang").find(".soucang-img").removeClass("soucang-img").addClass("cancel-soucang-img");
+					$("#soucang").find(".float-button").text("取消收藏");
+				}
+			};
+			var successFn = function(jsonStr) { //获取任务详情成功
+				$(".content").css("display", "block");
+				console.log(jsonStr);
+				var json = $.parseJSON(jsonStr);
+				if (json.status == "success") {
+					var $Content = $(".content");
+					mIsSignUp = json.result.arrProcess_can.work_hand;
+					mIsCollect = json.result.userinfo.favorite;
+					//是否收藏
+					changedButton(json.result.userinfo.is_favorite);
+					if (mIsSendTask != "true") {
+						$Content.append(init_Head(json));
+					}
+					$Content.append(init_task_describe(json));
+					$Content.append(init_task_join_people(json));
+					init_layout();
+				}
+			}
+			var errorFn = function() {}
+				//页面参数
+			var params = Common.urlParam(window.location);
+			var mTaskId, mIsMyTask, mIsSendTask, mIntTaskStatus, mBuyerStatus, task_file_ids;
+			//			targetTab.loadURL("task-detail.html?taskId=" + $_this.attr("task_id") + "&isMyTask=true&isSendTask=true" + "&intTaskStatus=" + flag + "&buyer_status=" + buyer_status+"&task_file_ids="+task_file_ids);
+			mTaskId = params.taskId;
+			mIsMyTask = params.isMyTask;
+			mIsSendTask = params.isSendTask;
+			mIntTaskStatus = params.intTaskStatus;
+			mBuyerStatus = params.buyer_status;
+			mSellerStatus = params.seller_status;
+			task_file_ids = params.task_file_ids;
+			var getTaskDetailData = function() {
+				console.log("mTaskId::" + mTaskId);
+				DataRequest.getData(Constant.IP2 + Constant.TaskDetail, [{
+					key: "taskId",
+					value: mTaskId
+				}], successFn, errorFn);
+			};
+			getTaskDetailData();
+			if (mIsMyTask == "true") {
+				$("#float-button").css("display", "none");
+				$("#float-task-status-button").css("display", "table");
+			} else {
+				$("#float-task-status-button").css("display", "none");
+				$("#float-button").css("display", "table");
+			}
+			//获取uid
+			console.log("mTaskId:::::" + mTaskId);
+			console.log("mIsMyTask:::::" + mIsMyTask);
+			console.log("mIntTaskStatus:::::" + mIntTaskStatus);
+			console.log("mBuyerStatus:::::" + mBuyerStatus);
+			console.log("mSellerStatus:::::" + mSellerStatus);
+			//更改任务状态按钮
+			if (mIsMyTask == "true") {
+				if (mBuyerStatus != undefined) {
+					who = 1;
+					currentState = mBuyerStatus;
+				} else if (mSellerStatus != undefined) {
+					who = 2;
+					currentState = mSellerStatus;
+				}
+				console.log("who:::" + who + "mIntTaskStatus::" + mIntTaskStatus + "currentState::" + currentState);
+				var state = Common.getState(who, mIntTaskStatus, currentState);
+				console.log("state.msg:::" + state.msg);
+				if (state.msg != undefined) { //悬赏模式
+					$("#float-task-status-button a").text(state.msg);
+					$("#float-task-status-button a").bind("click", function() {
+						task_id = $(".task-describe").attr("task_id");
+						agree_id = $(".task-describe").attr("agree_id");
+						task_money = $(".task-describe").attr("task_money");
+						console.log("functionname:::::" + state.functionName);
+						var fn = eval(state.functionName);
+						new fn($(this));
+						return false;
+					});
+					if (!state.enable) {
+						$("#float-task-status-button a").unbind("click").addClass("noclick");
+					}
+				} else {
+					$("#float-button").css("display", "none");
+					$("#float-task-status-button").css("display", "none");
+				}
+			}
+			//报名
+			$("#soucang").click(function() {
+				var $_this = $(this);
+				mui.plusReady(function() {
+					Common.u_Id = Common.getJson(Common.u_Id_Key);
+					if (Common.u_Id == undefined) { //没有登录提示登陆
+						Dialog.showDialog("您没有登入，是否去登入？", Dialog.closeDialog, Dialog.closeDialog); //跳转到登录没做
+					} else { //登录可操作收藏or取消收藏
+						if (mIsCollect) { //可以收藏,调用收藏接口
+							var isfavorite = $_this.attr("mIsfavorite");
+							if (isfavorite == "false") {
+								taskCollectAdd($(this));
+							} else { //不可以收藏,是否收藏过
+								if (isfavorite == "true") { //						如果该任务已经收藏，调用取消收藏接口
+									taskCollectCancel($(this));
+								}
+							}
+						} else {
+							mui.toast("该任务不可收藏");
+						}
+					}
+				});
+			});
+			$("#baoming").click(function() {
+				mui.plusReady(function() {
+					Common.u_Id = Common.getJson(Common.u_Id_Key);
+					if (Common.u_Id == undefined) { //没有登录提示登陆
+						Dialog.showDialog("您没有登入，是否去登入？", Dialog.closeDialog, Dialog.closeDialog); //跳转到登录没做
+					} else {
+						if (mIsSignUp) { //可以报名,跳转到报名页面
+							if (!show) {
+								show = true;
+								mui.plusReady(function() {
+									targetTab = Common.createWeb("baoming.html", "报名", Constant.allScreen_style);
+									console.log("taskId:::" + mTaskId + "task_model:::" + task_model);
+									targetTab.loadURL("baoming.html?taskId=" + mTaskId + "&task_model=" + task_model + "&u_id=" + Common.u_Id);
+									plus.webview.show(targetTab, "slide-in-right", 300);
+									targetTab.addEventListener("close", function() {
+										show = false;
+									});
+								});
+							}
+						} else {
+							mui.toast("该任务不可报名");
+						}
+					}
+				});
+			});
+		</script>
+
+</html>

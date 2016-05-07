@@ -1,0 +1,883 @@
+.border {
+	/*border: 1px red solid;*/
+}
+
+.border-left {
+	border-left: 1px #DDDDDD solid;
+}
+
+.border-bottom {
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.border-right-bottom {
+	border-right: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.vertical-center {
+	top: 0;
+	bottom: 0;
+	margin: auto;
+}
+
+.horizontal-center {
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.linearlayout-horizontal div {
+	display: inline-block;
+}
+
+.linearlayout-vertical div {
+	display: block;
+}
+
+.left-float {
+	float: left;
+}
+
+.right-float {
+	float: right;
+}
+
+.text-simple-line {
+	overflow: hidden;
+	display: inline-block;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+}
+
+body {
+	background-color: #f5f5f9;
+	font-family: simhei;
+}
+
+body,
+p,
+ul,
+li,
+span,
+input {
+	margin: 0;
+	padding: 0;
+	-webkit-tap-highlight-color: transparent;
+}
+
+input[type="button"] {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-appearance: none
+}
+
+
+/*支付页面的按钮*/
+
+.pay_button {
+	margin: 15px 20px;
+	height: 43px;
+	background: #DD3C38;
+	border-radius: 4px;
+	line-height: 43px;
+	text-align: center;
+	color: white;
+	border: none;
+}
+
+.pay_button:active {
+	background: #c43431;
+}
+
+.starBar {
+	vertical-align: middle;
+	display: inline-block;
+}
+
+.starBar-item {
+	list-style-type: none;
+	height: 100%;
+	float: left;
+}
+
+.task-need-describe p {
+	text-indent: 2em;
+}
+
+input {
+	outline: none;
+}
+
+.title-color {
+	color: black;
+}
+
+.content-color {
+	color: #7f7f7f;
+}
+
+.empty {
+	height: 90px;
+}
+
+
+/***************************************************************************************/
+
+
+/********************************************头部bar start*************************************/
+
+
+/*头部导航*/
+
+.header-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	height: 49px;
+	/*7.98%;*/
+	background: #DD3C38;
+	color: white;
+	z-index: 900;
+}
+
+.header-bar .header-left-elem {
+	/*display: inline-block;*/
+	float: left;
+}
+
+
+/*头部左边元素定位*/
+
+.header-left-elem {
+	position: relative;
+	height: 100%;
+	width: 15%;
+}
+
+.back {
+	width: 21px;
+	height: 100%;
+	background: url(../img/ic_back_normal.png) no-repeat 0 50%;
+	margin-left: 15px;
+	background-size: contain;
+}
+
+.back:active {
+	background: url(../img/ic_back_pressed.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+
+/*头部中间元素定位*/
+
+.header-center-elem {
+	position: relative;
+	height: 100%;
+	width: 60%;
+	text-align: center;
+}
+
+
+/*头部标题样式*/
+
+.header-center-elem .title {
+	/*font-size:20px;*/
+	/*line-height: 245%;*/
+	line-height: 49px;
+}
+
+
+/*头部右边元素定位*/
+
+.header-bar .header-right-elem {
+	display: inline-block;
+	float: right;
+	padding-right: 15px;
+	text-align: right;
+	line-height: 49px;
+}
+
+.header-right-elem {
+	position: relative;
+	height: 100%;
+	width: 15%;
+}
+
+.task-mode-select-img {
+	width: 21px;
+	height: 100%;
+	margin-right: 15px;
+	right: 0;
+	position: absolute;
+	background: url(../img/ic_shaixuan_normal.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+.task-mode-select-img:active {
+	background: url(../img/ic_shaixuan_pressed.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+.header-bar .search-bar {
+	position: absolute;
+	height: 63.265%;
+	/*31px*/
+	border-radius: 2px;
+	background-color: #c43431;
+	top: 0;
+	bottom: 0;
+	left: 4.16%;
+	right: 4.16%;
+	margin: auto;
+}
+
+.header-bar .search-bar span {
+	margin: 0px 5px;
+	width: 19px;
+	height: 100%;
+	display: inline-block;
+	float: left;
+	background: url(../img/ic_search.png) no-repeat 0 50%;
+	background-size: contain;
+}
+
+.header-bar .search-bar input {
+	height: 100%;
+	border: none;
+	width: 75%;
+	background: transparent;
+	/*font-size: 15px;*/
+	color: white;
+}
+
+.header-bar .search-bar input::-webkit-input-placeholder {
+	color: #E24F4F;
+}
+
+.header-bar-hide {
+	display: none;
+}
+
+.content {
+	position: relative;
+	top: 49px;
+}
+
+.header-bar-bottom-menu-content .content {
+	position: relative;
+	top: 97px;
+}
+
+.header-bar-bottom-menu #none {
+	display: none;
+}
+
+.middle {
+	vertical-align: middle;
+}
+
+.header-bar-bottom-menu {
+	position: fixed;
+	top: 49px;
+	left: 0;
+	right: 0;
+	background: white;
+	z-index: 10;
+	display: block;
+	padding-bottom: 2px;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+
+/********************************************头部bar end*************************************/
+
+
+/********************************顶部菜单start*******************************/
+
+.header-bar-bottom-menu .table-menu-item {
+	padding: 14px 0px;
+}
+
+.header-bar-menu-text {
+	color: black;
+}
+
+.menu-action .header-bar-menu-text {
+	color: #E8565A;
+}
+
+.menu-action-flag {
+	position: absolute;
+	left: 0px;
+	margin: 0px 21px;
+	width: 48px;
+	height: 2px;
+	background-color: #DD3C38;
+}
+
+
+/********************************顶部菜单end*******************************/
+
+
+/********************************************自动滚动广告条 start********************************/
+
+.mui-slider {
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+
+.mui-slider .mui-slider-group {
+	position: relative;
+	-webkit-transition: all 0s linear;
+	transition: all 0s linear;
+	white-space: nowrap;
+}
+
+.mui-slider .mui-slider-group.mui-slider-loop {
+	-webkit-transform: translate(-100%, 0);
+	transform: translate(-100%, 0);
+}
+
+.mui-slider .mui-slider-group .mui-slider-item>a:not(.mui-control-item) {
+	line-height: 0;
+	position: relative;
+	display: block;
+}
+
+.mui-slider .mui-slider-group .mui-slider-item {
+	/*font-size: 14px;*/
+	position: relative;
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	vertical-align: top;
+	white-space: normal;
+}
+
+.mui-slider-indicator .mui-indicator {
+	display: inline-block;
+	width: 4px;
+	height: 4px;
+	margin: -3px 3px;
+	cursor: pointer;
+	border-radius: 50%;
+	background: transparent;
+	border: 1px #dd3c38 solid;
+}
+
+.mui-slider-indicator .mui-active.mui-indicator {
+	background: #dd3c38;
+}
+
+.mui-slider-indicator {
+	position: absolute;
+	bottom: 8px;
+	width: 100%;
+	text-align: center;
+	background: 0 0;
+}
+
+.mui-text-right {
+	text-align: center!important;
+}
+
+.mui-slider .mui-slider-group .mui-slider-item img {
+	width: 100%
+}
+
+
+/********************************************自动滚动广告条 end********************************/
+
+
+/********************************************格子布局start********************************/
+
+
+/*例如首页的安全新闻*/
+
+.grid-table-menu {
+	position: relative;
+	background-color: white;
+	width: 100%;
+	display: table;
+}
+
+.grid-row-menu {
+	display: table-row;
+	width: 100%;
+	height: 105px;
+}
+
+.grid-cell-menu {
+	position: relative;
+	display: table-cell;
+	/*width: 1%;*/
+	vertical-align: middle;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.grid-cell-menu:active {
+	background-color: #DDDDDD;
+}
+
+.grid-row-menu .grid-cell-menu:nth-child(odd) {
+	border-right: 1px solid #DDDDDD;
+}
+
+
+/********************************************格子布局end********************************/
+
+
+/********************************************布局标签start********************************/
+
+.layout-title {
+	background-color: white;
+	height: 3.55%;
+	/*35px*/
+	padding-top: 2.37%;
+	padding-bottom: 2.37%;
+	padding-left: 4.17%;
+	vertical-align: middle;
+}
+
+
+/*列表标签标记*/
+
+.layout-title-flag {
+	width: 1.1%;
+	height: 100%;
+	/*21px;*/
+	background-color: #E8565A;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 1.18%;
+}
+
+
+/*列表标签文字*/
+
+.layout-title-text {
+	color: #DD3C38;
+	vertical-align: top;
+	font-weight: bold;
+}
+
+
+/********************************************布局标签end********************************/
+
+
+/********************************************竖行列表布局star********************************/
+
+.simple-task-list {
+	background-color: white;
+	padding-left: 4.44%;
+}
+
+.simple-task-item {
+	position: relative;
+	height: 100%;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+.simple-task-item:active {
+	background-color: #DDDDDD;
+}
+
+.simple-task-title {
+	line-height: 247%;
+	width: 58.1%;
+	vertical-align: middle;
+	color: black;
+}
+
+.simple-task-money {
+	position: absolute;
+	font-weight: bold;
+	width: 34.88%;
+	line-height: 247%;
+	vertical-align: middle;
+	right: 6.1%;
+	text-align: right;
+	color: #FF7D14;
+}
+
+
+/********************************************竖行列表布局end********************************/
+
+
+/********************************************尾部bar start*************************************/
+
+.footer-bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+	height: 56px;
+	background-color: #F2F2F2;
+	border-top: 1px solid #DDDDDD;
+	z-index: 1000;
+}
+
+.footer-menu-img {
+	display: inline-block;
+	width: 100%;
+	height: 35.08%;
+	/*20px*/
+}
+
+.footer-menu-text {
+	/*font-size: 11px;*/
+	color: #919190;
+}
+
+.table-menu {
+	display: table;
+}
+
+.table-menu-item {
+	display: table-cell;
+	width: 1%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+
+/********************************************尾部bar end*************************************/
+
+
+/********************************************行两布局 end*************************************/
+
+.line-3,
+.line-2 {
+	position: relative;
+	background: white;
+	height: 71px;
+}
+
+.line-2 .task-mode {
+	margin-left: 8px;
+	width: 17px;
+	height: 17px;
+}
+
+.line-2 .task-money {
+	color: #FF7D14;
+	font-weight: bold;
+}
+
+.vertical-center {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	margin: auto;
+}
+
+.left {
+	left: 15px;
+	color: black;
+	overflow: hidden;
+}
+
+.left div {
+	overflow: hidden;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+}
+
+.left div .task-user-title {
+	display: inline-block;
+	width: 120px;
+	overflow: hidden;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+}
+
+.right {
+	right: 15px;
+	color: black;
+	overflow: hidden;
+}
+
+.right div {
+	overflow: hidden;
+	/*自动隐藏文字*/
+	text-overflow: ellipsis;
+	/*文字隐藏后添加省略号*/
+	white-space: nowrap;
+}
+
+.task-right-button {
+	color: #E8565A;
+	vertical-align: middle;
+	padding: 4px 9px;
+	margin: 4px 0px;
+	/*padding：0px 9px;*/
+	border-radius: 2px;
+	border: 1px #E8565A solid;
+}
+
+.task-right-status {
+	color: #DDDDDD;
+	vertical-align: middle;
+	/*padding：0px 9px;*/
+	border-radius: 2px;
+}
+
+.task-right-button:active {
+	background-color: #E8565A;
+	color: white;
+}
+
+.noclick {
+	background-color: white;
+	color: #DDDDDD;
+	border-radius: 2px;
+	border: 1px #DDDDDD solid;
+}
+
+.noclick:active {
+	background-color: white;
+	color: #DDDDDD;
+	border-radius: 2px;
+	border: 1px #DDDDDD solid;
+}
+
+
+/********************************************行两布局 end*************************************/
+
+
+/********************************************横向菜单list start******************************************/
+
+.line-menu {
+	border-top: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+	display: table;
+}
+
+.line-menu-item {
+	display: table-cell;
+	width: 1%;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: #7F7F7F;
+}
+
+#float-button.line-menu {
+	border-top: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+	display: table;
+	width: 91.666%;
+}
+
+.float-button-bar .line-menu-item {
+	display: table-cell;
+	width: 49%;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	color: #7F7F7F;
+}
+
+
+/********************************************横向菜单list end******************************************/
+
+
+/***********************************************悬浮的button栏start******************************************************/
+
+
+/*如人才详细页面和任务详细页面*/
+
+.float-button-bar {
+	position: fixed;
+	bottom: 18px;
+	border-radius: 5px;
+	border: none;
+	left: 0;
+	right: 0;
+	z-index: 10;
+	height: 42px;
+	margin: 0px 15px;
+}
+
+.float-button {
+	border: none;
+	font-size: 15px;
+	line-height: 15px;
+	background: none;
+}
+
+#float-button .float-button-item:first-child {
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#float-button .float-button-item:last-child {
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background-color: rgba(0, 0, 0, 0.7);
+}
+
+#float-button .float-button-item:active {
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+.float-task-status-bar {
+	position: fixed;
+	bottom: 0px;
+	border: none;
+	background: white;
+	left: 0;
+	right: 0;
+	padding: 9px 15px;
+	z-index: 10;
+	height: 38px;
+}
+
+#float-task-status-button a {
+	color: white;
+	background: #DD3C38;
+	border-radius: 1px;
+	border: none;
+}
+
+#float-task-status-button a:active {
+	color: white;
+	background: #c43431;
+}
+
+#float-task-status-button .noclick {
+	color: white;
+	background: #d7d7d7;
+}
+
+#float-task-status-button .noclick:active {
+	color: white;
+	background: #d7d7d7;
+}
+
+.float-button-img {
+	position: absolute;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	width: 10px;
+	height: 10px;
+}
+
+.float-button-item .img {
+	width: 18px;
+	height: 18px;
+	margin-right: 5px;
+	display: inline-block;
+}
+
+.float-button {
+	width: 100%;
+	height: 18px;
+	font-size: 14px;
+}
+
+.float-button-item .left {
+	border-right: 1px #3e3e3e solid;
+}
+
+.float-button-item .left .float-button {
+	color: #FFC200;
+}
+
+.float-button-item .left .float-button:active {
+	color: #cc9c00;
+}
+
+.float-button-item .right {
+	border-left: 1px #606060 solid;
+}
+
+.float-button-item .right .float-button {
+	color: #00D355;
+}
+
+.float-button-item .right .float-button:active {
+	color: #00a140;
+}
+
+.footer-button {
+	display: table-cell;
+	width: 85%;
+	height: 60%;
+	font-size: 16px;
+	background-color: #DD3C38;
+	color: white;
+	border-radius: 4px;
+}
+
+.footer-button:active {
+	background-color: white;
+	color: #DD3C38;
+}
+
+
+/***********************************************悬浮的button栏end******************************************************/
+
+
+/***********************************************下拉选择start*********************************/
+
+.search-list {
+	position: fixed;
+	top: 49px;
+	left: 0;
+	right: 0;
+	background: white;
+	z-index: 10000;
+	display: block;
+}
+
+.select-list-item {
+	position: relative;
+	padding: 15px 0px;
+	margin-left: 20px;
+	font-size: 15px;
+	line-height: 15px;
+	color: black;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.select-list-item-action {
+	color: #E8565A;
+}
+
+.select-list-item .check-select-item {
+	position: absolute;
+	right: 10px;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	height: 12px;
+	width: 12px;
+	background: url(../img/ic_yes.png);
+	background-size: contain;
+	display: none;
+}
+
+.select-list-item-action .check-select-item {
+	display: block;
+}
+
+
+/***********************************************下拉选择end*********************************/

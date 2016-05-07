@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="../css/default.css" />
+		<link rel="stylesheet" href="../css/shouye.css" />
+		<link rel="stylesheet" href="../css/media.css" />
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+		<script type="text/javascript" src="../js/mui.min.js"></script>
+		<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="../js/Constant.js"></script>
+		<script type="text/javascript" src="../js/Common.js"></script>
+		<script type="text/javascript" src="../js/DataRequest.js"></script>
+		<script type="text/javascript" src="../js/jquery.md5.js"></script>
+		<script type="text/javascript" src="../js/ImageLazyLoad.js"></script>
+	</head>
+
+	<body>
+		<div id="content" style="display: none;">
+			<div id="slider" class="mui-slider">
+				<!--图片和标题-->
+				<div class="mui-slider-group mui-slider-loop">
+				</div>
+				<!--点标识-->
+				<div class="mui-slider-indicator mui-text-right">
+				</div>
+			</div>
+			<div class="table-menu shouye-task-type-table-menu">
+				<a class="table-menu-item" id="0">
+					<div class="shouye-task-type-img shouye-task-type-anquanyunwei"></div>
+					<span class="shouye-task-type-text font-size-11px">安全运维</span>
+				</a>
+				<a class="table-menu-item" id="1">
+					<div class="shouye-task-type-img shouye-task-type-wangluoshebei"></div>
+					<span class="shouye-task-type-text font-size-11px">网络设备</span>
+				</a>
+				<a class="table-menu-item" id="2">
+					<div class="shouye-task-type-img shouye-task-type-xitongyingyong"></div>
+					<span class="shouye-task-type-text font-size-11px">系统应用</span>
+				</a>
+				<a class="table-menu-item" id="3">
+					<div class="shouye-task-type-img shouye-task-type-wangluotuiguang"></div>
+					<span class="shouye-task-type-text font-size-11px">网络推广</span>
+				</a>
+				<a class="table-menu-item" id="4">
+					<div class="shouye-task-type-img shouye-task-type-gengduo"></div>
+					<span class="shouye-task-type-text font-size-11px">更多</span>
+				</a>
+			</div>
+
+			<div class="layout-title">
+				<div class="layout-title-flag"></div>
+				<span class="layout-title-text font-size-18px">任务推荐</span>
+			</div>
+			<div id="simple-task-recommend" class="simple-task-list">
+				<!--<div class="simple-task-item">
+					<span class="simple-task-title font-size-17px text-simple-line">美化APP美化APP美化APP美化APP美化APP美化APP</span><span class="simple-task-money font-size-17px text-simple-line">￥10000000.00</span>
+				</div>
+				<div class="simple-task-item">
+					<span class="simple-task-title font-size-17px text-simple-line">美化APP美化APP美化APP美化APP美化APP美化APP</span><span class="simple-task-money font-size-17px text-simple-line">￥10000000.00</span>
+				</div>-->
+			</div>
+			<div class="layout-title">
+				<div class="layout-title-flag"></div>
+				<span class="layout-title-text font-size-18px">安全新闻</span>
+			</div>
+			<div id="safe-news" class="grid-table-menu">
+				<!--<div class="grid-row-menu">
+					<div class="grid-cell-menu">
+						<span class="font-size-17px news-title text-simple-line">安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻</span>
+						<p class="font-size-13px news-time text-simple-line">2015-10-1</p>
+					</div>
+					<div class="grid-cell-menu">
+						<span class="font-size-17px news-title text-simple-line">安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻安全新闻</span>
+						<p class="font-size-13px news-time text-simple-line">2015-10-1</p>
+					</div>
+				</div>-->
+			</div>
+		</div>
+		<script>
+			var show = false;
+			//广告滚动条
+			var setSlidData = function(imageArray) {
+				var $SlideGroup = $(".mui-slider-group");
+				$SlideGroup.empty();
+				console.log(imageArray.length);
+				for (var i = 0; i < imageArray.length; i++) {
+					var $mui_slider_item = null;
+					if (i == 0 || i == imageArray.length - 1) {
+						$mui_slider_item = $("<div class='mui-slider-item mui-slider-ite-duplicate'></div>");
+					} else {
+						$mui_slider_item = $("<div class='mui-slider-item'></div>");
+					}
+					$A = $("<a href='#'></a>");
+					$Image = $("<img src='../img/em_black.png'/>");
+					$A.append($Image);
+					setImg($Image, imageArray[i]);
+					//					lazyload($Image, null);
+					$mui_slider_item.append($A);
+					$SlideGroup.append($mui_slider_item);
+				}
+				var $IndicatorGroup = $(".mui-slider-indicator");
+				$IndicatorGroup.empty();
+				for (var i = 0, leng = imageArray.length - 2; i < leng; i++) {
+					var $Indicator = null;
+					if (i == 0) {
+						$Indicator = $("<div class='mui-indicator mui-active'></div>");
+					} else {
+						$Indicator = $("<div class='mui-indicator'></div>");
+					}
+					$IndicatorGroup.append($Indicator);
+				}
+				var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+				});
+			};
+			var initNews = function(news) {
+				var $NewsList = $("#safe-news");
+				if ($NewsList.children().length > 0) {
+					$NewsList.empty();
+				}
+				for (var i = 0, rowCount = Math.round(news.length / 2); i < rowCount; i++) {
+					var $NewsRow = $("<div class='grid-row-menu'></div>");
+					var itemCount = 2;
+					if (i == rowCount - 1 && itemCount * rowCount > news.length) {
+						itemCount = 1; //最后一行为一个
+					}
+					for (var j = 0; j < itemCount; j++) {
+						var $NewItem = $("<div class='grid-cell-menu' new_id=" + news[2 * i + j].art_id + "><span class='font-size-17px text-simple-line news-title'>" + news[2 * i + j].art_title + "</span><p class='font-size-13px text-simple-line news-time'>" + news[2 * i + j].pub_time + "</p></div>");
+						$NewItem.click(function() {
+							//							alert($(this).attr("new_id"));
+							//打开安全新闻详细页
+							$_this = $(this);
+							if (!show) {
+								show = true;
+								mui.plusReady(function() {
+									targetTab = Common.createWeb("new_detail.html", "任务详情", Constant.allScreen_style);
+									targetTab.loadURL("new_detail.html?n_id=" + $_this.attr("new_id"));
+									plus.webview.show(targetTab, "slide-in-right", 300);
+									targetTab.addEventListener("close", function() {
+										show = false;
+									});
+								});
+							}
+						});
+						$NewsRow.append($NewItem);
+					}
+					$NewsList.append($NewsRow);
+				}
+				//设置单行显示
+				var width = $(".text-simple-line").parent().width() / 2 * 0.8;
+				$(".text-simple-line").css("width", width + "px");
+			};
+			//点击任务详情
+			var initRenWu = function(renwu) {
+				var $RenWuList = $("#simple-task-recommend");
+				if ($RenWuList.children().length > 0) {
+					$RenWuList.empty();
+				}
+				for (var i = 0, leng = renwu.length; i < leng; i++) {
+					$TaskItem = $("<div class='simple-task-item' task_id=" + renwu[i].task_id + "><span class='simple-task-title font-size-17px text-simple-line'>" + renwu[i].task_title + "</span><span class='simple-task-money font-size-17px text-simple-line'>￥" + renwu[i].task_cash + "</span></div>");
+					$TaskItem.click(function() {
+						//任务详情
+						var $_this = $(this);
+						if (!show) {
+							show = true;
+							mui.plusReady(function() {
+								targetTab = Common.createWeb("task-detail.html", "任务详情", Constant.allScreen_style);
+								targetTab.loadURL("task-detail.html?taskId=" + $_this.attr("task_id"));
+								plus.webview.show(targetTab, "slide-in-right", 300);
+								targetTab.addEventListener("close", function() {
+									show = false;
+								});
+							});
+						}
+					});
+					$RenWuList.append($TaskItem)
+				}
+			};
+			//成功初始化view
+			var initView = function(jsonStr) {
+				var json = $.parseJSON(jsonStr);
+				if (json.status === "success") {
+					$("#content").css("display", "block");
+					var sliderImages = [];
+					for (imageItem in json.pri) {
+						sliderImages.push(json.pri[imageItem]);
+					}
+					sliderImages.insert(0, sliderImages[sliderImages.length - 1]);
+					sliderImages.push(sliderImages[1]);
+					setSlidData(sliderImages);
+					var renwu = json.result.retask;
+					initRenWu(renwu);
+					var news = json.result.senews;
+					initNews(news);
+				}
+			};
+			mui.plusReady(function() {
+				var jsonStr = Common.getJson("shouye");
+				console.log(jsonStr);
+				if (jsonStr != null) {
+					initView(jsonStr);
+				}
+			});
+			var successFn = function(jsonStr) {
+				console.log(jsonStr);
+				mui.plusReady(function() {
+					Common.saveJson("shouye", jsonStr);
+				});
+				initView(jsonStr);
+			}
+			var errorFn = function(jsonStr) {
+				console.log("数据请求失败");
+			};
+			$(function() {
+				mui.plusReady(function() {
+					DataRequest.getData(Constant.IP + Constant.ShouYeApi, null, successFn, errorFn);
+					DataRequest.getData(Constant.IP + Constant.Cate, [{
+						key: "action",
+						value: "all"
+					}], successGetFL, errorGetFL);
+				});
+			});
+			var successGetFL = function(jsonStr) {
+				mui.plusReady(function() {
+					Common.saveJson("fenlei", jsonStr);
+				});
+				console.log("get fenlei success");
+			};
+			var errorGetFL = function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log("get fenlei error");
+			};
+			var titles = ["安全运维", "网络设备", "系统与应用", "网络推广", "更多"];
+			mui.plusReady(function() {
+				targetTabArray = [
+					plus.webview.create("shouye-yewudetail.html", titles[0], Constant.allScreen_style),
+					plus.webview.create("shouye-yewudetail.html", titles[1], Constant.allScreen_style),
+					plus.webview.create("shouye-yewudetail.html", titles[2], Constant.allScreen_style),
+					plus.webview.create("shouye-yewudetail.html", titles[3], Constant.allScreen_style),
+					plus.webview.create("shouye-yewudetail.html", titles[4], Constant.allScreen_style)
+				];
+			});
+			var open = true;
+			$(".shouye-task-type-table-menu").children("a").click(function() {
+				console.log("enter");
+				if (open) {
+					open = false;
+					var id = this.getAttribute("id");
+					mui.plusReady(function() {
+						var aniShow = {};
+						var targetTab = targetTabArray[id];
+						aniShow[targetTab] = "true";
+						mui.extend(aniShow, aniShow);
+						plus.webview.show(targetTab, "slide-in-right", 300);
+						targetTab.addEventListener("show", function() {
+							open = true;
+						});
+						targetTab.addEventListener("close", function() {
+							targetTabArray[id] = plus.webview.create("shouye-yewudetail.html", titles[id], Constant.allScreen_style)
+						});
+					});
+				}
+			});
+		</script>
+	</body>
+
+</html>

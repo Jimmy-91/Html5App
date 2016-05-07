@@ -1,0 +1,39 @@
+.file-name-bar {
+	position: relative;
+	height: 60px;
+	background: white;
+	border-bottom: solid 1px #DDDDDD;
+}
+
+.file-name {
+	position: relative;
+	height: 100%;
+	padding-left: 10px;
+	line-height: 60px;
+	z-index: 1;
+}
+
+.progress {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 0%;
+	background: -webkit-linear-gradient(left, #fff, #ffe062);
+	z-index: 0;
+}
+
+.download-over .progress {
+	display: none;
+}
+
+.download-over .progress-over {
+	position: relative;
+	height: 100%;
+	width: 16px;
+	background: url(../img/ic_xianzheng_yes.png) no-repeat 0 50%;
+	float: right;
+	background-size: contain;
+	margin-right: 15px;
+	z-index: 1;
+}

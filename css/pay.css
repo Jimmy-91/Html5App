@@ -1,0 +1,74 @@
+			.content {
+				position: relative;
+			}
+			
+			.pay_code_bar {
+				margin: 10px 0px;
+				height: 45px;
+				width: 100%;
+				background: red;
+			}
+			
+			.pay_code {
+				height: 45px;
+				width: 67%;
+				background: white;
+				border: none;
+				padding-left: 5.5%;
+				float: left;
+			}
+			
+			.pay_code::-webkit-input-placeholder {
+				color: #C5C5C6;
+			}
+			
+			.get_code_button {
+				height: 45px;
+				width: 27.5%;
+				background: #FFDB79;
+				text-align: center;
+				line-height: 45px;
+				color: white;
+				float: left;
+			}
+			
+			.get_code_button:active {
+				background: #e5c56c;
+			}
+			
+			.disable_pay_button {
+				margin: 0px 20px;
+				height: 43px;
+				background: #d7d7d7;
+				border-radius: 4px;
+				line-height: 43px;
+				text-align: center;
+				color: white;
+				border: none;
+			}
+			
+			.disable_pay_button:active {
+				color: white;
+				background: #d7d7d7;
+			}
+			
+			.poy-money-bar {
+				background: white;
+			}
+			
+			.pay-title {
+				padding: 15px 0px 30px 35px;
+				color: black;
+			}
+			
+			.pay-money {
+				color: #FF7D14;
+				font-size: 50px;
+				text-align: center;
+				padding-bottom: 47px;
+			}
+			
+			.pay-money .pay-moeny-unit {
+				color: black;
+				padding-left: 14px;
+			}

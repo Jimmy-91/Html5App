@@ -1,0 +1,67 @@
+.mui-bar-nav{
+        background:#DD3C38;
+}
+.mui-icon-left-nav{
+        color: #fff;
+}
+.mui-bar-nav h1{
+        color: #fff;
+}
+/* 改自带placeholder字体 */
+input,textarea{
+        font-family: "microsoft yahei";
+        font-size: 14px;
+}
+.box{
+        padding:10px;
+}
+        .box .title{
+                font-size:16px;
+                color: #333;
+        }
+        .box label{
+                font-family: "microsoft yahei";
+                font-size:14px;  
+        }
+        .box select{
+                width:45%;
+                border:1px solid #ccc !important;
+                font-family: "microsoft yahei";
+                color: #999;
+                float:left;
+                margin-right:5%;
+        }
+                .box select option{
+                        height:40px;
+                }
+        .box .left{
+                width:50%;
+                overflow:auto;
+                float:left;
+                padding-right:10px;
+        }
+        .box .right{
+                width:50%;
+                overflow:auto;
+                float:left;
+                padding-right:10px;
+        }
+                
+.box .mui-icon{
+        color: #999;
+}
+
+.case{
+        width:60px;
+        height: 60px;
+        border:1px solid #ccc;
+        float:left;
+        margin-left:5px;
+}
+.submit{
+        padding:8px;
+        font-size:16px;
+        background:#DD3C38;
+        color:#fff;
+}
+

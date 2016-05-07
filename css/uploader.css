@@ -1,0 +1,105 @@
+/*.download-file {
+	float: left;
+	margin: 5px;
+	
+}*/
+
+.table-cell .download-file {
+	background-position: 50% 0;
+	width: 100%;
+	height: 47px;
+	margin: 0px;
+}
+
+.task-picture {
+	background: url(../img/ic_paishe.png) no-repeat;
+	background-size: contain;
+}
+
+.photo {
+	background: url(../img/ic_xiangce.png) no-repeat;
+	background-size: contain;
+}
+
+.folder {
+	background: url(../img/ic_wenjian.png) no-repeat;
+	background-size: contain;
+}
+
+.video {
+	background: url(../img/ic_yuying.png) no-repeat;
+	background-size: contain;
+}
+
+.add_file {
+	margin: 15px 10px;
+	background: white;
+	border: 1px dashed #CCCCCC;
+	height: 64px;
+	color: #C6C6C6;
+	line-height: 64px;
+}
+
+.add_file:active {
+	background: #DDDDDD;
+}
+
+.add-fujian {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
+	background-size: contain;
+}
+
+.upload-select {
+	border: 1px solid #DDDDDD;
+	padding: 20px 0px;
+	position: fixed;
+	background: white;
+	bottom: 0;
+	display: none;
+	width: 100%;
+	z-index: 1001;
+}
+
+.table {
+	display: table;
+	width: 100%;
+}
+
+.select-upload-type :first-child {
+	margin: 10px 0px 5px 0px;
+}
+
+.select-upload-type :last-child {
+	margin: 5px 0px 10px 0px;
+}
+
+.table-cell {
+	position: relative;
+	right: 0px;
+	left: 0px;
+	margin: auto;
+	width: 23.6%;
+	text-align: center;
+	display: table-cell;
+}
+
+.table-cell:last-child,
+.table-cell:first-child {
+	width: 26.4%;
+}
+
+#upload-select {
+	position: fixed;
+	width: 100%;
+	bottom: 0;
+	display: none;
+}
+
+.upload-select-item {
+	width: 100%;
+	text-align: center;
+	border-top: 1px solid #DDDDDD;
+	padding: 5px 0px;
+}

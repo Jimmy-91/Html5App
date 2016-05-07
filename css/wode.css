@@ -1,0 +1,222 @@
+body {
+	background-color: #F5F5F9;
+}
+
+.wode-header {
+	position: relative;
+	height: 152px;
+	background-color: #DD3C38;
+}
+
+.wode-setting-bt {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background: url(../img/ic_set_normal.png);
+	background-size: contain;
+	right: 11px;
+	top: 10px;
+	z-index: 10;
+}
+
+.wode-setting-bt:active {
+	background: url(../img/ic_set_pressed.png);
+}
+
+.wode-user-head {
+	position: absolute;
+	width: 71px;
+	height: 71px;
+	border-radius: 71px;
+	background: url(../img/head.jpeg) no-repeat;
+	background-size: contain;
+	top: 25px;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.wode-user-level-flag {
+	position: absolute;
+	width: 22px;
+	height: 22px;
+	background: url(../img/ic_lv..png) no-repeat;
+	background-size: contain;
+	text-align: center;
+	right: 0;
+	bottom: 0;
+}
+
+.wode-user-level-flag .wode-user-level-flag-text {
+	font-family: "微软雅黑";
+	color: #EFA500;
+	font-size: 6px;
+}
+
+.wode-user-name {
+	position: absolute;
+	color: white;
+	font-size: 17px;
+	left: 0;
+	right: 0;
+	margin: auto;
+	text-align: center;
+	top: 111px;
+}
+
+
+/********************************************我的余额start**************************************************/
+
+.wode-money {
+	position: relative;
+	height: 61px;
+	background: white;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.wode-money-balance {
+	position: absolute;
+	left: 15px;
+	top: 39px;
+	font-size: 12px;
+	line-height: 12px;
+	color: #7F7F7F;
+}
+
+.wode-money-balance-text {
+	position: absolute;
+	left: 52px;
+	top: 29px;
+	line-height: 22px;
+	font-size: 31px;
+	color: #FF7D14;
+}
+
+.wode-money-balance-distill {
+	position: absolute;
+	right: 70px;
+	top: 28px;
+	font-size: 12px;
+	line-height: 12px;
+	padding: 6px 9px;
+	color: #E8565A;
+	border-radius: 2px;
+	border: 1px #E8565A solid;
+	background: transparent;
+}
+
+.wode-money-balance-distill:active {
+	background: #E8565A;
+	color: white;
+}
+
+.wode-money-balance-recharge {
+	position: absolute;
+	right: 15px;
+	top: 28px;
+	font-size: 12px;
+	line-height: 12px;
+	padding: 6px 9px;
+	color: #FFB823;
+	border-radius: 2px;
+	border: 1px #FFB823 solid;
+	background: transparent;
+}
+
+.wode-money-balance-recharge:active {
+	background: #FFB823;
+	color: white;
+}
+
+
+/********************************************我的余额end**************************************************/
+
+
+/********************************************我的页面菜单start**************************************************/
+
+.wode-list-menu {
+	border-top: 1px #DDDDDD solid;
+	margin-top: 11px;
+}
+
+.wode-list-menu-item {
+	position: relative;
+	float: left;
+	height: 85px;
+	background: white;
+}
+
+.wode-list-menu-item .center {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	text-align: center;
+	height: 25px;
+	left: 0;
+	right: 0;
+	margin: auto;
+}
+
+.wode-list-menu-item .center * {
+	vertical-align: middle;
+}
+
+.wode-list-menu-item .center span {
+	padding-left: 5px;
+}
+
+.wode-list-menu-item:active {
+	background: #DDDDDD;
+}
+
+
+/*.wode-list-menu-item-left {
+	position: relative;
+	float: left;
+}
+
+.wode-list-menu-item-right {
+	
+}*/
+
+.wode-list-menu-item-img {
+	position: relative;
+	width: 25px;
+	height: 25px;
+	background-size: contain;
+	display: inline-block;
+}
+
+.wode-list-menu-item-text {
+	position: relative;
+	color: black;
+	font-size: 15px;
+	line-height: 15px;
+}
+
+
+/********************************************我的页面菜单end**************************************************/
+
+
+/********************************************退出登录start**************************************************/
+
+.wode-exit-login {
+	outline: none;
+	width: 100%;
+	font-size: 15px;
+	color: #E8565A;
+	margin-top: 22px;
+	height: 43px;
+	background: white;
+	border: none;
+	border-top: 1px #DDDDDD solid;
+	border-bottom: 1px #DDDDDD solid;
+}
+
+.wode-exit-login:active {
+	color: white;
+	background-color: #E8565A;
+}
+
+
+/********************************************退出登录end**************************************************/
